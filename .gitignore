@@ -102,3 +102,10 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Parcel files
+.parcel-cache
+dist
+
+# Vscode files
+.vscode
