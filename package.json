@@ -1,0 +1,21 @@
+{
+  "name": "body_pose",
+  "version": "1.0.0",
+  "description": "testing for the 3d body pose detection model of tfjs",
+  "main": "index.js",
+  "author": "Marow",
+  "license": "MIT",
+  "dependencies": {
+    "@mediapipe/pose": "^0.5.1635988162",
+    "@tensorflow-models/pose-detection": "^1.0.1",
+    "@tensorflow/tfjs": "^3.13.0",
+    "@tensorflow/tfjs-backend-webgl": "^3.13.0",
+    "@tensorflow/tfjs-converter": "^3.13.0",
+    "@tensorflow/tfjs-core": "^3.13.0",
+    "howler": "^2.2.3"
+  },
+  "devDependencies": {
+    "buffer": "^6.0.3",
+    "process": "^0.11.10"
+  }
+}
