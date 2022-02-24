@@ -1,6 +1,3 @@
-# AR-music
-Please install [node](https://nodejs.org/en/), [yarn](https://yarnpkg.com/) and [parcel](https://parceljs.org/).
+# Air Drum POC
 
-To download and install dependencies do: ```yarn install```
-
-Then to start the app locally on http://localhost:1234/ do: ```parcel index.html```
+See this POC README [here](https://github.com/Elkokonut/AR-music/blob/master/air-drum poc/README.md).

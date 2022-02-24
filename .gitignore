@@ -105,7 +105,7 @@ dist
 
 # Parcel files
 .parcel-cache
-dist
+*/dist
 
 # Vscode files
 .vscode
