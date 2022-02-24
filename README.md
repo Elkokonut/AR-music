@@ -1,3 +1,5 @@
-# Air Drum POC
+# AR-music
 
-See this POC README [here](https://github.com/Elkokonut/AR-music/blob/master/air-drum poc/README.md).
+## Air Drum POC
+
+See this POC README [here](https://github.com/Elkokonut/AR-music/blob/main/air-drum%20poc/README.md).
