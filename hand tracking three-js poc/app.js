@@ -6,10 +6,10 @@ navigator.getUserMedia = (
 );
 
 var video = document.querySelector('video')
+video.style.display = "none"
 streaming = false;
 
-scene = new Scene(video)
-
+render = createScene(video)
 
 if (navigator.getUserMedia) {
   navigator.getUserMedia(
@@ -27,23 +27,6 @@ if (navigator.getUserMedia) {
 
       video.addEventListener('canplay', function (ev) {
         if (!streaming) {
-
-          scene.add(new Cube())
-
-          camera.aspect = video.videoWidth / video.videoHeight;
-          camera.updateProjectionMatrix();
-          renderer.setSize(video.videoWidth, video.videoHeight);
-
-          streaming = true;
-
-          console.log("adding cube")
-          const geometry = new THREE.BoxGeometry();
-          const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-          const cube = new THREE.Mesh(geometry, material);
-          scene.add(cube);
-
-          camera.position.z = 5;
-
 
           requestAnimationFrame(render);
         }
