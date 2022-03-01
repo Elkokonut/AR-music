@@ -7,21 +7,67 @@ export default class poseDetector
 {
     constructor(video)
     {
+        this.video = video;
         this.model = poseDetection.SupportedModels.BlazePose;
-        const detectorConfig = {
+        this.detectorConfig = {
         runtime: 'tfjs',
         modelType: 'full'
         };
-        this.detector = await poseDetection.createDetector(model, detectorConfig);
-        this.webcam = await tf.data.webcam(video);
+        this.detector;
+        this.webcam;
     }
 
-    predictFrameKeypoints2d()
+    async init()
+    {
+        this.detector = await poseDetection.createDetector(this.model, this.detectorConfig);
+        this.webcam = await tf.data.webcam(this.video);
+    }
+
+    async predictFrameKeypoints2d()
     {
         const img = await this.webcam.capture();
         const poses = await this.detector.estimatePoses(img);
         img.dispose();
-        return poses.keypoints;
-    }
+        return poses[0].keypoints;
+    } 
+    //return something like    
+    // keypoints: [
+    //     {x: 230, y: 220, score: 0.9, score: 0.99, name: "nose"},
+    //     {x: 212, y: 190, score: 0.8, score: 0.91, name: "left_eye"},
+    //     ...
+    //   ]
+    // 0: nose
+    // 1: left_eye_inner
+    // 2: left
+    // 3: left_eye_outer
+    // 4: right_eye_inner
+    // 5: right_eye
+    // 6: right_eye_outer
+    // 7: left_ear
+    // 8: right_ear
+    // 9: mouth_left
+    // 10: mouth_right
+    // 11: left_shoulder
+    // 12: right_shoulder
+    // 13: left_elbow
+    // 14: right_elbow
+    // 15: left_wrist
+    // 16: right_wrist
+    // 17: left_pinky
+    // 18: right_pinky
+    // 19: left_index
+    // 20: right_index
+    // 21: left_thumb
+    // 22: right_thumb
+    // 23: left_hip
+    // 24: right_hip
+    // 25: left_knee
+    // 26: right_knee
+    // 27: left_ankle
+    // 28: right_ankle
+    // 29: left_heel
+    // 30: right_heel
+    // 31: left_foot_index
+    // 32: right_foot_index
 }
 
