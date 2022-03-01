@@ -41,20 +41,34 @@ import poseDetector from "./ia.js"
 //         this.scene.add(elmt)
 //     }
 
-function change_position(cube, keypoint){
-    if (keypoint.score > 0.85){
-        cube.position.x = keypoint.x
-        cube.position.y = keypoint.y
+function change_position3d(cube, keypoint, width, height) {
+    if (keypoint.score > 0.85) {
+        cube.position.x = keypoint.x * width;
+        cube.position.y = - keypoint.y * height;
+        cube.position.z = keypoint.z
     }
 }
+
+
+function change_position2d(cube, keypoint, width, height) {
+    if (keypoint.score > 0.85) {
+        cube.position.x = keypoint.x - width / 2;
+        cube.position.y = - (keypoint.y - height / 2);
+    }
+}
+
+// int input_range = input_end - input_start;
+// int output_range = output_end - output_start;
+
+// output = (input - input_start)*output_range / input_range + output_start;
 
 export default async function createScene(video) {
     const scene = new THREE.Scene();
     scene.background = new THREE.VideoTexture(video);
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
 
     const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(video.videoWidth, video.videoHeight);
     document.body.appendChild(renderer.domElement);
 
     // controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -76,11 +90,16 @@ export default async function createScene(video) {
     const pose_detector = new poseDetector(video)
     await pose_detector.init()
 
+    camera.aspect = video.videoWidth / video.videoHeight;
+    camera.updateProjectionMatrix();
+
     scene.add(green_cube);
     scene.add(red_cube);
 
 
     camera.position.z = 5;
+
+    counter = 0
 
     async function animate() {
         requestAnimationFrame(animate);
@@ -90,16 +109,35 @@ export default async function createScene(video) {
         red_cube.rotation.x += 0.02;
         red_cube.rotation.y += 0.01;
 
-        mesh = await pose_detector.predictFrameKeypoints2d()
+        if (counter % 24 == 0) {
+            mesh = await pose_detector.predictFrameKeypoints3d()
+            // mesh = await pose_detector.predictFrameKeypoints2d()
 
+            if (mesh != null) {
+                green_cube.visible = true;
+                red_cube.visible = true;
 
-        left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist")
-        change_position(green_cube, left_keypoint)
+                // left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist")
+                // change_position2d(green_cube, left_keypoint, video.videoWidth, video.videoHeight)
+                // right_keypoint = mesh.find(keypoint => keypoint.name == "right_wrist")
+                // change_position2d(red_cube, right_keypoint, video.videoWidth, video.videoHeight)
 
-        // right_keypoint = mesh.find(keypoint => keypoint.name == "right_wrist")
-        // change_position(red_cube, right_keypoint)
+                left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist")
+                change_position3d(green_cube, left_keypoint, video.videoWidth, video.videoHeight)
+                right_keypoint = mesh.find(keypoint => keypoint.name == "right_wrist")
+                change_position3d(red_cube, right_keypoint, video.videoWidth, video.videoHeight)
+            }
+            else {
+                green_cube.visible = false;
+                red_cube.visible = false;
+            }
 
-        // controls.update();
+            counter = 0;
+        }
+        else {
+            counter++;
+        }
+
         renderer.render(scene, camera);
     };
 

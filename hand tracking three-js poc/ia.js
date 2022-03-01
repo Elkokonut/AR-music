@@ -3,39 +3,53 @@ import * as tf from '@tensorflow/tfjs';
 // Uncomment the line below if you want to use TF.js runtime.
 import '@tensorflow/tfjs-backend-webgl';
 
-export default class poseDetector
-{
-    constructor(video)
-    {
+export default class poseDetector {
+    constructor(video) {
         this.video = video;
         this.model = poseDetection.SupportedModels.BlazePose;
         this.detectorConfig = {
-        runtime: 'tfjs',
-        modelType: 'full'
+            runtime: 'tfjs',
+            modelType: 'full'
         };
         this.detector;
         this.webcam;
     }
 
-    async init()
-    {
+    async init() {
         this.detector = await poseDetection.createDetector(this.model, this.detectorConfig);
         this.webcam = await tf.data.webcam(this.video);
     }
 
-    async predictFrameKeypoints2d()
-    {
+    async predictFrameKeypoints2d() {
         const img = await this.webcam.capture();
         const poses = await this.detector.estimatePoses(img);
         img.dispose();
-        return poses[0].keypoints;
-    } 
-    //return something like    
+
+        if (poses.length > 0)
+            return poses[0].keypoints;
+        else
+            return null;
+    }//return something like    
     // keypoints: [
     //     {x: 230, y: 220, score: 0.9, score: 0.99, name: "nose"},
     //     {x: 212, y: 190, score: 0.8, score: 0.91, name: "left_eye"},
     //     ...
     //   ]
+
+    async predictFrameKeypoints3d() {
+        const img = await this.webcam.capture();
+        const poses = await this.detector.estimatePoses(img);
+        img.dispose();
+        if (poses.length > 0)
+            return poses[0].keypoints3D;
+        else
+            return null;
+    } // return something like     
+    // keypoints3D: [
+    //   {x: 0.65, y: 0.11, z: 0.05, score: 0.99, name: "nose"},
+    //   ...
+    // ]
+
     // 0: nose
     // 1: left_eye_inner
     // 2: left
