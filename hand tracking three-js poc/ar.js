@@ -42,26 +42,25 @@ import poseDetector from "./ia.js"
 //     }
 
 function change_position3d(cube, keypoint, width, height) {
-    if (keypoint.score > 0.85) {
+    if (keypoint && keypoint.score > 0.85) {
+        cube.visible = true;
         cube.position.x = keypoint.x * width;
         cube.position.y = - keypoint.y * height;
         cube.position.z = keypoint.z
     }
+    else
+        cube.visible = false
 }
 
 
 function change_position2d(cube, keypoint, width, height) {
-    if (keypoint.score > 0.85) {
-
-        console.log(`cube position x: ${cube.position.x}`);
-        cube.position.x = keypoint.x - width / 2;
-        console.log(`keypoint x: ${keypoint.x}`);
-
-
-        console.log(`cube position y: ${cube.position.y}`);
-        cube.position.y = - (keypoint.y - height / 2);
-        console.log(`keypoint y: ${keypoint.y}`);
+    if (keypoint && keypoint.score > 0.85) {
+        cube.visible = true;
+        cube.position.x = (keypoint.x - width / 2) / 50;
+        cube.position.y = - (keypoint.y - height / 2) / 50;
     }
+    else
+        cube.visible = false
 }
 
 // int input_range = input_end - input_start;
@@ -91,14 +90,13 @@ export default async function createScene(video) {
     const geometry = new THREE.BoxGeometry();
     const green = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const green_cube = new THREE.Mesh(geometry, green);
-    green_cube.scale.set(10, 10, 10);
+
     green_cube.position.x = 2;
     green_cube.name = "leftHandCube"
 
     const red = new THREE.MeshBasicMaterial({ color: 0xff0000 });
     const red_cube = new THREE.Mesh(geometry, red);
     red_cube.position.x = -2;
-    red_cube.scale.set(10, 10, 10);
     red_cube.name = "rightHandCube"
 
     const pose_detector = new poseDetector(video)
@@ -108,40 +106,37 @@ export default async function createScene(video) {
     scene.add(red_cube);
 
 
-    camera.position.z = video.videoWidth / 2;
+    camera.position.z = video.videoWidth / 2 / 50;
 
     counter = 0
 
     async function animate() {
-        requestAnimationFrame(animate);
+        //requestAnimationFrame(animate);
 
         green_cube.rotation.x += 0.01;
         green_cube.rotation.y += 0.01;
         red_cube.rotation.x += 0.02;
         red_cube.rotation.y += 0.01;
 
-        if (counter % 24 == 0) {
+        if (counter % 35 == 0) {
             // mesh = await pose_detector.predictFrameKeypoints3d()
             mesh = await pose_detector.predictFrameKeypoints2d()
 
-            if (mesh != null) {
-                green_cube.visible = true;
-                red_cube.visible = true;
+            // if (mesh != null) {
+            //     left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist")
+            //     change_position2d(green_cube, left_keypoint, video.videoWidth, video.videoHeight)
+            //     right_keypoint = mesh.find(keypoint => keypoint.name == "right_wrist")
+            //     change_position2d(red_cube, right_keypoint, video.videoWidth, video.videoHeight)
 
-                left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist")
-                change_position2d(green_cube, left_keypoint, video.videoWidth, video.videoHeight)
-                right_keypoint = mesh.find(keypoint => keypoint.name == "right_wrist")
-                change_position2d(red_cube, right_keypoint, video.videoWidth, video.videoHeight)
-
-                // left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist")
-                // change_position3d(green_cube, left_keypoint, video.videoWidth, video.videoHeight)
-                // right_keypoint = mesh.find(keypoint => keypoint.name == "right_wrist")
-                // change_position3d(red_cube, right_keypoint, video.videoWidth, video.videoHeight)
-            }
-            else {
-                green_cube.visible = false;
-                red_cube.visible = false;
-            }
+            //     // left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist")
+            //     // change_position3d(green_cube, left_keypoint, video.videoWidth, video.videoHeight)
+            //     // right_keypoint = mesh.find(keypoint => keypoint.name == "right_wrist")
+            //     // change_position3d(red_cube, right_keypoint, video.videoWidth, video.videoHeight)
+            // }
+            // else {
+            //     green_cube.visible = false;
+            //     red_cube.visible = false;
+            // }
 
             counter = 0;
         }

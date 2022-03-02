@@ -1,52 +1,36 @@
 import { type } from 'os';
 import createScene from './ar.js';
-
+import * as tf from '@tensorflow/tfjs';
 
 async function main() {
-  navigator.getUserMedia = (
-    navigator.getUserMedia ||
-    navigator.webkitGetUserMedia ||
-    navigator.mozGetUserMedia ||
-    navigator.msGetUserMedia
-  );
 
   var video = document.querySelector('video')
 
-  render = await createScene(video);
-  // video.style.display = "none"
-  streaming = false;
-
-
-  if (navigator.getUserMedia) {
-    navigator.getUserMedia(
-      {
-        video: true,
-        audio: false
-      },
-
-      //
-      // Fonction appelée en cas de réussite
-      //
-      function (localMediaStream) {
+  if (navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(function (localMediaStream) {
         video.setAttribute('autoplay', 'autoplay');
         video.srcObject = localMediaStream;
 
 
-        video.addEventListener('canplay', function (ev) {
+        video.addEventListener('canplay', async function (ev) {
           if (!streaming) {
-
-            requestAnimationFrame(render);
+            // requestAnimationFrame(render);
+            while(true)
+            {
+              await render();
+              await tf.nextFrame();
+            }
           }
         }, false);
-      },
-
-      //
-      // Fonction appelée en cas d'échec
-      //
-      function (err) {
-        console.log("Une erreur est survenue: " + err);
-      }
-    );
+      })
+      .catch(function (error) {
+        console.log("Something went wrong!");
+      });
+  
+  render = await createScene(video);
+  video.style.display = "none"
+  streaming = false;
   }
   else {
     console.log('Ce navigateur ne supporte pas la méthode getUserMedia');
