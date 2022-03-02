@@ -8,29 +8,30 @@ async function main() {
 
   if (navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices.getUserMedia({ video: true })
-      .then(function (localMediaStream) {
+      .then(async function (localMediaStream) {
         video.setAttribute('autoplay', 'autoplay');
         video.srcObject = localMediaStream;
-
-
-        video.addEventListener('canplay', async function (ev) {
+        video.style.display = "none";
+        streaming = false;
+        // render = await createScene(video);
+        // requestAnimationFrame(render);
+        video.addEventListener('playing', async function () {
           if (!streaming) {
-            // requestAnimationFrame(render);
-            while(true)
-            {
-              await render();
-              await tf.nextFrame();
-            }
+            console.log("here I am");
+            streaming = true;
+            render = await createScene(video);
+            requestAnimationFrame(render);
+            // while(true)
+            // {
+            //   await render();
+            //   await tf.nextFrame();
+            // }
           }
         }, false);
       })
       .catch(function (error) {
         console.log("Something went wrong!");
-      });
-  
-  render = await createScene(video);
-  video.style.display = "none"
-  streaming = false;
+      });  
   }
   else {
     console.log('Ce navigateur ne supporte pas la méthode getUserMedia');

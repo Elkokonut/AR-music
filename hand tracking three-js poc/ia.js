@@ -13,6 +13,7 @@ export default class poseDetector {
         };
         this.detector;
         this.webcam;
+        console.log(video);
     }
 
     async init() {
@@ -22,7 +23,7 @@ export default class poseDetector {
 
     async predictFrameKeypoints2d() {
         const img = await this.webcam.capture();
-        const poses = await this.detector.estimatePoses();
+        const poses = await this.detector.estimatePoses(img);
         img.dispose();
         if (poses.length > 0)
             return poses[0].keypoints;
