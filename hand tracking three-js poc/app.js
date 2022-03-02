@@ -11,11 +11,10 @@ async function main() {
   );
 
   var video = document.querySelector('video')
-  video.style.display = "none"
-  streaming = false;
-
 
   render = await createScene(video);
+  // video.style.display = "none"
+  streaming = false;
 
 
   if (navigator.getUserMedia) {
@@ -31,6 +30,7 @@ async function main() {
       function (localMediaStream) {
         video.setAttribute('autoplay', 'autoplay');
         video.srcObject = localMediaStream;
+
 
         video.addEventListener('canplay', function (ev) {
           if (!streaming) {

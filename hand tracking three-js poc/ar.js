@@ -52,8 +52,15 @@ function change_position3d(cube, keypoint, width, height) {
 
 function change_position2d(cube, keypoint, width, height) {
     if (keypoint.score > 0.85) {
+
+        console.log(`cube position x: ${cube.position.x}`);
         cube.position.x = keypoint.x - width / 2;
+        console.log(`keypoint x: ${keypoint.x}`);
+
+
+        console.log(`cube position y: ${cube.position.y}`);
         cube.position.y = - (keypoint.y - height / 2);
+        console.log(`keypoint y: ${keypoint.y}`);
     }
 }
 
@@ -62,14 +69,19 @@ function change_position2d(cube, keypoint, width, height) {
 
 // output = (input - input_start)*output_range / input_range + output_start;
 
+
 export default async function createScene(video) {
     const scene = new THREE.Scene();
     scene.background = new THREE.VideoTexture(video);
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+    const camera = new THREE.PerspectiveCamera(75, video.videoWidth / video.videoHeight, 1, 1000);
 
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(video.videoWidth, video.videoHeight);
     document.body.appendChild(renderer.domElement);
+
+
+    console.log(`width is : ${video.videoWidth}`);
+    console.log(`height is : ${video.videoHeight}`);
 
     // controls = new THREE.OrbitControls(camera, renderer.domElement);
     // controls.enableDamping = true;
@@ -79,25 +91,24 @@ export default async function createScene(video) {
     const geometry = new THREE.BoxGeometry();
     const green = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const green_cube = new THREE.Mesh(geometry, green);
+    green_cube.scale.set(10, 10, 10);
     green_cube.position.x = 2;
     green_cube.name = "leftHandCube"
 
     const red = new THREE.MeshBasicMaterial({ color: 0xff0000 });
     const red_cube = new THREE.Mesh(geometry, red);
     red_cube.position.x = -2;
+    red_cube.scale.set(10, 10, 10);
     red_cube.name = "rightHandCube"
 
     const pose_detector = new poseDetector(video)
     await pose_detector.init()
 
-    camera.aspect = video.videoWidth / video.videoHeight;
-    camera.updateProjectionMatrix();
-
     scene.add(green_cube);
     scene.add(red_cube);
 
 
-    camera.position.z = 5;
+    camera.position.z = video.videoWidth / 2;
 
     counter = 0
 
@@ -110,22 +121,22 @@ export default async function createScene(video) {
         red_cube.rotation.y += 0.01;
 
         if (counter % 24 == 0) {
-            mesh = await pose_detector.predictFrameKeypoints3d()
-            // mesh = await pose_detector.predictFrameKeypoints2d()
+            // mesh = await pose_detector.predictFrameKeypoints3d()
+            mesh = await pose_detector.predictFrameKeypoints2d()
 
             if (mesh != null) {
                 green_cube.visible = true;
                 red_cube.visible = true;
 
-                // left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist")
-                // change_position2d(green_cube, left_keypoint, video.videoWidth, video.videoHeight)
-                // right_keypoint = mesh.find(keypoint => keypoint.name == "right_wrist")
-                // change_position2d(red_cube, right_keypoint, video.videoWidth, video.videoHeight)
-
                 left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist")
-                change_position3d(green_cube, left_keypoint, video.videoWidth, video.videoHeight)
+                change_position2d(green_cube, left_keypoint, video.videoWidth, video.videoHeight)
                 right_keypoint = mesh.find(keypoint => keypoint.name == "right_wrist")
-                change_position3d(red_cube, right_keypoint, video.videoWidth, video.videoHeight)
+                change_position2d(red_cube, right_keypoint, video.videoWidth, video.videoHeight)
+
+                // left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist")
+                // change_position3d(green_cube, left_keypoint, video.videoWidth, video.videoHeight)
+                // right_keypoint = mesh.find(keypoint => keypoint.name == "right_wrist")
+                // change_position3d(red_cube, right_keypoint, video.videoWidth, video.videoHeight)
             }
             else {
                 green_cube.visible = false;
@@ -137,7 +148,6 @@ export default async function createScene(video) {
         else {
             counter++;
         }
-
         renderer.render(scene, camera);
     };
 
