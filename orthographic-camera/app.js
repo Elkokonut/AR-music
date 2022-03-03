@@ -11,27 +11,23 @@ async function main() {
       .then(async function (localMediaStream) {
         video.setAttribute('autoplay', 'autoplay');
         video.srcObject = localMediaStream;
+        video.style.cssText = "-moz-transform: scale(-1, 1); \
+-webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); \
+transform: scale(-1, 1); filter: FlipH;";
         video.style.display = "none";
         streaming = false;
-        // render = await createScene(video);
-        // requestAnimationFrame(render);
         video.addEventListener('playing', async function () {
           if (!streaming) {
             console.log("here I am");
             streaming = true;
             render = await createScene(video);
             requestAnimationFrame(render);
-            // while(true)
-            // {
-            //   await render();
-            //   await tf.nextFrame();
-            // }
           }
         }, false);
       })
       .catch(function (error) {
         console.log("Something went wrong!");
-      });  
+      });
   }
   else {
     console.log('Ce navigateur ne supporte pas la méthode getUserMedia');

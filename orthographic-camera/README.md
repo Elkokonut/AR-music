@@ -1,4 +1,4 @@
-## Hand tracking POC3 : Three js and tfjs
+## Hand tracking POC4 : Three js and tfjs (orthographic camera)
 
 Please install [node](https://nodejs.org/en/), [yarn](https://yarnpkg.com/) and [parcel](https://parceljs.org/).
 

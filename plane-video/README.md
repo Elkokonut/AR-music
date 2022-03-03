@@ -1,4 +1,4 @@
-## Air Drum POC
+## Hand tracking POC5 : Three js and tfjs (plane object video)
 
 Please install [node](https://nodejs.org/en/), [yarn](https://yarnpkg.com/) and [parcel](https://parceljs.org/).
 
