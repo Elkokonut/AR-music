@@ -8,7 +8,8 @@
     "@tensorflow-models/pose-detection": "^1.0.1",
     "@tensorflow/tfjs": "^3.13.0",
     "@tensorflow/tfjs-backend-webgl": "^3.13.0",
-    "three": "^0.138.2"
+    "three": "^0.138.2",
+    "three-orbitcontrols": "^2.110.3"
   },
   "devDependencies": {
     "buffer": "^6.0.3",

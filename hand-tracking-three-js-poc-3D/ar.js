@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import poseDetector from "./ia.js"
 
 // class Cube {
@@ -41,15 +42,12 @@ import poseDetector from "./ia.js"
 //         this.scene.add(elmt)
 //     }
 
-function change_position3d(cube, keypoint, width, height) {
+function change_position3d(cube, keypoint, width) {
     if (keypoint && keypoint.score > 0.85) {
-        cube.visible = true;
-        cube.position.x = keypoint.x * width;
-        cube.position.y = - keypoint.y * height;
-        cube.position.z = keypoint.z
+        console.log(keypoint.z);
+        ratio = Math.abs(cube.position.x / keypoint.x)
+        cube.position.z = - keypoint.z * ratio;
     }
-    else
-        cube.visible = false
 }
 
 
@@ -73,7 +71,7 @@ export default async function createScene(video) {
 
     const scene = new THREE.Scene();
     scene.background = new THREE.VideoTexture(video);
-    const camera = new THREE.PerspectiveCamera(75, width / height, 1, 1000);
+    const camera = new THREE.PerspectiveCamera(50, width / height, 1, 1000);
 
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(width, height);
@@ -82,10 +80,10 @@ export default async function createScene(video) {
     console.log(`width is : ${width}`);
     console.log(`height is : ${height}`);
 
-    // controls = new THREE.OrbitControls(camera, renderer.domElement);
-    // controls.enableDamping = true;
-    // controls.dampingFactor = 0.25;
-    // controls.enableZoom = true;
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.enableZoom = true;
 
     const geometry = new THREE.BoxGeometry();
     const green = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -99,9 +97,14 @@ export default async function createScene(video) {
     red_cube.position.x = -2;
     red_cube.name = "rightHandCube"
 
+    camera.lookAt( 0, 0, 0 );
+
     const pose_detector = new poseDetector(video)
     await pose_detector.init()
-
+    const gridHelper = new THREE.GridHelper(10, 10, 0xff0000);
+    const axesHelper = new THREE.AxesHelper(10);
+    scene.add(axesHelper);
+    scene.add(gridHelper);
     scene.add(green_cube);
     scene.add(red_cube);
 
@@ -117,31 +120,35 @@ export default async function createScene(video) {
         green_cube.rotation.y += 0.01;
         red_cube.rotation.x += 0.02;
         red_cube.rotation.y += 0.01;
-        
-        // if (counter % 24 == 0) {
-            // mesh = await pose_detector.predictFrameKeypoints3d()
-            mesh = await pose_detector.predictFrameKeypoints2d();
-            if (mesh != null) {
-                left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist")
-                change_position2d(green_cube, left_keypoint, width, height)
-                right_keypoint = mesh.find(keypoint => keypoint.name == "right_wrist")
-                change_position2d(red_cube, right_keypoint, width, height)
 
-                // left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist")
-                // change_position3d(green_cube, left_keypoint, width, height)
-                // right_keypoint = mesh.find(keypoint => keypoint.name == "right_wrist")
-                // change_position3d(red_cube, right_keypoint, width, height)
+        // if (counter % 24 == 0) {
+        mesh3d = await pose_detector.predictFrameKeypoints3d()
+        mesh = await pose_detector.predictFrameKeypoints2d();
+        if (mesh != null) {
+            left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist")
+            change_position2d(green_cube, left_keypoint, width, height)
+            right_keypoint = mesh.find(keypoint => keypoint.name == "right_wrist")
+            change_position2d(red_cube, right_keypoint, width, height)
+
+            if (mesh3d) {
+                mesh3d.find(keypoint => keypoint.name == "left_wrist")
+                left_keypoint = mesh3d.find(keypoint => keypoint.name == "left_wrist")
+                change_position3d(green_cube, left_keypoint, width)
+                right_keypoint = mesh3d.find(keypoint => keypoint.name == "right_wrist")
+                change_position3d(red_cube, right_keypoint, width)
             }
-            else {
-                green_cube.visible = false;
-                red_cube.visible = false;
-            }
+        }
+        else {
+            green_cube.visible = false;
+            red_cube.visible = false;
+        }
 
         //     counter = 0;
         // }
         // else {
         //     counter++;
         // }
+        controls.update();
         renderer.render(scene, camera);
     };
 

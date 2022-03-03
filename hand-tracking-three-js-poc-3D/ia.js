@@ -1,6 +1,6 @@
 import * as poseDetection from '@tensorflow-models/pose-detection';
 import * as tf from '@tensorflow/tfjs';
-// Uncomment the line below if you want to use TF.js runtime.
+// Register WebGL backend.
 import '@tensorflow/tfjs-backend-webgl';
 
 export default class poseDetector {
@@ -9,11 +9,11 @@ export default class poseDetector {
         this.model = poseDetection.SupportedModels.BlazePose;
         this.detectorConfig = {
             runtime: 'tfjs',
+            enableSmoothing: true,
             modelType: 'full'
         };
         this.detector;
         this.webcam;
-        console.log(video);
     }
 
     async init() {
