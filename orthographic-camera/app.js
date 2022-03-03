@@ -1,6 +1,4 @@
-import { type } from 'os';
 import createScene from './ar.js';
-import * as tf from '@tensorflow/tfjs';
 
 async function main() {
 
@@ -18,7 +16,6 @@ transform: scale(-1, 1); filter: FlipH;";
         streaming = false;
         video.addEventListener('playing', async function () {
           if (!streaming) {
-            console.log("here I am");
             streaming = true;
             render = await createScene(video);
             requestAnimationFrame(render);

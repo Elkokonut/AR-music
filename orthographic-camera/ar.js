@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import poseDetector from "./ia.js"
 
 
@@ -33,8 +32,14 @@ function add_mesh_body(scene, mesh, video) {
                 scene.add(circle);
                 obj = circle
             }
+            obj.visible = true;
             obj.position.x = (keypoint.x - width / 2);
             obj.position.y = - (keypoint.y - height / 2);
+        }
+        else {
+            obj = scene.getObjectByName(keypoint.name);
+            if (obj)
+                obj.visible = false;
         }
     });
 }
@@ -49,20 +54,11 @@ export default async function createScene(video) {
 
     const scene = new THREE.Scene();
     scene.background = new THREE.VideoTexture(video);
-    const camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 1000 );
+    const camera = new THREE.OrthographicCamera(width / - 2, width / 2, height / 2, height / - 2, 1, 1000);
 
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(width, height);
     document.body.appendChild(renderer.domElement);
-
-    console.log(`width is : ${width}`);
-    console.log(`height is : ${height}`);
-
-    controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.25;
-    controls.enableZoom = true;
-
 
     const geometry = new THREE.BoxGeometry();
     const green = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -103,8 +99,6 @@ export default async function createScene(video) {
         red_cube.rotation.x += 0.02;
         red_cube.rotation.y += 0.01;
 
-        // if (counter % 24 == 0) {
-        // mesh3d = await pose_detector.predictFrameKeypoints3d()
         mesh = await pose_detector.predictFrameKeypoints2d();
         if (mesh != null) {
             add_mesh_body(scene, mesh, video)
@@ -115,26 +109,12 @@ export default async function createScene(video) {
             right_depth_text.innerText = `Right depth is ${right_keypoint.z}`
             change_position2d(red_cube, right_keypoint, width, height)
 
-            // if (mesh3d) {
-            //     mesh3d.find(keypoint => keypoint.name == "left_wrist")
-            //     left_keypoint = mesh3d.find(keypoint => keypoint.name == "left_wrist")
-            //     change_position3d(green_cube, left_keypoint, width)
-            //     right_keypoint = mesh3d.find(keypoint => keypoint.name == "right_wrist")
-            //     change_position3d(red_cube, right_keypoint, width)
-            // }
         }
         else {
             green_cube.visible = false;
             red_cube.visible = false;
         }
 
-        //     counter = 0;
-        // }
-        // else {
-        //     counter++;
-        // }
-        controls.update();
-        console.log(camera.position)
         renderer.render(scene, camera);
     };
 

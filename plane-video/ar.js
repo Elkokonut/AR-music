@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import poseDetector from "./ia.js"
 
 
@@ -33,8 +32,14 @@ function add_mesh_body(scene, mesh, video) {
                 scene.add(circle);
                 obj = circle
             }
+            obj.visible = true;
             obj.position.x = (keypoint.x - width / 2);
             obj.position.y = - (keypoint.y - height / 2);
+        }
+        else {
+            obj = scene.getObjectByName(keypoint.name);
+            if (obj)
+                obj.visible = false;
         }
     });
 }
