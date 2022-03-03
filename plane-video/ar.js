@@ -56,8 +56,10 @@ export default async function createScene(video) {
     const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 0);
 
     const renderer = new THREE.WebGLRenderer();
+ 
     renderer.setSize(width, height);
     document.body.appendChild(renderer.domElement);
+    document.querySelector('canvas').style = '-moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); transform: scale(-1, 1); filter: FlipH;';
 
     // controls = new OrbitControls(camera, renderer.domElement);
     // controls.enableDamping = true;
@@ -106,9 +108,6 @@ export default async function createScene(video) {
 
     async function animate() {
         requestAnimationFrame(animate);
-
-        let right_depth_text = document.getElementById("right_depth_text");
-        let left_depth_text = document.getElementById("left_depth_text");
         green_cube.rotation.x += 0.01;
         green_cube.rotation.y += 0.01;
         red_cube.rotation.x += 0.02;
@@ -118,10 +117,8 @@ export default async function createScene(video) {
             add_mesh_body(scene, mesh, video)
 
             left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist")
-            left_depth_text.innerText = `Left depth is ${left_keypoint.z}`
             change_position2d(green_cube, left_keypoint, width, height)
             right_keypoint = mesh.find(keypoint => keypoint.name == "right_wrist")
-            right_depth_text.innerText = `Right depth is ${right_keypoint.z}`
             change_position2d(red_cube, right_keypoint, width, height)
 
         }

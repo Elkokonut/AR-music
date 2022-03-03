@@ -11,10 +11,7 @@ async function main() {
       .then(async function (localMediaStream) {
         video.setAttribute('autoplay', 'autoplay');
         video.srcObject = localMediaStream;
-        video.style.cssText = "-moz-transform: scale(-1, 1); \
--webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); \
-transform: scale(-1, 1); filter: FlipH;";
-        // video.style.display = "none";
+        video.style.display = "none";
         streaming = false;
         video.addEventListener('playing', async function () {
           if (!streaming) {

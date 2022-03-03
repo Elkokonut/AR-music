@@ -59,6 +59,7 @@ export default async function createScene(video) {
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(width, height);
     document.body.appendChild(renderer.domElement);
+    document.querySelector('canvas').style = '-moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); transform: scale(-1, 1); filter: FlipH;';
 
     const geometry = new THREE.BoxGeometry();
     const green = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
