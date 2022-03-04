@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@david18284/one-euro-filter@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@david18284/one-euro-filter/-/one-euro-filter-1.0.2.tgz#e1cf85282fab3c124f26171ccbd92d6432046db4"
+  integrity sha512-UleF2sRJYzkPlMyxW3u7KYv0AFKlAUJaYr95YbB6cmX+PoC7HQtVdJmd0Q8E2mh0sN98w55jFqp95AHiWFBgcw==
+
 "@mediapipe/pose@^0.5.1635988162":
   version "0.5.1635988162"
   resolved "https://registry.yarnpkg.com/@mediapipe/pose/-/pose-0.5.1635988162.tgz#905e626cb07bce86c692d8ec057f04558ddd26fe"

@@ -1,15 +1,23 @@
 import * as THREE from 'three';
 import poseDetector from "./ia.js"
+import { OneEuroFilter, LowPassFilter } from '@david18284/one-euro-filter';
 
 
-function change_position2d(cube, keypoint, width, height) {
+function change_position2d(obj, keypoint, width, height, filter) {
     if (keypoint && keypoint.score > 0.85) {
-        cube.visible = true;
-        cube.position.x = (keypoint.x - width / 2);
-        cube.position.y = - (keypoint.y - height / 2);
+        obj.visible = true;
+        x = (keypoint.x - width / 2);
+        y = - (keypoint.y - height / 2);
+        estimation = filter.filter(value=[x, y], timestamp=Date.now())
+        if (estimation)
+            console.log("x:", x, "y:", y, "estimation:", estimation)
+            // x = estimation[0]
+            // y = estimation[1]
+        obj.position.x = x; // estimation; //x
+        obj.position.y = y; //estimation[1]; //y
     }
     else
-        cube.visible = false
+        obj.visible = false
 }
 
 function add_mesh_body(scene, mesh, video) {
@@ -32,6 +40,7 @@ function add_mesh_body(scene, mesh, video) {
                 scene.add(circle);
                 obj = circle
             }
+            // change_position2d(obj, keypoint, width, height, filter);
             obj.visible = true;
             obj.position.x = (keypoint.x - width / 2);
             obj.position.y = - (keypoint.y - height / 2);
@@ -51,12 +60,16 @@ export default async function createScene(video) {
     width = video.videoWidth;
     height = video.videoHeight;
 
+    redPosFilter = new OneEuroFilter({ minCutOff: 0.1, beta: 0.00700 });
+    greenPosFilter = new OneEuroFilter({ minCutOff: 0.1, beta: 0.00700});
+    landmarkFilters = {};
+
     const scene = new THREE.Scene();
     scene.background = new THREE.VideoTexture(video);
     const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 0);
 
     const renderer = new THREE.WebGLRenderer();
- 
+
     renderer.setSize(width, height);
     document.body.appendChild(renderer.domElement);
     document.querySelector('canvas').style = '-moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); transform: scale(-1, 1); filter: FlipH;';
@@ -117,9 +130,9 @@ export default async function createScene(video) {
             add_mesh_body(scene, mesh, video)
 
             left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist")
-            change_position2d(green_cube, left_keypoint, width, height)
+            change_position2d(green_cube, left_keypoint, width, height, greenPosFilter)
             right_keypoint = mesh.find(keypoint => keypoint.name == "right_wrist")
-            change_position2d(red_cube, right_keypoint, width, height)
+            change_position2d(red_cube, right_keypoint, width, height, redPosFilter)
 
         }
         else {
