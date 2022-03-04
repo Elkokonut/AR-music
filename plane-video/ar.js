@@ -1,27 +1,35 @@
 import * as THREE from 'three';
 import poseDetector from "./ia.js"
-import { OneEuroFilter, LowPassFilter } from '@david18284/one-euro-filter';
-
+import OneEuroFilter2D from './oneEuroFilter.js';
 
 function change_position2d(obj, keypoint, width, height, filter) {
     if (keypoint && keypoint.score > 0.85) {
         obj.visible = true;
         x = (keypoint.x - width / 2);
         y = - (keypoint.y - height / 2);
-        estimation = filter.filter(value=[x, y], timestamp=Date.now())
-        if (estimation)
-            console.log("x:", x, "y:", y, "estimation:", estimation)
-            // x = estimation[0]
-            // y = estimation[1]
-        obj.position.x = x; // estimation; //x
-        obj.position.y = y; //estimation[1]; //y
+        if (!filter)
+            filter = new OneEuroFilter2D(x, y, Date.now(), 0.0, 0.004, 0.7, 1.0)
+        else {
+            estimation = filter.call(x, y)
+            if (estimation) {
+                x = estimation[0];
+                y = estimation[1];
+            }
+
+        }
+        obj.position.x = x;
+        obj.position.y = y;
+        return filter
     }
     else
-        obj.visible = false
+        obj.visible = false;
+    return null;
 }
 
 function add_mesh_body(scene, mesh, video) {
     const points = [];
+    const width = video.videoWidth;
+    const height = video.videoHeight;
 
     mesh.forEach(keypoint => {
         if (keypoint.score > 0.85) {
@@ -57,12 +65,12 @@ function add_mesh_body(scene, mesh, video) {
 
 export default async function createScene(video) {
 
-    width = video.videoWidth;
-    height = video.videoHeight;
+    const width = video.videoWidth;
+    const height = video.videoHeight;
 
-    redPosFilter = new OneEuroFilter({ minCutOff: 0.1, beta: 0.00700 });
-    greenPosFilter = new OneEuroFilter({ minCutOff: 0.1, beta: 0.00700});
-    landmarkFilters = {};
+    let redPosFilter = null;
+    let greenPosFilter = null;
+    let landmarkFilters = {};
 
     const scene = new THREE.Scene();
     scene.background = new THREE.VideoTexture(video);
@@ -130,9 +138,9 @@ export default async function createScene(video) {
             add_mesh_body(scene, mesh, video)
 
             left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist")
-            change_position2d(green_cube, left_keypoint, width, height, greenPosFilter)
+            greenPosFilter = change_position2d(green_cube, left_keypoint, width, height, greenPosFilter)
             right_keypoint = mesh.find(keypoint => keypoint.name == "right_wrist")
-            change_position2d(red_cube, right_keypoint, width, height, redPosFilter)
+            redPosFilter = change_position2d(red_cube, right_keypoint, width, height, redPosFilter)
 
         }
         else {
