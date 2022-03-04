@@ -1,6 +1,4 @@
-import { type } from 'os';
 import createScene from './ar.js';
-import * as tf from '@tensorflow/tfjs';
 
 async function main() {
 
