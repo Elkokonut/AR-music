@@ -17,12 +17,12 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 
-const renderer = new THREE.WebGLRenderer(canvas = video, alpha = true);
+const renderer = new THREE.WebGLRenderer({ canvas: video, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 video.style.display = 'none';
-videoTexture = new THREE.VideoTexture(video);
+var videoTexture = new THREE.VideoTexture(video);
 scene.background = videoTexture
 
 
@@ -48,7 +48,7 @@ if (navigator.getUserMedia) {
       video.setAttribute('autoplay', 'autoplay');
       video.srcObject = localMediaStream;
 
-      video.addEventListener('canplay', function (ev) {
+      video.addEventListener('canplay', function () {
         if (!streaming) {
 
           camera.aspect = video.videoWidth / video.videoHeight;

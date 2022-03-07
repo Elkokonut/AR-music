@@ -1,6 +1,4 @@
-import { type } from 'os';
 import createScene from './ar.js';
-import * as tf from '@tensorflow/tfjs';
 
 async function main() {
 
@@ -12,7 +10,7 @@ async function main() {
         video.setAttribute('autoplay', 'autoplay');
         video.srcObject = localMediaStream;
         video.style.display = "none";
-        streaming = false;
+        var streaming = false;
         video.addEventListener('playing', async function () {
           if (!streaming) {
             var streaming = true;
@@ -29,6 +27,6 @@ async function main() {
     console.log('Ce navigateur ne supporte pas la méthode getUserMedia');
   }
 
-};
+}
 
 main();
