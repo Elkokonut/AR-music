@@ -3,6 +3,7 @@ import createScene from './ar.js';
 async function main() {
 
   var video = document.querySelector('video')
+  var streaming = false;
 
   if (navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices.getUserMedia({ video: true })
@@ -10,10 +11,9 @@ async function main() {
         video.setAttribute('autoplay', 'autoplay');
         video.srcObject = localMediaStream;
         video.style.display = "none";
-        var streaming = false;
         video.addEventListener('playing', async function () {
           if (!streaming) {
-            var streaming = true;
+            streaming = true;
             var render = await createScene(video);
             requestAnimationFrame(render);
           }
