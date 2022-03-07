@@ -12,7 +12,9 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 12
-    - name: yarn install
+    - name: Adding eslint package.
+      run: yarn add eslint
+    - name: Install packages with yarn.
       run: yarn install
     - name: eslint
       uses: icrawl/action-eslint@v1
