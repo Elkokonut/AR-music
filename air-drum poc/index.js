@@ -103,6 +103,7 @@ async function app() {
     var detector = await poseDetection.createDetector(model, detectorConfig);
     const webcam = await tf.data.webcam(video);
 
+    /*eslint no-constant-condition: 0*/
     while(true)
     {
         const img = await webcam.capture();
