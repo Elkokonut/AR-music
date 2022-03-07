@@ -2,7 +2,7 @@ import * as poseDetection from '@tensorflow-models/pose-detection';
 import * as tf from '@tensorflow/tfjs';
 // Uncomment the line below if you want to use TF.js runtime.
 import '@tensorflow/tfjs-backend-webgl';
-import {Howl, Howler} from 'howler';
+import {Howl} from 'howler';
 
 
 
@@ -52,7 +52,7 @@ navigator.mediaDevices.getUserMedia({ video: true })
     video.srcObject = stream;
     })
     .catch(function (error) {
-    console.log("Something went wrong!");
+    console.log("Something went wrong!", error);
     });
 }
 
@@ -100,7 +100,7 @@ async function app() {
     runtime: 'tfjs',
     modelType: 'full'
     };
-    detector = await poseDetection.createDetector(model, detectorConfig);
+    var detector = await poseDetection.createDetector(model, detectorConfig);
     const webcam = await tf.data.webcam(video);
 
     while(true)

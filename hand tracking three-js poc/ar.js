@@ -1,18 +1,6 @@
 import * as THREE from 'three';
 import poseDetector from "./ia.js"
 
-function change_position3d(cube, keypoint, width, height) {
-    if (keypoint && keypoint.score > 0.85) {
-        cube.visible = true;
-        cube.position.x = keypoint.x * width;
-        cube.position.y = - keypoint.y * height;
-        cube.position.z = keypoint.z
-    }
-    else
-        cube.visible = false
-}
-
-
 function change_position2d(cube, keypoint, width, height) {
     if (keypoint && keypoint.score > 0.85) {
         cube.visible = true;
@@ -89,7 +77,7 @@ export default async function createScene(video) {
             red_cube.visible = false;
         }
         renderer.render(scene, camera);
-    };
+    }
 
     return animate
 }
