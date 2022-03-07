@@ -1,4 +1,4 @@
-import createScene from './ar.js';
+import BodyTrackerScene from './ar.js';
 
 async function main() {
 
@@ -15,8 +15,9 @@ async function main() {
           if (!streaming) {
             console.log("here I am");
             streaming = true;
-            render = await createScene(video);
-            requestAnimationFrame(render);
+            var scene = new BodyTrackerScene(video);
+            await scene.init();
+            await scene.animate();
           }
         }, false);
       })
