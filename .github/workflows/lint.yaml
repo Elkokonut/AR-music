@@ -16,8 +16,6 @@ jobs:
       run: yarn add eslint
     - name: Install packages with yarn.
       run: yarn install
-    - name: Adding eslint configuration.
-      run: npm init @eslint/config
     - name: eslint
       uses: icrawl/action-eslint@v1
       with:
