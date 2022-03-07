@@ -13,23 +13,23 @@ async function main() {
 -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); \
 transform: scale(-1, 1); filter: FlipH;";
         video.style.display = "none";
-        streaming = false;
+        var streaming = false;
         video.addEventListener('playing', async function () {
           if (!streaming) {
             streaming = true;
-            render = await createScene(video);
+            var render = await createScene(video);
             requestAnimationFrame(render);
           }
         }, false);
       })
       .catch(function (error) {
-        console.log("Something went wrong!");
+        console.log("Something went wrong!", error);
       });
   }
   else {
     console.log('Ce navigateur ne supporte pas la méthode getUserMedia');
   }
 
-};
+}
 
 main();

@@ -10,10 +10,9 @@ async function main() {
         video.setAttribute('autoplay', 'autoplay');
         video.srcObject = localMediaStream;
         video.style.display = "none";
-        streaming = false;
+        var streaming = false;
         video.addEventListener('playing', async function () {
           if (!streaming) {
-            console.log("here I am");
             streaming = true;
             var scene = new BodyTrackerScene(video);
             await scene.init();
@@ -22,13 +21,13 @@ async function main() {
         }, false);
       })
       .catch(function (error) {
-        console.log("Something went wrong!");
+        console.log("Something went wrong!", error);
       });
   }
   else {
     console.log('Ce navigateur ne supporte pas la méthode getUserMedia');
   }
 
-};
+}
 
 main();

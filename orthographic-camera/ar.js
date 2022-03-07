@@ -12,14 +12,12 @@ function change_position2d(cube, keypoint, width, height) {
         cube.visible = false
 }
 
-function add_mesh_body(scene, mesh, video) {
-    const points = [];
-
+function add_mesh_body(scene, mesh, width, height) {
     mesh.forEach(keypoint => {
         if (keypoint.score > 0.85) {
-            obj = scene.getObjectByName(keypoint.name);
+            var obj = scene.getObjectByName(keypoint.name);
             if (!obj) {
-                material = null;
+                var material = null;
                 if (keypoint.name.includes("left")) {
                     material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
                 }
@@ -37,7 +35,7 @@ function add_mesh_body(scene, mesh, video) {
             obj.position.y = - (keypoint.y - height / 2);
         }
         else {
-            obj = scene.getObjectByName(keypoint.name);
+            var obj = scene.getObjectByName(keypoint.name);
             if (obj)
                 obj.visible = false;
         }
@@ -48,8 +46,8 @@ function add_mesh_body(scene, mesh, video) {
 
 export default async function createScene(video) {
 
-    width = video.videoWidth;
-    height = video.videoHeight;
+    var width = video.videoWidth;
+    var height = video.videoHeight;
 
 
     const scene = new THREE.Scene();
@@ -87,14 +85,9 @@ export default async function createScene(video) {
 
 
     camera.position.z = width;
-
-    counter = 0
-
     async function animate() {
         requestAnimationFrame(animate);
 
-        let right_depth_text = document.getElementById("right_depth_text");
-        let left_depth_text = document.getElementById("left_depth_text");
         green_cube.rotation.x += 0.01;
         green_cube.rotation.y += 0.01;
         red_cube.rotation.x += 0.02;
@@ -102,13 +95,11 @@ export default async function createScene(video) {
 
         mesh = await pose_detector.predictFrameKeypoints2d();
         if (mesh != null) {
-            add_mesh_body(scene, mesh, video)
-            left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist")
-            left_depth_text.innerText = `Left depth is ${left_keypoint.z}`
-            change_position2d(green_cube, left_keypoint, width, height)
-            right_keypoint = mesh.find(keypoint => keypoint.name == "right_wrist")
-            right_depth_text.innerText = `Right depth is ${right_keypoint.z}`
-            change_position2d(red_cube, right_keypoint, width, height)
+            add_mesh_body(scene, mesh, width, height);
+            var left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist");
+            change_position2d(green_cube, left_keypoint, width, height);
+            var right_keypoint = mesh.find(keypoint => keypoint.name == "right_wrist");
+            change_position2d(red_cube, right_keypoint, width, height);
 
         }
         else {
@@ -119,5 +110,5 @@ export default async function createScene(video) {
         renderer.render(scene, camera);
     };
 
-    return animate
+    return animate;
 }

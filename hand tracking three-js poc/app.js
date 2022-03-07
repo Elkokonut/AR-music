@@ -13,24 +13,16 @@ async function main() {
         video.srcObject = localMediaStream;
         video.style.display = "none";
         streaming = false;
-        // render = await createScene(video);
-        // requestAnimationFrame(render);
         video.addEventListener('playing', async function () {
           if (!streaming) {
-            console.log("here I am");
-            streaming = true;
-            render = await createScene(video);
+            var streaming = true;
+            var render = await createScene(video);
             requestAnimationFrame(render);
-            // while(true)
-            // {
-            //   await render();
-            //   await tf.nextFrame();
-            // }
           }
         }, false);
       })
       .catch(function (error) {
-        console.log("Something went wrong!");
+        console.log("Something went wrong!", error);
       });  
   }
   else {

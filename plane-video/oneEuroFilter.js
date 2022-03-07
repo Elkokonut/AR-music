@@ -1,5 +1,5 @@
 function smoothing_factor(t_e, cutoff) {
-    r = 2 * Math.PI * cutoff * t_e
+    var r = 2 * Math.PI * cutoff * t_e
     return r / (r + 1)
 }
 
@@ -11,8 +11,8 @@ function exponential_smoothing(a, x, x_prev) {
 export default class OneEuroFilter2D {
     constructor(x0, y0, t0 = Date.now(), dx0 = 0.0, min_cutoff = 1.0, beta = 0.00001,
         d_cutoff = 1.0) {
-        this.xfilter = new OneEuroFilter(x0, t0, dx0 = dx0, min_cutoff = min_cutoff, beta = beta, d_cutoff = d_cutoff);
-        this.yfilter = new OneEuroFilter(y0, t0, dx0 = dx0, min_cutoff = min_cutoff, beta = beta, d_cutoff = d_cutoff);
+        this.xfilter = new OneEuroFilter(x0, t0, dx0, min_cutoff, beta, d_cutoff);
+        this.yfilter = new OneEuroFilter(y0, t0, dx0, min_cutoff, beta, d_cutoff);
     }
 
     call(x, y, t = Date.now()) {
