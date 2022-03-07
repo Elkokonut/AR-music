@@ -67,7 +67,7 @@ function change_position2d(cube, keypoint, width, height) {
 
 export default async function createScene(video) {
 
-    width = video.videoWidth;
+    var width = video.videoWidth;
     height = video.videoHeight;
 
 
