@@ -1,7 +1,5 @@
 function smoothing_factor(t_e, cutoff) {
-    r = 2 * Math.PI * cutoff * t_e
-    console.log("pi", Math.PI)
-    console.log("r", r)
+    var r = 2 * Math.PI * cutoff * t_e
     return r / (r + 1)
 }
 
@@ -13,8 +11,8 @@ function exponential_smoothing(a, x, x_prev) {
 export default class OneEuroFilter2D {
     constructor(x0, y0, t0 = Date.now(), dx0 = 0.0, min_cutoff = 1.0, beta = 0.00001,
         d_cutoff = 1.0) {
-        this.xfilter = new OneEuroFilter(x0, t0, dx0 = dx0, min_cutoff = min_cutoff, beta = beta, d_cutoff = d_cutoff);
-        this.yfilter = new OneEuroFilter(y0, t0, dx0 = dx0, min_cutoff = min_cutoff, beta = beta, d_cutoff = d_cutoff);
+        this.xfilter = new OneEuroFilter(x0, t0, dx0, min_cutoff, beta, d_cutoff);
+        this.yfilter = new OneEuroFilter(y0, t0, dx0, min_cutoff, beta, d_cutoff);
     }
 
     call(x, y, t = Date.now()) {
@@ -40,37 +38,20 @@ class OneEuroFilter {
 
     call(x, t = Date.now()) {
         if (!this.called) {
-            // console.log("CALL")
-            // console.log("x", x)
-            // console.log("t", t)
-            // console.log("x_prev", this.x_prev)
-            // console.log("t_prev", this.t_prev)
-            // console.log("dx_prev", this.dx_prev)
-            // console.log("min_cutoff", this.min_cutoff)
-            // console.log("beta", this.beta)
-            // console.log("d_cutoff", this.d_cutoff)
             // Compute the filtered signal.
-            let t_e = t - this.t_prev;
+            var t_e = t - this.t_prev;
             if (t_e > 0) {
 
                 // The filtered derivative of the signal.
-                let a_d = smoothing_factor(t_e, this.d_cutoff);
-                let dx = (x - this.x_prev) / t_e;
-                let dx_hat = exponential_smoothing(a_d, dx, this.dx_prev);
+                var a_d = smoothing_factor(t_e, this.d_cutoff);
+                var dx = (x - this.x_prev) / t_e;
+                var dx_hat = exponential_smoothing(a_d, dx, this.dx_prev);
 
 
                 // The filtered signal.
-                let cutoff = this.min_cutoff + this.beta * Math.abs(dx_hat);
-                let a = smoothing_factor(t_e, cutoff);
-                let x_hat = exponential_smoothing(a, x, this.x_prev);
-
-                // console.log("t_e", t_e)
-                // console.log("a_d", a_d)
-                // console.log("dx", dx)
-                // console.log("dx_hat", dx_hat)
-                // console.log("cutoff", cutoff)
-                // console.log("a", a)
-                // console.log("x_hat", x_hat)
+                var cutoff = this.min_cutoff + this.beta * Math.abs(dx_hat);
+                var a = smoothing_factor(t_e, cutoff);
+                var x_hat = exponential_smoothing(a, x, this.x_prev);
 
                 // Memorize the previous values.
                 this.x_prev = x_hat;
