@@ -44,13 +44,15 @@ class BodyTrackerObject extends Object3D {
             this.obj.visible = true;
             var x = (keypoint.x - width / 2);
             var y = - (keypoint.y - height / 2);
-            if (!this.euroFilter)
-                this.euroFilter = new OneEuroFilter2D(x, y, Date.now(), 0.0, 0.004, 0.7, 1.0)
-            else {
-                var estimation = this.euroFilter.call(x, y)
-                if (estimation) {
-                    x = estimation[0];
-                    y = estimation[1];
+            if (this.type == "cube") {
+                if (!this.euroFilter)
+                    this.euroFilter = new OneEuroFilter2D(x, y, Date.now(), 0.0, 0.004, 0.7, 1.0)
+                else {
+                    var estimation = this.euroFilter.call(x, y)
+                    if (estimation) {
+                        x = estimation[0];
+                        y = estimation[1];
+                    }
                 }
             }
             this.obj.position.x = x;
@@ -86,11 +88,11 @@ class Disk extends BodyTrackerObject {
         const geometry = new THREE.CircleGeometry(5, 32);
         var circle = new THREE.Mesh(geometry, material);
         super(circle, name, scene, null, null, name);
-        this.circle = this.circle;
+        this.circle = circle;
         this.type = "Disk";
     }
     animate(mesh, width, height) {
-        // super.animate(mesh, width, height)
+        super.animate(mesh, width, height)
     }
 }
 
