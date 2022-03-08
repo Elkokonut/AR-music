@@ -20,16 +20,20 @@ async function main() {
             //sliders logic
             var mcoff_slider = document.getElementById("mincutoff_slider");
             var beta_slider = document.getElementById("beta_slider");
+            var mcoff_text = document.getElementById("mincutoff_text");
+            var beta_text = document.getElementById("beta_text");
             mcoff_slider.oninput = function() {
+              mcoff_text.innerHTML = "mcoff value: " + mcoff_slider.value/10000; 
               scene.objects.forEach(elm => {
                 if(elm.euroFilter != null)
-                  elm.euroFilter.set_mcoff(mcoff_slider.value/100);
+                  elm.euroFilter.set_mcoff(mcoff_slider.value/10000);
               });
             }
             beta_slider.oninput = function() {
+              beta_text.innerHTML = "beta value: " + beta_slider.value/10000; 
               scene.objects.forEach(elm => {
                 if(elm.euroFilter != null)
-                  elm.euroFilter.set_beta(beta_slider.value/100);
+                  elm.euroFilter.set_beta(beta_slider.value/10000);
               });
             }
             //end of slider logic

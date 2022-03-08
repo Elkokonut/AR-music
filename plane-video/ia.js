@@ -10,7 +10,7 @@ export default class poseDetector {
         this.detectorConfig = {
             runtime: 'tfjs',
             enableSmoothing: true,
-            modelType: 'lite'
+            modelType: 'full'
         };
         this.detector;
         this.webcam;
