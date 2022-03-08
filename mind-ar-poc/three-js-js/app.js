@@ -1,5 +1,6 @@
 import 'mind-ar/dist/mindar-face-three.prod';
 
+/*eslint no-undef: 0*/
 window.addEventListener("DOMContentLoaded", async function () {
     const THREE = MINDAR.FACE.THREE;
     const mindarThree = new MINDAR.FACE.MindARThree({
