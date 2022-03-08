@@ -8,9 +8,10 @@
 		</style>
 	</head>
 	<body>
-        <video/>
-		<p id="left_depth_text"></p>
-		<p id="right_depth_text"></p>
+        <video></video>
+		<input type="range" min="0" max="100" value="50" class="slider" id="mincutoff_slider">
+		<input type="range" min="0" max="100" value="50" class="slider" id="beta_slider">
+
 		<script type="module" src="./ia.js"></script>
 		<script type="module" src="./ar.js"></script>
 		<script type="module" src="./app.js"></script>

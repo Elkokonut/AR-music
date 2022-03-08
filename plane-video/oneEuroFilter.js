@@ -1,3 +1,5 @@
+import { min } from "@tensorflow/tfjs";
+
 function smoothing_factor(t_e, cutoff) {
     var r = 2 * Math.PI * cutoff * t_e
     return r / (r + 1)
@@ -17,6 +19,18 @@ export default class OneEuroFilter2D {
 
     call(x, y, t = Date.now()) {
         return [this.xfilter.call(x, t), this.yfilter.call(y, t)];
+    }
+
+    set_mcoff(min_cutoff)
+    {
+        this.xfilter.min_cutoff = min_cutoff;
+        this.yfilter.min_cutoff = min_cutoff;
+    }
+
+    set_beta(beta)
+    {
+        this.xfilter.beta = beta;
+        this.yfilter.beta= beta;
     }
 
 }
