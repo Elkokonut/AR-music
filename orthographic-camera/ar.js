@@ -35,7 +35,7 @@ function add_mesh_body(scene, mesh, width, height) {
             obj.position.y = - (keypoint.y - height / 2);
         }
         else {
-            var obj = scene.getObjectByName(keypoint.name);
+            obj = scene.getObjectByName(keypoint.name);
             if (obj)
                 obj.visible = false;
         }
@@ -93,7 +93,7 @@ export default async function createScene(video) {
         red_cube.rotation.x += 0.02;
         red_cube.rotation.y += 0.01;
 
-        mesh = await pose_detector.predictFrameKeypoints2d();
+        var mesh = await pose_detector.predictFrameKeypoints2d();
         if (mesh != null) {
             add_mesh_body(scene, mesh, width, height);
             var left_keypoint = mesh.find(keypoint => keypoint.name == "left_wrist");
@@ -108,7 +108,7 @@ export default async function createScene(video) {
         }
 
         renderer.render(scene, camera);
-    };
+    }
 
     return animate;
 }
