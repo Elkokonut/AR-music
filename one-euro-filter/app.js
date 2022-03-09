@@ -30,10 +30,10 @@ async function main() {
               });
             }
             beta_slider.oninput = function() {
-              beta_text.innerHTML = "beta value: " + beta_slider.value/10000; 
+              beta_text.innerHTML = "beta value: " + beta_slider.value/1000; 
               scene.objects.forEach(elm => {
                 if(elm.euroFilter != null)
-                  elm.euroFilter.set_beta(beta_slider.value/10000);
+                  elm.euroFilter.set_beta(beta_slider.value/1000);
               });
             }
             //end of slider logic

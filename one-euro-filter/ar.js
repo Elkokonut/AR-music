@@ -40,23 +40,14 @@ class BodyTrackerObject extends Object3D {
     change_position2d(mesh, width, height) {
         var keypoint = mesh.find(keypoint => keypoint.name == this.keypoint_name)
         if (keypoint && keypoint.score > 0.90) {
-            //console.log(this.obj.scale)
             this.obj.visible = true;
             var x = (keypoint.x - width / 2);
             var y = - (keypoint.y - height / 2);
             if (!this.euroFilter)
-                this.euroFilter = new OneEuroFilter2D(x, y, Date.now(), 0.0, 0.004, 0.7, 1.0)
+                this.euroFilter = new OneEuroFilter2D(x, y, Date.now(), 0.002, 0.3);
             else {
-                var estimation = this.euroFilter.call(x, y)
-                // console.log(this.euroFilter.xfilter.beta);
-                // console.log(this.euroFilter.yfilter.beta);
-                // console.log(this.euroFilter.xfilter.min_cutoff);
-                // console.log(this.euroFilter.yfilter.min_cutoff);
+                var estimation = this.euroFilter.call(x, y);
                 if (estimation) {
-                    console.log(`x value: ${x}`);
-                    console.log(`x estimation: ${estimation[0]}`);
-                    console.log(`y value : ${y}`);
-                    console.log(`y estimation: ${estimation[1]}`);
                     x = estimation[0];
                     y = estimation[1];
                 }
@@ -66,8 +57,6 @@ class BodyTrackerObject extends Object3D {
         }
         else
             this.obj.visible = false;
-        return null;
-
     }
 }
 
@@ -147,8 +136,11 @@ class Scene {
 
 
     animate() {
-        requestAnimationFrame(this.animate);
-        this.renderer.render(this.scene, this.camera);
+        function render() {
+            requestAnimationFrame(this.animate);
+            this.renderer.render(this.scene, this.camera);
+        }
+        render();
     }
 
 }

@@ -9,10 +9,9 @@ function exponential_smoothing(a, x, x_prev) {
 }
 
 export default class OneEuroFilter2D {
-    constructor(x0, y0, t0 = Date.now(), dx0 = 0.0, min_cutoff = 1.0, beta = 0.00001,
-        d_cutoff = 1.0) {
-        this.xfilter = new OneEuroFilter(x0, t0, dx0, min_cutoff, beta, d_cutoff);
-        this.yfilter = new OneEuroFilter(y0, t0, dx0, min_cutoff, beta, d_cutoff);
+    constructor(x0, y0, t0 = Date.now(), min_cutoff, beta) {
+        this.xfilter = new OneEuroFilter(x0, t0, min_cutoff, beta);
+        this.yfilter = new OneEuroFilter(y0, t0, min_cutoff, beta);
     }
 
     call(x, y, t = Date.now()) {
@@ -34,15 +33,15 @@ export default class OneEuroFilter2D {
 }
 
 class OneEuroFilter {
-    constructor(x0, t0, dx0, min_cutoff, beta, d_cutoff) {
+    constructor(x0, t0, min_cutoff, beta) {
         // Initialize the one euro filter.
         // The parameters.
         this.min_cutoff = min_cutoff;
         this.beta = beta;
-        this.d_cutoff = d_cutoff;
+        this.d_cutoff = 0.001; // period in milliseconds, so default to 0.001 = 1Hz
         // Previous values.
         this.x_prev = x0;
-        this.dx_prev = dx0;
+        this.dx_prev = 0.0;
         this.t_prev = t0;
     }
 
@@ -68,5 +67,6 @@ class OneEuroFilter {
             this.t_prev = t;
             return x_hat;
         }
+        return x;
     }
 }
