@@ -10,25 +10,29 @@ export default class poseDetector {
         this.detectorConfig = {
             runtime: 'tfjs',
             enableSmoothing: true,
-            modelType: 'full'
+            modelType: 'lite'
         };
         this.detector;
         this.webcam;
     }
 
     async init() {
+        await tf.ready();
+        console.log(`Backend is: ${tf.getBackend()}`);
         this.detector = await poseDetection.createDetector(this.model, this.detectorConfig);
         this.webcam = await tf.data.webcam(this.video);
     }
 
     async predictFrameKeypoints2d() {
         const img = await this.webcam.capture();
-        const poses = await this.detector.estimatePoses(img);
+        const poses = await this.detector.estimatePoses(img, {}, Date.now());
         img.dispose();
-        if (poses.length > 0)
+        if (poses.length > 0) {
             return poses[0].keypoints;
-        else
+        }
+        else {
             return null;
+        }
     }//return something like    
     // keypoints: [
     //     {x: 230, y: 220, score: 0.9, score: 0.99, name: "nose"},

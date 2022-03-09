@@ -2,7 +2,7 @@ import BodyTrackerScene from './ar.js';
 
 async function main() {
 
-  var video = document.querySelector('video')
+  var video = document.querySelector('video');
 
   if (navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices.getUserMedia({ video: true })
@@ -23,17 +23,17 @@ async function main() {
             var mcoff_text = document.getElementById("mincutoff_text");
             var beta_text = document.getElementById("beta_text");
             mcoff_slider.oninput = function() {
-              mcoff_text.innerHTML = "mcoff value: " + mcoff_slider.value/10000; 
+              mcoff_text.innerHTML = "mcoff value: " + mcoff_slider.value/1000; 
               scene.objects.forEach(elm => {
                 if(elm.euroFilter != null)
-                  elm.euroFilter.set_mcoff(mcoff_slider.value/10000);
+                  elm.euroFilter.set_mcoff(mcoff_slider.value/1000);
               });
             }
             beta_slider.oninput = function() {
-              beta_text.innerHTML = "beta value: " + beta_slider.value/1000; 
+              beta_text.innerHTML = "beta value: " + beta_slider.value/100; 
               scene.objects.forEach(elm => {
                 if(elm.euroFilter != null)
-                  elm.euroFilter.set_beta(beta_slider.value/1000);
+                  elm.euroFilter.set_beta(beta_slider.value/100);
               });
             }
             //end of slider logic

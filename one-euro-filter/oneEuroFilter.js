@@ -18,16 +18,14 @@ export default class OneEuroFilter2D {
         return [this.xfilter.call(x, t), this.yfilter.call(y, t)];
     }
 
-    set_mcoff(min_cutoff)
-    {
+    set_mcoff(min_cutoff) {
         this.xfilter.min_cutoff = min_cutoff;
         this.yfilter.min_cutoff = min_cutoff;
     }
 
-    set_beta(beta)
-    {
+    set_beta(beta) {
         this.xfilter.beta = beta;
-        this.yfilter.beta= beta;
+        this.yfilter.beta = beta;
     }
 
 }
@@ -48,7 +46,7 @@ class OneEuroFilter {
     call(x, t = Date.now()) {
         // Compute the filtered signal.
         var t_e = t - this.t_prev;
-        if (t_e > 0) {
+        if (t_e > this.d_cutoff) {
 
             // The filtered derivative of the signal.
             var a_d = smoothing_factor(t_e, this.d_cutoff);
@@ -67,6 +65,6 @@ class OneEuroFilter {
             this.t_prev = t;
             return x_hat;
         }
-        return x;
+        return this.x_prev;
     }
 }

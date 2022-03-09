@@ -29,7 +29,6 @@ class BodyTrackerObject extends Object3D {
 
     animate(mesh, width, height) {
         if (mesh != null) {
-            //console.log(this.type)
             this.change_position2d(mesh, width, height);
         }
         else {
@@ -44,7 +43,7 @@ class BodyTrackerObject extends Object3D {
             var x = (keypoint.x - width / 2);
             var y = - (keypoint.y - height / 2);
             if (!this.euroFilter)
-                this.euroFilter = new OneEuroFilter2D(x, y, Date.now(), 0.002, 0.3);
+                this.euroFilter = new OneEuroFilter2D(x, y, Date.now(), 0.001, 1.0);
             else {
                 var estimation = this.euroFilter.call(x, y);
                 if (estimation) {
@@ -101,6 +100,8 @@ class Scene {
         this.camera = null;
         this.renderer = null;
 
+        this.initialisation = false;
+
         this.objects = []
     }
 
@@ -120,10 +121,11 @@ class Scene {
         document.body.appendChild(this.renderer.domElement);
         document.querySelector('canvas').style = '-moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); transform: scale(-1, 1); filter: FlipH;';
 
-
         this.camera.lookAt(0, 0, 0);
 
-        this.addGridHelper()
+        // this.addGridHelper();
+
+        this.initialisation = true;
     }
 
 
@@ -187,12 +189,13 @@ export default class BodyTrackerScene extends Scene {
 
     constructor(video) {
         super(video);
-        this.pose_detector = new poseDetector(video)
+        this.pose_detector = new poseDetector(video);
     }
 
     async init(width = null, height = null) {
         super.init(width, height);
-        await this.pose_detector.init()
+        await this.pose_detector.init();
+        console.log(`Loaded model:${this.pose_detector.detectorConfig.modelType}`)
 
         this.objects.push(new Cube("leftHandCube", [10, 10, 10], 0x00ff00, "left_wrist", this.scene));
         this.objects.push(new Cube("rightHandCube", [10, 10, 10], 0x0000ff, "right_wrist", this.scene));
@@ -209,18 +212,28 @@ export default class BodyTrackerScene extends Scene {
     async animate() {
 
         var self = this;
+        if (this.initialisation == false)
+            this.init();
 
-        async function render() {
-            requestAnimationFrame(render);
+        this.renderer.setAnimationLoop(async () => {
             var mesh = await self.pose_detector.predictFrameKeypoints2d();
-
             self.objects.forEach(obj => {
                 obj.animate(mesh, self.width, self.height);
             });
             self.renderer.render(self.scene, self.camera);
-        }
+        });
 
-        await render();
+        // async function render() {
+        //     requestAnimationFrame(render);
+        //     var mesh = await self.pose_detector.predictFrameKeypoints2d();
+
+        //     self.objects.forEach(obj => {
+        //         obj.animate(mesh, self.width, self.height);
+        //     });
+        //     self.renderer.render(self.scene, self.camera);
+        // }
+
+        // await render();
 
     }
 }
