@@ -1,4 +1,9 @@
-## Hand tracking POC5 : Three js and tfjs (plane object video)
+## Hand tracking POC4 : Three js and tfjs (One Euro Filter)
+
+### Purpose
+While tracking the hand, using the One Euro Filter to get smooth movement of the 3D Objects.
+
+### Setup 
 
 Please install [node](https://nodejs.org/en/), [yarn](https://yarnpkg.com/) and [parcel](https://parceljs.org/).
 

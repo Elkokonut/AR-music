@@ -1,4 +1,9 @@
-## Hand tracking POC4 : Three js and tfjs (orthographic camera)
+## Hand tracking POC3 : Three js and tfjs (orthographic camera)
+
+### Purpose
+Using the Orthographic camera in the three.js scene while traking the hand (the scene is in 2 dimensions).
+
+### Setup 
 
 Please install [node](https://nodejs.org/en/), [yarn](https://yarnpkg.com/) and [parcel](https://parceljs.org/).
 

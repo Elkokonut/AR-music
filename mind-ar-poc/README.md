@@ -1,9 +1,10 @@
 ## Hand tracking POC2 : Three js and tfjs
 
 ### Purpose
-Using tfjs and three.js in order to track the hand with 3D Objects.
+Using mind-ar-js framework with A-Frame and Three.js in a simple application.
 
 ### Setup 
+#### For three-js-js only
 
 Please install [node](https://nodejs.org/en/), [yarn](https://yarnpkg.com/) and [parcel](https://parceljs.org/).
 

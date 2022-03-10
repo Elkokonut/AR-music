@@ -197,8 +197,8 @@ export default class BodyTrackerScene extends Scene {
         await this.pose_detector.init();
         console.log(`Loaded model:${this.pose_detector.detectorConfig.modelType}`)
 
-        this.objects.push(new Cube("leftHandCube", [10, 10, 10], 0x00ff00, "left_wrist", this.scene));
-        this.objects.push(new Cube("rightHandCube", [10, 10, 10], 0x0000ff, "right_wrist", this.scene));
+        this.objects.push(new Cube("leftHandCube", [20, 20, 20], 0x00ff00, "left_wrist", this.scene));
+        this.objects.push(new Cube("rightHandCube", [20, 20, 20], 0x0000ff, "right_wrist", this.scene));
 
         for (var index in this.#keypoints_names) {
             if (this.#keypoints_names[index].includes("left"))

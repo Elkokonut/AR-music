@@ -1,7 +1,7 @@
-## Hand tracking POC2 : Three js and tfjs
+## Three-js - POC 0
 
 ### Purpose
-Using tfjs and three.js in order to track the hand with 3D Objects.
+To try Three.js in a simple application using the camera, drawing a cube in top of it.
 
 ### Setup 
 

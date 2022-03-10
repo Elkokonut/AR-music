@@ -1,4 +1,10 @@
-## Air Drum POC
+## Air Drum POC 1
+
+### Purpose
+Using tfjs to track body keypoints and trigger events at some positions.
+
+### Setup 
+
 
 Please install [node](https://nodejs.org/en/), [yarn](https://yarnpkg.com/) and [parcel](https://parceljs.org/).
 
