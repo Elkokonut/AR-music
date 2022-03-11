@@ -1,0 +1,20 @@
+{
+  "name": "hand-tracking-poc-1",
+  "version": "1.0.0",
+  "main": "app.js",
+  "license": "MIT",
+  "dependencies": {
+    "@david18284/one-euro-filter": "^1.0.2",
+    "@mediapipe/pose": "^0.5.1635988162",
+    "@tensorflow-models/pose-detection": "^1.0.1",
+    "@tensorflow/tfjs": "^3.13.0",
+    "@tensorflow/tfjs-backend-webgl": "^3.13.0",
+    "three": "^0.138.2",
+    "three-orbitcontrols": "^2.110.3"
+  },
+  "devDependencies": {
+    "buffer": "^6.0.3",
+    "os-browserify": "^0.3.0",
+    "process": "^0.11.10"
+  }
+}
