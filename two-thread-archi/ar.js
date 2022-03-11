@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import poseDetector from "./ia.js"
 import OneEuroFilter2D from './oneEuroFilter.js';
 
 

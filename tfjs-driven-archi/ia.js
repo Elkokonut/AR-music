@@ -48,10 +48,6 @@ export default class poseDetector {
     async mainLoop(scene)
     {
         var nb_called = 0;
-        var intervall_sec = setInterval(() => {
-            console.log(nb_called);
-            nb_called = 0;
-        }, 1000)
         /*eslint no-constant-condition: 0*/
         while(true)
         {
