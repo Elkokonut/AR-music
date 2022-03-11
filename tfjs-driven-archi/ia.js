@@ -52,6 +52,7 @@ export default class poseDetector {
             console.log(nb_called);
             nb_called = 0;
         }, 1000)
+        /*eslint no-constant-condition: 0*/
         while(true)
         {
             var keypoints = await this.predictFrameKeypoints2d();

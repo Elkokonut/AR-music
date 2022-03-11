@@ -90,6 +90,7 @@ export default class poseDetector {
 
     async mainLoop(scene)
     {
+        /*eslint no-constant-condition: 0*/
         while(true)
         {
             var keypoints = await this.predictFrameKeypoints2d();
