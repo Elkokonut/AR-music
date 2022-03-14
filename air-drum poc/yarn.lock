@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@mediapipe/pose/-/pose-0.5.1635988162.tgz#905e626cb07bce86c692d8ec057f04558ddd26fe"
   integrity sha512-t0dpl+iG/MTPtPPxEYHyVWo+X7G+qgYUYaB4y9pxavQRNzuQQeHeSmUnT+A8qOKnuB0ccxgyrrFmGUaaL0F3wQ==
 
-"@tensorflow-models/pose-detection@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@tensorflow-models/pose-detection/-/pose-detection-1.0.1.tgz#7d536b62b0fa5878eda7f8c36b67bae7d111712d"
-  integrity sha512-BWVGUxfW+GcOGT1F+ReTYwsKYnKKN/4CduPq+oytC8dhxmt23qzTNozEnuwi7zphBMCc+8FZwF1J65jK/+d2AQ==
+"@tensorflow-models/pose-detection@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@tensorflow-models/pose-detection/-/pose-detection-2.0.0.tgz#2656be3718ee85b01d84611d69889d9a1cf4b0ec"
+  integrity sha512-e7yaVoCeqR8s6cp9obNJJ7wa5a4VL/JSmI8uJ3qjIbvDY9iQQVtX+AHleZb0FsN7IlivfGRzmFSMEl7RnPauvQ==
   dependencies:
     rimraf "^3.0.2"
 
