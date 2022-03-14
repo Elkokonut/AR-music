@@ -3,7 +3,8 @@ import * as tf from '@tensorflow/tfjs';
 import '@tensorflow/tfjs-backend-webgl';
 
 export default class poseDetector {
-    constructor() {
+    constructor(video) {
+        this.video = video;
         this.model = poseDetection.SupportedModels.BlazePose;
         this.detectorConfig = {
             runtime: 'tfjs',
