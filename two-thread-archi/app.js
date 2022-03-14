@@ -12,7 +12,7 @@ async function main() {
         video.srcObject = localMediaStream;
         video.style.display = "none";
         var streaming = false;
-        video.addEventListener('playing', async function () {
+        video.addEventListener('canplay', async function () {
           if (!streaming) {
             streaming = true;
             var scene = new BodyTrackerScene(video);
@@ -20,26 +20,7 @@ async function main() {
             var pose_detector = new poseDetector(video);
             await pose_detector.init();
             await pose_detector.mainLoop(scene);
-            //sliders logic
-            var mcoff_slider = document.getElementById("mincutoff_slider");
-            var beta_slider = document.getElementById("beta_slider");
-            var mcoff_text = document.getElementById("mincutoff_text");
-            var beta_text = document.getElementById("beta_text");
-            mcoff_slider.oninput = function() {
-              mcoff_text.innerHTML = "mcoff value: " + mcoff_slider.value/1000; 
-              scene.objects.forEach(elm => {
-                if(elm.euroFilter != null)
-                  elm.euroFilter.set_mcoff(mcoff_slider.value/1000);
-              });
-            }
-            beta_slider.oninput = function() {
-              beta_text.innerHTML = "beta value: " + beta_slider.value/100; 
-              scene.objects.forEach(elm => {
-                if(elm.euroFilter != null)
-                  elm.euroFilter.set_beta(beta_slider.value/100);
-              });
-            }
-            //end of slider logic
+            video.play();
 
           }
         }, false);

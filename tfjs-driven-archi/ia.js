@@ -20,11 +20,10 @@ export default class poseDetector {
         await tf.ready();
         console.log(`Backend is: ${tf.getBackend()}`);
         this.detector = await poseDetection.createDetector(this.model, this.detectorConfig);
-        this.webcam = await tf.data.webcam(this.video);
     }
 
     async predictFrameKeypoints2d() {
-        const img = await this.webcam.capture();
+        var img = tf.browser.fromPixels(this.video);
         const poses = await this.detector.estimatePoses(img, {}, Date.now());
         img.dispose();
         if (poses.length > 0) {
@@ -35,24 +34,13 @@ export default class poseDetector {
         }
     }
 
-    async predictFrameKeypoints3d() {
-        const img = await this.webcam.capture();
-        const poses = await this.detector.estimatePoses(img);
-        img.dispose();
-        if (poses.length > 0)
-            return poses[0].keypoints3D;
-        else
-            return null;
-    }
-
     async mainLoop(scene)
     {
         /*eslint no-constant-condition: 0*/
         while(true)
         {
             var keypoints = await this.predictFrameKeypoints2d();
-            if (keypoints !== null)
-                scene.render_scene(keypoints);
+            scene.render_scene(keypoints);
             await tf.nextFrame();
         }
     }
