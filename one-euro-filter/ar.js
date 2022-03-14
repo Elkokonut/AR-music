@@ -224,7 +224,7 @@ export default class BodyTrackerScene extends Scene {
         setInterval(() => {console.log(nb_calls);
         nb_calls = 0;}, 1000);
         this.renderer.setAnimationLoop(async () => {
-            var mesh = await self.pose_detector.predictFrameKeypoints2d(this.video);
+            var mesh = await self.pose_detector.predictFrameKeypoints2d();
             nb_calls++;
             self.objects.forEach(obj => {
                 obj.animate(mesh, self.width, self.height);
