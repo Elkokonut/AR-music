@@ -48,9 +48,13 @@ export default class poseDetector {
     async mainLoop(scene)
     {
         /*eslint no-constant-condition: 0*/
+        var nb_calls = 0;
+        setInterval(() => {console.log(nb_calls);
+        nb_calls = 0;}, 1000);
         while(true)
         {
             var keypoints = await this.predictFrameKeypoints2d();
+            nb_calls++;
             if (keypoints !== null)
                 scene.render_scene(keypoints);
             await tf.nextFrame();
