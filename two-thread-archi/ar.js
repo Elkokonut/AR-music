@@ -30,9 +30,6 @@ class BodyTrackerObject extends Object3D {
         if (mesh != null) {
             this.change_position2d(mesh, width, height);
         }
-        else {
-            this.obj.visible = false;
-        }
     }
 
     change_position2d(mesh, width, height) {
@@ -202,14 +199,19 @@ export default class BodyTrackerScene extends Scene {
             else
                 this.objects.push(new Disk(this.#keypoints_names[index], 0xff00ff, this.scene));
         }
-
+        var nb_calls_render = 0;
+        setInterval(() => {
+            document.getElementById("frameRateRender").innerHTML = 'Render FrameRate: ' + nb_calls_render;
+            nb_calls_render = 0;
+        }, 1000);
         this.renderer.setAnimationLoop(() => {
+            nb_calls_render++;
+            this.move_objects(null);
             this.renderer.render(this.scene, this.camera);
         });
     }
 
-    async move_objects(mesh)
-    {
+    move_objects(mesh) {
         this.objects.forEach(obj => {
             obj.animate(mesh, this.width, this.height);
         });
