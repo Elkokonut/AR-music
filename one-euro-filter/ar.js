@@ -220,13 +220,19 @@ export default class BodyTrackerScene extends Scene {
         var self = this;
         if (this.initialisation == false)
             this.init();
-
+        var nb_calls_render = 0;
+        setInterval(() => {
+            document.getElementById("frameRateRender").innerHTML = 'Render FrameRate: ' + nb_calls_render;
+            nb_calls_render = 0;
+        }, 1000);
         this.renderer.setAnimationLoop(async () => {
-            var mesh = await self.pose_detector.predictFrameKeypoints2d(this.video);
+            var mesh = await self.pose_detector.predictFrameKeypoints2d();
+            nb_calls_render++;
             self.objects.forEach(obj => {
                 obj.animate(mesh, self.width, self.height);
-            });
+            });        
             self.renderer.render(self.scene, self.camera);
+            
         });
 
     }

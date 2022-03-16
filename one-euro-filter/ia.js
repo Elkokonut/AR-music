@@ -3,7 +3,8 @@ import * as tf from '@tensorflow/tfjs';
 import '@tensorflow/tfjs-backend-webgl';
 
 export default class poseDetector {
-    constructor() {
+    constructor(video) {
+        this.video = video;
         this.model = poseDetection.SupportedModels.BlazePose;
         this.detectorConfig = {
             runtime: 'tfjs',
@@ -20,8 +21,8 @@ export default class poseDetector {
         this.detector = await poseDetection.createDetector(this.model, this.detectorConfig);
     }
 
-    async predictFrameKeypoints2d(video) {
-        var img = tf.browser.fromPixels(video);
+    async predictFrameKeypoints2d() {
+        var img = tf.browser.fromPixels(this.video);
         const poses = await this.detector.estimatePoses(img, {}, Date.now());
         img.dispose();
         if (poses.length > 0) {

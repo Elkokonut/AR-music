@@ -33,13 +33,18 @@ export default class poseDetector {
             return null;
         }
     }
-    
-    async mainLoop(scene)
-    {
+
+    async mainLoop(scene) {
+        var nb_calls = 0;
+        setInterval(() => {
+            document.getElementById("frameRateAI").innerHTML = 'AI FrameRate: ' + nb_calls;
+            nb_calls = 0;
+        }
+            , 1000);
         /*eslint no-constant-condition: 0*/
-        while(true)
-        {
+        while (true) {
             var keypoints = await this.predictFrameKeypoints2d();
+            nb_calls++;
             if (keypoints !== null)
                 scene.move_objects(keypoints);
             await tf.nextFrame();
