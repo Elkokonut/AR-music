@@ -131,16 +131,6 @@ class Scene {
         this.scene.add(axesHelper);
         this.scene.add(gridHelper);
     }
-
-
-    animate() {
-        function render() {
-            requestAnimationFrame(this.animate);
-            this.renderer.render(this.scene, this.camera);
-        }
-        render();
-    }
-
 }
 
 
@@ -204,11 +194,68 @@ export default class BodyTrackerScene extends Scene {
             document.getElementById("frameRateRender").innerHTML = 'Render FrameRate: ' + nb_calls_render;
             nb_calls_render = 0;
         }, 1000);
-        this.renderer.setAnimationLoop(() => {
+
+
+        function FpsCtrl(fps, callback) {
+
+            var delay = 1000 / fps,                               // calc. time per frame
+                time = null,                                      // start time
+                frame = -1,                                       // frame count
+                tref;                                             // rAF time reference
+        
+            function loop(timestamp) {
+                if (time === null) time = timestamp;              // init start time
+                var seg = Math.floor((timestamp - time) / delay); // calc frame no.
+                if (seg > frame) {                                // moved to next frame?
+                    frame = seg;                                  // update
+                    callback({                                    // callback function
+                        time: timestamp,
+                        frame: frame
+                    })
+                }
+                tref = requestAnimationFrame(loop)
+            }
+            // play status
+            this.isPlaying = false;
+
+            // set frame-rate
+            this.frameRate = function(newfps) {
+                if (!arguments.length) return fps;
+                fps = newfps;
+                delay = 1000 / fps;
+                frame = -1;
+                time = null;
+            };
+
+            // enable starting/pausing of the object
+            this.start = function() {
+                if (!this.isPlaying) {
+                    this.isPlaying = true;
+                    tref = requestAnimationFrame(loop);
+                }
+            };
+
+            this.pause = function() {
+                if (this.isPlaying) {
+                    cancelAnimationFrame(tref);
+                    this.isPlaying = false;
+                    time = null;
+                    frame = -1;
+                }
+            };
+        }
+        var fc = new FpsCtrl(60, () => {
+            // render each frame here
             nb_calls_render++;
             this.move_objects(null);
             this.renderer.render(this.scene, this.camera);
-        });
+         });
+         fc.start();
+        // this.renderer.setAnimationLoop(() => {
+        //     nb_calls_render++;
+        //     this.move_objects(null);
+        //     this.renderer.render(this.scene, this.camera);
+        // });
     }
 
     move_objects(mesh) {

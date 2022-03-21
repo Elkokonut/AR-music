@@ -43,11 +43,11 @@ export default class poseDetector {
             , 1000);
         /*eslint no-constant-condition: 0*/
         while (true) {
+            await tf.nextFrame();
             var keypoints = await this.predictFrameKeypoints2d();
             nb_calls++;
             if (keypoints !== null)
                 scene.move_objects(keypoints);
-            await tf.nextFrame();
         }
     }
 }
