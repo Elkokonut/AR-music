@@ -23,7 +23,7 @@ async function main() {
             await pose_detector.mainLoop(scene);
 
           }
-        }, false);
+        });
       })
       .catch(function (error) {
         console.log("Something went wrong!", error);

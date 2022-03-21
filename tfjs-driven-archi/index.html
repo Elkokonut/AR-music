@@ -1,27 +1,41 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>Test Hand Tracking</title>
-		<style>
-			body {
-				margin: 0;
-			}
-	
-			video {
-				width: 100vw;
-				height: 100vh;
-				position: relative;
-				overflow: hidden;
-			}
-		</style>
-	</head>
-	<body>
-		<p id="frameRateAI"></p>
-        <video autoplay loop></video>
 
-		<script type="module" src="./ia.js"></script>
-		<script type="module" src="./ar.js"></script>
-		<script type="module" src="./app.js"></script>
-	</body>
+<head>
+	<meta charset="utf-8">
+	<title>Test Hand Tracking</title>
+	<style>
+		body {
+			margin: 0;
+		}
+
+		video {
+			width: 100vw;
+			height: 100vh;
+			position: relative;
+			overflow: hidden;
+		}
+
+		canvas {
+			-moz-transform: scale(-1, 1);
+			-webkit-transform: scale(-1, 1);
+			-o-transform: scale(-1, 1);
+			transform: scale(-1, 1);
+			filter: FlipH;
+			width: 100%;
+			max-width: 100%;
+			height: 100%;
+		}
+	</style>
+</head>
+
+<body>
+	<p id="frameRateAI"></p>
+	<video autoplay loop></video>
+
+	<script type="module" src="./ia.js"></script>
+	<script type="module" src="./ar.js"></script>
+	<script type="module" src="./app.js"></script>
+</body>
+
 </html>

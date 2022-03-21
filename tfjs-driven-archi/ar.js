@@ -120,8 +120,14 @@ class Scene {
 
         this.renderer.setSize(this.width, this.height);
         document.body.appendChild(this.renderer.domElement);
-        document.querySelector('canvas').style = '-moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); transform: scale(-1, 1); filter: FlipH;';
-
+        document.querySelector('canvas').style = '-moz-transform: scale(-1, 1); \
+                                                    -webkit-transform: scale(-1, 1); \
+                                                    -o-transform: scale(-1, 1); \
+                                                    transform: scale(-1, 1); \
+                                                    filter: FlipH;\
+                                                    width: 100%; \
+                                                    max-width: 100%; \
+                                                    height: 100%;';
         this.camera.lookAt(0, 0, 0);
 
         // this.addGridHelper();

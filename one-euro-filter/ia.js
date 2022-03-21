@@ -13,16 +13,23 @@ export default class poseDetector {
         };
         this.detector;
         this.webcam;
+        this.nb_calls = 0;
     }
 
     async init() {
         await tf.ready();
         console.log(`Backend is: ${tf.getBackend()}`);
         this.detector = await poseDetection.createDetector(this.model, this.detectorConfig);
+        setInterval(() => {
+            document.getElementById("frameRateAI").innerHTML = 'AI FrameRate: ' + this.nb_calls;
+            this.nb_calls = 0;
+        }
+            , 1000);
     }
 
     async predictFrameKeypoints2d() {
         var img = tf.browser.fromPixels(this.video);
+        this.nb_calls++;
         const poses = await this.detector.estimatePoses(img, {}, Date.now());
         img.dispose();
         if (poses.length > 0) {
