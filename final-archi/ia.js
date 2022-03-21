@@ -46,7 +46,7 @@ export default class poseDetector {
             await tf.nextFrame();
             var keypoints = await this.predictFrameKeypoints2d();
             nb_calls++;
-            if (keypoints !== null)
+            if (keypoints)
                 scene.move_objects(keypoints);
         }
     }

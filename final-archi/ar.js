@@ -34,7 +34,7 @@ class BodyTrackerObject extends Object3D {
 
     change_position2d(mesh, width, height) {
         var keypoint = mesh.find(keypoint => keypoint.name == this.keypoint_name)
-        if (keypoint && keypoint.score > 0.90) {
+        if (keypoint && keypoint.score > 0.85) {
             this.obj.visible = true;
             var x = (keypoint.x - width / 2);
             var y = - (keypoint.y - height / 2);
