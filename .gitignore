@@ -110,3 +110,4 @@ dist
 # Vscode files
 .vscode
 .DS_Store
+*.mp4
