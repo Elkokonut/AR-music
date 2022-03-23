@@ -95,9 +95,6 @@ async function initPage() {
   await pose_detector.mainLoop(scene);
 }
 
-video.addEventListener('loadeddata', (event) => {
-  console.log('loadeddata');
-});
 
 function createButton() {
   let btn = document.createElement("button");
