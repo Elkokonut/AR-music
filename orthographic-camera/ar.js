@@ -7,6 +7,8 @@ function change_position2d(cube, keypoint, width, height) {
         cube.visible = true;
         cube.position.x = (keypoint.x - width / 2);
         cube.position.y = - (keypoint.y - height / 2);
+
+        // console.log(cube.position);
     }
     else
         cube.visible = false
@@ -33,6 +35,8 @@ function add_mesh_body(scene, mesh, width, height) {
             obj.visible = true;
             obj.position.x = (keypoint.x - width / 2);
             obj.position.y = - (keypoint.y - height / 2);
+            if ((obj.name == "nose"))
+                console.log(obj.position);
         }
         else {
             obj = scene.getObjectByName(keypoint.name);
