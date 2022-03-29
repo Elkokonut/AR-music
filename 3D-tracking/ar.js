@@ -11,6 +11,8 @@ class Object3D {
         this.scene = scene;
         this.obj = obj;
         this.obj.name = name;
+
+        this.z = 0;
         if (position)
             this.obj.position.set(position[0], position[1], position[2]);
         if (scale)
@@ -38,8 +40,8 @@ class BodyTrackerObject extends Object3D {
         }
     }
 
-    get_position2D(keypoint, width, height) {
-        var positions = [(keypoint.x - width / 2), - (keypoint.y - height / 2)];
+    get_position(keypoint, width, height) {
+        var positions = [(keypoint.x - width / 2), - (keypoint.y - height / 2), keypoint.z / 10000];
         if (!this.euroFilter)
             this.euroFilter = new OneEuroFilterMD(positions, Date.now(), 0.001, 1.0);
         else {
@@ -52,13 +54,13 @@ class BodyTrackerObject extends Object3D {
     }
 
     change_position2d(mesh, width, height) {
-        var keypoint = mesh.find(keypoint => keypoint.name == this.keypoint_name)
+        var keypoint = mesh.find(keypoint => keypoint.name == this.keypoint_name);
         if (keypoint && keypoint.score > 0.80) {
             this.obj.visible = true;
-            var positions = this.get_position2D(keypoint, width, height);
-            // console.log(positions);
+            var positions = this.get_position(keypoint, width, height);
             this.obj.position.x = positions[0];
             this.obj.position.y = positions[1];
+            this.z = positions[2];
         }
         else
             this.obj.visible = false;
@@ -79,6 +81,11 @@ class Cube extends BodyTrackerObject {
         this.cube.rotation.x += 0.01;
         this.cube.rotation.y += 0.01;
         super.animate(mesh, width, height)
+
+        if (distance[this.type])
+            this.obj.scale.x = this.scale[0] * (distance[this.type] + 1);
+        this.obj.scale.y = this.scale[1] * (distance[this.type] + 1);
+        this.obj.scale.z = this.scale[2] * (distance[this.type] + 1);
     }
 }
 
@@ -93,9 +100,9 @@ class Disk extends BodyTrackerObject {
     animate(mesh, distance, width, height) {
         super.animate(mesh, width, height);
         if (distance[this.type])
-            this.obj.scale.x = (distance[this.type] + 1);
-            this.obj.scale.y = (distance[this.type] + 1);
-            this.obj.scale.z = (distance[this.type] + 1);
+            this.obj.scale.x = 2 * (distance[this.type] + 1);
+        this.obj.scale.y = 2 * (distance[this.type] + 1);
+        this.obj.scale.z = 2 * (distance[this.type] + 1);
     }
 }
 
@@ -131,7 +138,9 @@ class Scene {
 
         this.renderer = new THREE.WebGLRenderer();
 
-        this.renderer.setSize(this.width, this.height);
+        var ratio = window.innerWidth / this.width;
+        var renderheight = ratio * this.height;
+        this.renderer.setSize(window.innerWidth, renderheight);
         document.body.appendChild(this.renderer.domElement);
         document.querySelector('canvas').style = '-moz-transform: scale(-1, 1); \
                                                     -webkit-transform: scale(-1, 1); \
@@ -188,13 +197,13 @@ export default class BodyTrackerScene extends Scene {
                 "mouth_right"
             ],
             [
-                "left",
-                "right"
+                "left_eye_outer",
+                "right_eye_outer"
             ],
             0xffff00,
             {
                 "min": "10",
-                "max": "20"
+                "max": "250"
             }
         ],
         "body": [
@@ -220,8 +229,8 @@ export default class BodyTrackerScene extends Scene {
             ],
             0xff00ff,
             {
-                "min": "100",
-                "max": "300"
+                "min": "10",
+                "max": "400"
             }
         ],
         "right_hand": [
@@ -232,12 +241,12 @@ export default class BodyTrackerScene extends Scene {
                 "right_thumb"
             ],
             [
-                "right_wrist",
+                "right_pinky",
                 "right_thumb"
             ],
             0x00FFAC,
             {
-                "min": "10",
+                "min": "0",
                 "max": "50"
             }
         ],
@@ -249,12 +258,12 @@ export default class BodyTrackerScene extends Scene {
                 "left_thumb"
             ],
             [
-                "left_wrist",
+                "left_pinky",
                 "left_thumb"
             ],
             0x00F9FF,
             {
-                "min": "10",
+                "min": "0",
                 "max": "50"
             }
         ]
@@ -284,21 +293,19 @@ export default class BodyTrackerScene extends Scene {
     }
 
     editDistances(tmp_positions) {
+        var out_min = -0.999999999;
+        var out_max = 1;
         for (const [type, dist] of Object.entries(this.distances)) {
             if (tmp_positions[type] && tmp_positions[type].length == 2) {
-                var min = this.keypoints_infos[type][3]["min"];
-                var max = this.keypoints_infos[type][3]["max"];
-                var mean = (max + min) / 2;
-                var std = (max + min);
+                var in_min = this.keypoints_infos[type][3]["min"];
+                var in_max = this.keypoints_infos[type][3]["max"];
                 var tmp = distance(tmp_positions[type][0], tmp_positions[type][1]);
-                tmp = Math.min(max, tmp);
-                tmp = Math.max(min, tmp);
-                tmp = (tmp - mean) / std;
+                tmp = Math.min(in_max, tmp);
+                tmp = Math.max(in_min, tmp);
+                tmp = (tmp - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
                 this.distances[type] = tmp;
             }
         }
-        console.log("distances: ");
-        console.log(this.distances);
     }
 
 
@@ -319,12 +326,14 @@ export default class BodyTrackerScene extends Scene {
             var distances = {};
             self.objects.forEach(obj => {
                 obj.animate(mesh, self.distances, self.width, self.height);
-                if (obj.constructor.name == "BodyTrackerObject" || Object.getPrototypeOf(obj.constructor).name == "BodyTrackerObject") {
+                if (obj.obj.visible == true
+                    && obj.constructor.name == "BodyTrackerObject"
+                    || Object.getPrototypeOf(obj.constructor).name == "BodyTrackerObject") {
                     var infos = self.keypoints_infos[obj.type];
                     if (infos && infos[1] && infos[1].includes(obj.obj.name)) {
                         if (!distances[obj.type])
                             distances[obj.type] = [];
-                        distances[obj.type].push([obj.obj.position.x, obj.obj.position.y]);
+                        distances[obj.type].push([obj.obj.position.x, obj.obj.position.y, obj.z]);
                     }
                 }
             });

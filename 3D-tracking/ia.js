@@ -39,18 +39,5 @@ export default class poseDetector {
             return null;
         }
     }
-
-    async predictFrameKeypoints3d() {
-        var img = tf.browser.fromPixels(this.video);
-        this.nb_calls++;
-        const poses = await this.detector.estimatePoses(img, {}, Date.now());
-        img.dispose();
-        if (poses.length > 0) {
-            return poses[0].keypoints3D;
-        }
-        else {
-            return null;
-        }
-    }
 }
 
