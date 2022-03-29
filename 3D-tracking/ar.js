@@ -297,7 +297,7 @@ export default class BodyTrackerScene extends Scene {
     editDistances(tmp_positions) {
         var out_min = -0.999999999;
         var out_max = 1;
-        for (const [type, dist] of Object.entries(this.distances)) {
+        for (const [type, _] of Object.entries(this.distances)) {
             if (tmp_positions[type] && tmp_positions[type].length == 2) {
                 var in_min = this.keypoints_infos[type][3]["min"];
                 var in_max = this.keypoints_infos[type][3]["max"];
