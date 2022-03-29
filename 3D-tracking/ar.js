@@ -82,10 +82,11 @@ class Cube extends BodyTrackerObject {
         this.cube.rotation.y += 0.01;
         super.animate(mesh, width, height)
 
-        if (distance[this.type])
+        if (distance[this.type]) {
             this.obj.scale.x = this.scale[0] * (distance[this.type] + 1);
-        this.obj.scale.y = this.scale[1] * (distance[this.type] + 1);
-        this.obj.scale.z = this.scale[2] * (distance[this.type] + 1);
+            this.obj.scale.y = this.scale[1] * (distance[this.type] + 1);
+            this.obj.scale.z = this.scale[2] * (distance[this.type] + 1);
+        }
     }
 }
 
@@ -99,10 +100,11 @@ class Disk extends BodyTrackerObject {
     }
     animate(mesh, distance, width, height) {
         super.animate(mesh, width, height);
-        if (distance[this.type])
+        if (distance[this.type]) {
             this.obj.scale.x = 2 * (distance[this.type] + 1);
-        this.obj.scale.y = 2 * (distance[this.type] + 1);
-        this.obj.scale.z = 2 * (distance[this.type] + 1);
+            this.obj.scale.y = 2 * (distance[this.type] + 1);
+            this.obj.scale.z = 2 * (distance[this.type] + 1);
+        }
     }
 }
 
