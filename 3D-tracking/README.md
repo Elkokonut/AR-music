@@ -1,7 +1,7 @@
-## Hand tracking POC4 : Three js and tfjs (One Euro Filter)
+## POC9 : 3D tracking 
 
 ### Purpose
-While tracking the hand, using the One Euro Filter to get smooth movement of the 3D Objects.
+Scaling keypoints according to estimated depth
 
 ### Setup 
 
