@@ -80,21 +80,21 @@ class BodyTrackerObject extends Object3D {
 }
 
 
-class Cube extends BodyTrackerObject {
-    constructor(name, scale, color, keypoint_name, scene) {
-        const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshBasicMaterial({ color: color });
-        var cube = new THREE.Mesh(geometry, material);
-        super(cube, name, scene, null, scale, keypoint_name);
-        this.cube = cube;
-        this.type = "cube";
-    }
-    animate(mesh, width, height) {
-        this.cube.rotation.x += 0.01;
-        this.cube.rotation.y += 0.01;
-        super.animate(mesh, width, height)
-    }
-}
+// class Cube extends BodyTrackerObject {
+//     constructor(name, scale, color, keypoint_name, scene) {
+//         const geometry = new THREE.BoxGeometry();
+//         const material = new THREE.MeshBasicMaterial({ color: color });
+//         var cube = new THREE.Mesh(geometry, material);
+//         super(cube, name, scene, null, scale, keypoint_name);
+//         this.cube = cube;
+//         this.type = "cube";
+//     }
+//     animate(mesh, width, height) {
+//         this.cube.rotation.x += 0.01;
+//         this.cube.rotation.y += 0.01;
+//         super.animate(mesh, width, height)
+//     }
+// }
 
 class Disk extends BodyTrackerObject {
     constructor(name, color, scene) {
