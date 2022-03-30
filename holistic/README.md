@@ -1,4 +1,4 @@
-## Hand tracking POC7 : Three js and tfjs 
+## Holistic model POC10 
 
 ### Purpose
 Three js and tjfs independently refresh
