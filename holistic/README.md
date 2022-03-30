@@ -1,7 +1,7 @@
 ## Holistic model POC10 
 
 ### Purpose
-Three js and tjfs independently refresh
+Using Holisitc model for tracking.
 
 ### Setup 
 
