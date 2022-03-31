@@ -1,5 +1,13 @@
 {
   "devDependencies": {
     "eslint": "^8.12.0"
+  },
+  "dependencies": {
+    "@mediapipe/camera_utils": "^0.3.1640029074",
+    "@mediapipe/holistic": "^0.5.1635989137",
+    "iphone-inline-video": "^2.2.2",
+    "mathjs": "^10.4.2",
+    "three": "^0.139.0",
+    "three-orbit-controls": "^82.1.0"
   }
 }
