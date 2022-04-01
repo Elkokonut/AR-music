@@ -1,22 +1,15 @@
-on:
-  push:
-  pull_request:
-
+name: workflow
+on: [push]
 jobs:
-  eslint:
-    name: eslint
+  job:
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     steps:
-    - uses: actions/checkout@v1
-    - name: install node v12
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12
-    - name: Adding eslint package.
-      run: yarn add eslint
-    - name: Install packages with yarn.
-      run: yarn install
-    - name: eslint
-      uses: icrawl/action-eslint@v1
-      with:
-        custom-glob: . # only if a different glob is needed, default: src
+      - uses: actions/checkout@v1
+      - name: Prepare
+        run: npm ci
+      - name: Lint
+        uses: mooyoul/tslint-actions@v1.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pattern: '*.ts'
