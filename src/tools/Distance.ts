@@ -1,7 +1,15 @@
 import { distance } from "mathjs";
+import Keypoint from "./Keypoint";
 
 
 export default class Distance {
+    keypoint_a: Keypoint;
+    keypoint_b: Keypoint;
+
+    out_min: number;
+    out_max: number;
+    in_min: number;
+    in_max: number;
 
     constructor(keypoint_a, keypoint_b, out_min, out_max, in_min, in_max) {
         this.keypoint_a = keypoint_a;

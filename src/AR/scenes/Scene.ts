@@ -1,7 +1,16 @@
 import * as THREE from 'three';
 import oc from 'three-orbit-controls';
+import Object3D from '../objects/Object3D';
 
 export default class Scene {
+    video: HTMLVideoElement;
+    scene: THREE.Scene;
+    camera: THREE.PerspectiveCamera | THREE.OrthographicCamera;
+    renderer: THREE.WebGLRenderer;
+    controls: any;
+    initialisation: boolean;
+    objects: Object3D[];
+
     constructor(video) {
         this.video = video;
         this.scene = null;

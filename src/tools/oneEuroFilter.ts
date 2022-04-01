@@ -9,6 +9,8 @@ function exponential_smoothing(a, x, x_prev) {
 }
 
 export default class OneEuroFilterMD {
+    filters: OneEuroFilter[];
+    
     constructor(entries, t0 = Date.now(), min_cutoff, beta) {
         this.filters = []
         entries.forEach(point => {
@@ -41,6 +43,13 @@ export default class OneEuroFilterMD {
 }
 
 class OneEuroFilter {
+    min_cutoff: number;
+    beta: number;
+    d_cutoff: Number;
+    x_prev: number;
+    dx_prev: number;
+    t_prev: number;
+
     constructor(x0, t0, min_cutoff, beta) {
         // Initialize the one euro filter.
         // The parameters.

@@ -2,9 +2,14 @@ var keypoint_json = require("../../tools/keypoints.json");
 import Scene from './Scene.js';
 import Disk from "../objects/Disk.js"
 import { initDistance, generateKeypoints } from "../../tools/keypoints_helper.js"
+import Keypoint from '../../tools/Keypoint';
+import Distance from '../../tools/Distance';
 
 
 export default class BodyTrackerScene extends Scene {
+    keypoints: Keypoint[];
+    distances: { [key: string]: Distance };
+    debug: boolean;
 
     constructor(video, debug) {
         super(video);

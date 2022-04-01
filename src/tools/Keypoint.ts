@@ -1,6 +1,16 @@
 import OneEuroFilterMD from "./oneEuroFilter.js";
 
 export default class Keypoint {
+    type: string;
+    order: number;
+
+    euroFilter: OneEuroFilterMD;
+
+    x: number;
+    y: number;
+    z: number;
+
+    is_visible: boolean;
 
     constructor(type, order) {
         this.type = type;
