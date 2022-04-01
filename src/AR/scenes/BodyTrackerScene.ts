@@ -1,4 +1,6 @@
-var keypoint_json = require("../../tools/keypoints.json");
+declare function require(name:string);
+
+var keypoint_json = require("../../../ressources/keypoints.json");
 import Scene from './Scene.js';
 import Disk from "../objects/Disk.js"
 import { initDistance, generateKeypoints } from "../../tools/keypoints_helper.js"

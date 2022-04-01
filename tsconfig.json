@@ -4,7 +4,13 @@
       "allowJs": true,
       "target": "es6",
       "noEmitOnError": true,
-      "moduleResolution": "node12"
+      "moduleResolution": "node",
+      "lib": [
+        "ES2017",
+        "dom"
+    ]
     },
-    "include": ["./src/**/*"]
+    "include": ["./src/**/*"],
+    "typeRoots": ["src/types/global.d.ts"],
+  
   }

@@ -3,9 +3,9 @@ import poseDetector from './AI/holistic.js';
 import enableInlineVideo from 'iphone-inline-video';
 
 var webcam = true;
-var video = document.querySelector('#webcam');
+var video: HTMLVideoElement = document.querySelector('#webcam');
 
-window.APPNamespace = {};
+globalThis.APPNamespace = {};
 
 enableInlineVideo(video);
 
@@ -57,7 +57,7 @@ video.addEventListener('pause', async function () {
 
 
 async function initPage() {
-  var scene = new BodyTrackerScene(video);
+  var scene = new BodyTrackerScene(video, true);
   await scene.init();
   var promise = video.play();
   if (promise !== undefined) {
@@ -72,14 +72,14 @@ async function initPage() {
     });
   }
 
-  document.querySelector('canvas').style = ' -moz-transform: scale(-1, 1); \
+  document.querySelector('canvas').setAttribute("style", ' -moz-transform: scale(-1, 1); \
                                           -webkit-transform: scale(-1, 1); \
                                           -o-transform: scale(-1, 1); \
                                           transform: scale(-1, 1); \
                                           filter: FlipH; \
                                           width: 100%; \
                                           max-width: 100%; \
-                                          height: 100%;'
+                                          height: 100%;');
   var pose_detector = new poseDetector(video);
   await pose_detector.init(scene);
 }
