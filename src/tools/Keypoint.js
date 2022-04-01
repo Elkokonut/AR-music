@@ -1,4 +1,4 @@
-import OneEuroFilterMD from "../tools/oneEuroFilter.js";
+import OneEuroFilterMD from "./oneEuroFilter.js";
 
 export default class Keypoint {
 

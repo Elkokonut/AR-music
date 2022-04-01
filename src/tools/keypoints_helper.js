@@ -1,5 +1,5 @@
-import Distance from "../AR/distance";
-import Keypoint from "../AR/Keypoint";
+import Distance from "./Distance";
+import Keypoint from "./Keypoint";
 
 export function initDistance(keypoint_json, scene_keypoints) {
     var res = {};
