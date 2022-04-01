@@ -3,7 +3,8 @@
       "outDir": "./built",
       "allowJs": true,
       "target": "es6",
-      "noEmitOnError": true
+      "noEmitOnError": true,
+      "moduleResolution": "node12"
     },
     "include": ["./src/**/*"]
   }
