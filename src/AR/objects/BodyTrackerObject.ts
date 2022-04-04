@@ -1,6 +1,9 @@
 import Object3D from './Object3D.js';
+import Keypoint from '../../tools/Keypoint'
 
 export default class BodyTrackerObject extends Object3D {
+    keypoint: Keypoint;
+    
     constructor(obj, name, keypoint, scale) {
         super(obj, name, scale);
         this.obj.visible = keypoint.is_visible;
@@ -14,12 +17,7 @@ export default class BodyTrackerObject extends Object3D {
             this.obj.position.y = this.keypoint.y;
             this.z = this.keypoint.z;
             this.obj.visible = true;
-
-            if (distance) {
-                this.obj.scale.x = this.scale[0] * (distance + 1);
-                this.obj.scale.y = this.scale[1] * (distance + 1);
-                this.obj.scale.z = this.scale[2] * (distance + 1);
-            }
+            super.animate(distance);
         }
         else {
             this.obj.visible = false;

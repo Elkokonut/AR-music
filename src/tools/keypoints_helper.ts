@@ -2,12 +2,12 @@ import Distance from "./Distance";
 import Keypoint from "./Keypoint";
 
 export function initDistance(keypoint_json, scene_keypoints) {
-    var res = {};
+    const res = {};
     for (const [type, keypoints_info] of Object.entries(keypoint_json))
     {
-        var keypoints_names = keypoints_info[0];
-        var keypoint_a = scene_keypoints.find(keypoint => keypoint.order == keypoints_names.indexOf(keypoints_info[1][0]) && keypoint.type == type);
-        var keypoint_b = scene_keypoints.find(keypoint => keypoint.order == keypoints_names.indexOf(keypoints_info[1][1]) && keypoint.type == type);
+        const keypoints_names = keypoints_info[0];
+        const keypoint_a = scene_keypoints.find(keypoint => keypoint.order == keypoints_names.indexOf(keypoints_info[1][0]) && keypoint.type == type);
+        const keypoint_b = scene_keypoints.find(keypoint => keypoint.order == keypoints_names.indexOf(keypoints_info[1][1]) && keypoint.type == type);
         res[type] = new Distance(keypoint_a, keypoint_b, -0.99999999, 1, keypoints_info[2]["min"], keypoints_info[2]["max"]);
     }
 
@@ -16,11 +16,11 @@ export function initDistance(keypoint_json, scene_keypoints) {
 }
 
 export function generateKeypoints(keypoint_json) {
-    var res = [];
+    const res = [];
     for (const [type, keypoints_info] of Object.entries(keypoint_json))
     {
-        var keypoints_names = keypoints_info[0];
-        for (var index in keypoints_names)
+        const keypoints_names = keypoints_info[0];
+        for (const index in keypoints_names)
             res.push(new Keypoint(type, index));
     }
     return res;

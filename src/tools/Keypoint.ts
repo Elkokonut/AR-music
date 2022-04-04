@@ -1,6 +1,16 @@
 import OneEuroFilterMD from "./oneEuroFilter.js";
 
 export default class Keypoint {
+    type: string;
+    order: number;
+
+    euroFilter: OneEuroFilterMD;
+
+    x: number;
+    y: number;
+    z: number;
+
+    is_visible: boolean;
 
     constructor(type, order) {
         this.type = type;
@@ -23,9 +33,9 @@ export default class Keypoint {
 
         if (normalized_values && max_values && normalized_values.length == max_values.length) {
 
-            var res = [];
+            const res = [];
 
-            for (var i = 0; i < normalized_values.length; i++) {
+            for (const i = 0; i < normalized_values.length; i++) {
                 if (!is_valid_normalized_value(normalized_values[i])) {
                     return null;
                 }
@@ -37,15 +47,15 @@ export default class Keypoint {
     }
 
     get_position(keypoint) {
-        var width = window.APPNamespace.width;
-        var height = window.APPNamespace.height;
-        var kp_pix_coord = this._normalized_to_pixel_coordinates([keypoint.x, keypoint.y], [width, height]);
+        const width = globalThis.APPNamespace.width;
+        const height = globalThis.APPNamespace.height;
+        const kp_pix_coord = this._normalized_to_pixel_coordinates([keypoint.x, keypoint.y], [width, height]);
         if (!kp_pix_coord) {
             return null;
         }
-        var positions = [(kp_pix_coord[0] - width / 2), - (kp_pix_coord[1] - height / 2), keypoint.z];
+        const positions = [(kp_pix_coord[0] - width / 2), - (kp_pix_coord[1] - height / 2), keypoint.z];
         if (this.euroFilter) {
-            var estimation = this.euroFilter.call(positions);
+            const estimation = this.euroFilter.call(positions);
             if (estimation) {
                 return estimation;
             }
@@ -54,10 +64,10 @@ export default class Keypoint {
     }
 
     update(keypoints) {
-        var is_visible = false;
+        let is_visible = false;
         if (keypoints && keypoints[this.type]) {
-            var keypoint = keypoints[this.type][this.order];
-            var positions = this.get_position(keypoint);
+            const keypoint = keypoints[this.type][this.order];
+            const positions = this.get_position(keypoint);
             if (positions) {
                 is_visible = true;
                 this.x = positions[0];

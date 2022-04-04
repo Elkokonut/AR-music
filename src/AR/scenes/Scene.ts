@@ -1,7 +1,18 @@
 import * as THREE from 'three';
 import oc from 'three-orbit-controls';
+import BodyTrackerObject from '../objects/BodyTrackerObject';
 
 export default class Scene {
+    video: HTMLVideoElement;
+    scene: THREE.Scene;
+    camera: THREE.PerspectiveCamera | THREE.OrthographicCamera;
+    renderer: THREE.WebGLRenderer;
+
+    /* eslint @typescript-eslint/no-explicit-any: 0 */
+    controls: any;
+    initialisation: boolean;
+    objects: BodyTrackerObject[];
+
     constructor(video) {
         this.video = video;
         this.scene = null;
@@ -18,11 +29,11 @@ export default class Scene {
         console.log("Init Scene");
         
 
-        var ratio = window.innerWidth / this.video.videoWidth;
-        var renderheight = ratio * this.video.videoHeight;
+        const ratio = window.innerWidth / this.video.videoWidth;
+        const renderheight = ratio * this.video.videoHeight;
 
-        window.APPNamespace.height = renderheight;
-        window.APPNamespace.width = window.innerWidth;
+        globalThis.APPNamespace.height = renderheight;
+        globalThis.APPNamespace.width = window.innerWidth;
 
 
         this.scene = new THREE.Scene();
