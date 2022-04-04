@@ -2,8 +2,8 @@ import BodyTrackerScene from './AR/scenes/BodyTrackerScene.js';
 import poseDetector from './AI/holistic.js';
 import enableInlineVideo from 'iphone-inline-video';
 
-var webcam = true;
-var video: HTMLVideoElement = document.querySelector('#webcam');
+const webcam = true;
+const video: HTMLVideoElement = document.querySelector('#webcam');
 
 globalThis.APPNamespace = {};
 
@@ -26,7 +26,7 @@ if (webcam) {
     console.log('Ce navigateur ne supporte pas la méthode getUserMedia');
   }
 }
-var initialisation = false;
+let initialisation = false;
 
 
 video.addEventListener('canplay', async function () {
@@ -57,9 +57,9 @@ video.addEventListener('pause', async function () {
 
 
 async function initPage() {
-  var scene = new BodyTrackerScene(video, true);
+  const scene = new BodyTrackerScene(video, true);
   await scene.init();
-  var promise = video.play();
+  const promise = video.play();
   if (promise !== undefined) {
     promise.catch(error => {
       console.log("Create Button: " + error);
@@ -80,13 +80,13 @@ async function initPage() {
                                           width: 100%; \
                                           max-width: 100%; \
                                           height: 100%;');
-  var pose_detector = new poseDetector(video);
+  const pose_detector = new poseDetector(video);
   await pose_detector.init(scene);
 }
 
 
 function createButton() {
-  let btn = document.createElement("button");
+  const btn = document.createElement("button");
   document.querySelector('canvas').style.display = "none";
   btn.innerHTML = "Start";
   document.body.appendChild(btn);

@@ -4,8 +4,7 @@ import * as pipe_camera from '@mediapipe/camera_utils'
 
 export default class poseDetector {
   video: HTMLVideoElement;
-  model: any;
-  detector: any;
+  model: pipe_holistic.Holistic;
   
   constructor(video) {
     this.video = video;
@@ -14,7 +13,6 @@ export default class poseDetector {
         return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`;
       }
     });
-    this.detector;
   }
 
   async init(scene) {
@@ -37,14 +35,14 @@ export default class poseDetector {
       minDetectionConfidence: 0.5,
       minTrackingConfidence: 0.5
     });
-    var nb_calls = 0;
+    let nb_calls = 0;
     setInterval(() => {
       document.getElementById("frameRateAI").innerHTML = 'AI FrameRate: ' + nb_calls;
       nb_calls = 0;
     }
       , 1000);
     function onResults(results) {
-      var keypoints =
+      const keypoints =
       {
         "body": results.poseLandmarks,
         "left_hand": results.leftHandLandmarks,

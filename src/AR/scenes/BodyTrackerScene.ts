@@ -1,6 +1,6 @@
 declare function require(name:string);
 
-var keypoint_json = require("../../../ressources/keypoints.json");
+const keypoint_json = require("../../../ressources/keypoints.json");
 import Scene from './Scene.js';
 import Disk from "../objects/Disk.js"
 import { initDistance, generateKeypoints } from "../../tools/keypoints_helper.js"
@@ -18,7 +18,7 @@ export default class BodyTrackerScene extends Scene {
         this.keypoints = generateKeypoints(keypoint_json);
         this.distances = initDistance(keypoint_json, this.keypoints);
 
-        this.debug = true;
+        this.debug =  debug;
     }
 
 
@@ -46,14 +46,15 @@ export default class BodyTrackerScene extends Scene {
 
     async animate() {
 
-        var nb_calls_render = 0;
+        let nb_calls_render = 0;
 
         setInterval(() => {
             document.getElementById("frameRateRender").innerHTML = 'Render FrameRate: ' + nb_calls_render;
             nb_calls_render = 0;
         }, 1000);
 
-        var self = this;
+        /* eslint @typescript-eslint/no-this-alias: 0 */
+        const self = this;
 
         async function render() {
             nb_calls_render++;

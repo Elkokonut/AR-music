@@ -1,5 +1,5 @@
 function smoothing_factor(t_e, cutoff) {
-    var r = 2 * Math.PI * cutoff * t_e
+    const r = 2 * Math.PI * cutoff * t_e
     return r / (r + 1)
 }
 
@@ -19,9 +19,9 @@ export default class OneEuroFilterMD {
     }
 
     call(points, t = Date.now()) {
-        var res = [];
-        var length = points.length < this.filters.length ? points.length : this.filters.length;
-        for (var i = 0; i < length; i++)
+        const res = [];
+        const length = points.length < this.filters.length ? points.length : this.filters.length;
+        for (let i = 0; i < length; i++)
         {
             res.push(this.filters[i].call(points[i], t));
         }
@@ -45,7 +45,7 @@ export default class OneEuroFilterMD {
 class OneEuroFilter {
     min_cutoff: number;
     beta: number;
-    d_cutoff: Number;
+    d_cutoff: number;
     x_prev: number;
     dx_prev: number;
     t_prev: number;
@@ -64,19 +64,19 @@ class OneEuroFilter {
 
     call(x, t = Date.now()) {
         // Compute the filtered signal.
-        var t_e = t - this.t_prev;
+        const t_e = t - this.t_prev;
         if (t_e > this.d_cutoff) {
 
             // The filtered derivative of the signal.
-            var a_d = smoothing_factor(t_e, this.d_cutoff);
-            var dx = (x - this.x_prev) / t_e;
-            var dx_hat = exponential_smoothing(a_d, dx, this.dx_prev);
+            const a_d = smoothing_factor(t_e, this.d_cutoff);
+            const dx = (x - this.x_prev) / t_e;
+            const dx_hat = exponential_smoothing(a_d, dx, this.dx_prev);
 
 
             // The filtered signal.
-            var cutoff = this.min_cutoff + this.beta * Math.abs(dx_hat);
-            var a = smoothing_factor(t_e, cutoff);
-            var x_hat = exponential_smoothing(a, x, this.x_prev);
+            const cutoff = this.min_cutoff + this.beta * Math.abs(dx_hat);
+            const a = smoothing_factor(t_e, cutoff);
+            const x_hat = exponential_smoothing(a, x, this.x_prev);
 
             // Memorize the previous values.
             this.x_prev = x_hat;

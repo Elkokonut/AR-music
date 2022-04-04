@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 export default class Object3D {
-    obj: any;
+    obj: THREE.Mesh;
     z: number;
     scale: number[];
     constructor(obj, name, scale) {

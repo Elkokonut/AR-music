@@ -21,9 +21,9 @@ export default class Distance {
     }
 
     getValue() {
-        var pos1 = [this.keypoint_a.x, this.keypoint_a.y, this.keypoint_a.z];
-        var pos2 = [this.keypoint_b.x, this.keypoint_b.y, this.keypoint_b.z];
-        var res = distance(pos1, pos2) as number;
+        const pos1 = [this.keypoint_a.x, this.keypoint_a.y, this.keypoint_a.z];
+        const pos2 = [this.keypoint_b.x, this.keypoint_b.y, this.keypoint_b.z];
+        let res = distance(pos1, pos2) as number;
         res = Math.min(this.in_max, res);
         res = Math.max(this.in_min, res);
         res = (res - this.in_min) * (this.out_max - this.out_min) / (this.in_max - this.in_min) + this.out_min;
