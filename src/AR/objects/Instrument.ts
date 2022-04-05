@@ -1,8 +1,7 @@
 import * as THREE from 'three';
 import BodyTrackerObject from './BodyTrackerObject';
 import Keypoint from '../../tools/Keypoint'
-import FBXLoader from 'three-fbx-loader'
-
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 
 
 export default class Instrument extends BodyTrackerObject {
@@ -20,7 +19,7 @@ export default class Instrument extends BodyTrackerObject {
             console.log("success");
             
             console.log(obj);
-            const inst = new Instrument(obj, name, keypoint, null);
+            const inst = new Instrument(obj, name, keypoint, [10,10,10]);
             
             scene.add3DObject(inst);
         }, (xhr) => {
