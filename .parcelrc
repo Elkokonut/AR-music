@@ -3,6 +3,7 @@
   "reporters":  ["...", "parcel-reporter-static-files-copy"],
   "transformers": {
     "*.fbx": ["@parcel/transformer-raw"],
-    "*.gltf": ["@parcel/transformer-raw"]
+    "*.gltf": ["@parcel/transformer-raw"],
+    "*.obj": ["@parcel/transformer-raw"]
   }
 }

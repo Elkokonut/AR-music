@@ -2,7 +2,7 @@ declare function require(name:string);
 
 import * as THREE from 'three'
 import oc from 'three-orbit-controls';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 const OrbitControls = oc(THREE);
 
 const scene = new THREE.Scene()
@@ -12,7 +12,7 @@ const light = new THREE.PointLight()
 light.position.set(0.8, 1.4, 1.0)
 scene.add(light)
 
-const ambientLight = new THREE.AmbientLight()
+const ambientLight = new THREE.AmbientLight( 0x404040)
 scene.add(ambientLight)
 
 const camera = new THREE.PerspectiveCamera(
@@ -33,19 +33,10 @@ controls.target.set(0, 1, 0)
 
 //const material = new THREE.MeshNormalMaterial()
 
-const loader = new GLTFLoader();
+const loader = new FBXLoader();
 loader.load(
-    require('../static/models/scene.gltf'),
-    (object) => {
-        // object.traverse(function (child) {
-        //     if ((child as THREE.Mesh).isMesh) {
-        //         // (child as THREE.Mesh).material = material
-        //         if ((child as THREE.Mesh).material) {
-        //             ((child as THREE.Mesh).material as THREE.MeshBasicMaterial).transparent = false
-        //         }
-        //     }
-        // })
-        // object.scale.set(.01, .01, .01)
+    require('../static/models/mic/uploads_files_3171311_Microphone_FBX.fbx'),
+    async (object) => {
         scene.add(object)
     },
     (xhr) => {

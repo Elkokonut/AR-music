@@ -1,4 +1,4 @@
-import BodyTrackerObject from './BodyTrackerObject.js';
+import BodyTrackerObject from './BodyTrackerObject';
 import * as THREE from 'three';
 
 export default class Cube extends BodyTrackerObject {

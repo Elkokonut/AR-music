@@ -1,5 +1,5 @@
-import BodyTrackerScene from './AR/scenes/BodyTrackerScene.js';
-import poseDetector from './AI/holistic.js';
+import BodyTrackerScene from './AR/scenes/BodyTrackerScene';
+import poseDetector from './AI/holistic';
 import enableInlineVideo from 'iphone-inline-video';
 
 const webcam = true;
