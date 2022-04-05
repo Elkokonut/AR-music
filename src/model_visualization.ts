@@ -37,6 +37,7 @@ const loader = new FBXLoader();
 loader.load(
     require('../static/models/mic/uploads_files_3171311_Microphone_FBX.fbx'),
     async (object) => {
+        object.position.y = -8;
         scene.add(object)
     },
     (xhr) => {
