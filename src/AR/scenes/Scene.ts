@@ -43,12 +43,29 @@ export default class Scene {
         this.camera.position.z = renderheight;
         this.camera.lookAt(0, 0, 0);
 
+        const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+        this.scene.add( light );
+
         this.renderer = new THREE.WebGLRenderer();
 
         this.renderer.setSize(window.innerWidth, renderheight);
         document.body.appendChild(this.renderer.domElement);
 
         this.initialisation = true;
+    }
+
+    resize()
+    {
+        const ratio = window.innerWidth / this.video.videoWidth;
+        const renderheight = ratio * this.video.videoHeight;
+
+        globalThis.APPNamespace.height = renderheight;
+        globalThis.APPNamespace.width = window.innerWidth;
+
+        this.camera.aspect = window.innerWidth / renderheight;
+        this.camera.updateProjectionMatrix()
+        this.renderer.setSize(window.innerWidth, renderheight)
+        this.renderer.render(this.scene, this.camera);
     }
 
     add3DObject(obj3D)

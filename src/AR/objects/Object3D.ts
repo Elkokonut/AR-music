@@ -1,20 +1,21 @@
 import * as THREE from 'three';
 
 export default class Object3D {
-    obj: THREE.Mesh;
+    obj: THREE.Group;
     z: number;
     scale: number[];
     constructor(obj, name, scale) {
         this.obj = obj;
-        this.obj.name = name;
-        this.z = 0;
-        this.scale = [1, 1, 1];
-        if (scale)
-        {
-            this.obj.scale.set(scale[0], scale[1], scale[2]);
-            this.scale = scale;
+        if (obj) {
+            this.obj.name = name;
+            if (scale) {
+                this.obj.scale.set(scale[0], scale[1], scale[2]);
+                this.scale = scale;
+            }
+            else
+                this.scale = [1, 1, 1];
         }
-
+        this.z = 0;
     }
 
     animate(distance) {

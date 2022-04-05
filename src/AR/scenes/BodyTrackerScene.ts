@@ -1,11 +1,13 @@
 declare function require(name:string);
 
-const keypoint_json = require("../../../ressources/keypoints.json");
+const keypoint_json = require("../../../static/json/keypoints.json");
 import Scene from './Scene.js';
 import Disk from "../objects/Disk.js"
 import { initDistance, generateKeypoints } from "../../tools/keypoints_helper.js"
 import Keypoint from '../../tools/Keypoint';
 import Distance from '../../tools/Distance';
+
+import Instrument from '../objects/Instrument.js';
 
 
 export default class BodyTrackerScene extends Scene {
@@ -24,6 +26,7 @@ export default class BodyTrackerScene extends Scene {
 
     async init() {
         super.init();
+        Instrument.instrument_from_model(require("../../../static/models/DAFT_PUNK_HELMETS.fbx"), "mic", this.keypoints.find(keypoint => keypoint.type=="body" && keypoint.order==0), this);
 
         if (this.debug)
             this.initDebug();

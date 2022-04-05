@@ -35,7 +35,7 @@ export default class Keypoint {
 
             const res = [];
 
-            for (const i = 0; i < normalized_values.length; i++) {
+            for (let i = 0; i < normalized_values.length; i++) {
                 if (!is_valid_normalized_value(normalized_values[i])) {
                     return null;
                 }
