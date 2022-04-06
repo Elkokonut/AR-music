@@ -5,15 +5,19 @@ import oc from 'three-orbit-controls';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 const OrbitControls = oc(THREE);
 
-const scene = new THREE.Scene()
+const scene = new THREE.Scene();
+scene.background =  new THREE.Color( 0x33CEA4 );
 scene.add(new THREE.AxesHelper(5))
 
-const light = new THREE.PointLight()
-light.position.set(0.8, 1.4, 1.0)
-scene.add(light)
+const light1 = new THREE.PointLight()
+light1.position.set(0.8, 1.4, 30)
+scene.add(light1)
 
-const ambientLight = new THREE.AmbientLight( 0x404040)
-scene.add(ambientLight)
+// const ambientLight = new THREE.AmbientLight(0x404040, 1.0)
+// scene.add(ambientLight)
+
+const light = new THREE.HemisphereLight(0xFFFF80, 0x4040FF, 1.0);
+scene.add(light);
 
 const camera = new THREE.PerspectiveCamera(
     75,
@@ -21,7 +25,7 @@ const camera = new THREE.PerspectiveCamera(
     0.1,
     1000
 )
-camera.position.set(0.8, 1.4, 1.0)
+camera.position.set(0.8, 1.4, 25)
 
 const renderer = new THREE.WebGLRenderer()
 renderer.setSize(window.innerWidth, window.innerHeight)
