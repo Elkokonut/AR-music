@@ -1,4 +1,5 @@
-const keypoint_json = "../../../static/json/keypoints.json";
+declare function require(name:string);
+const keypoint_json = require("../../../static/json/keypoints.json");
 import Scene from './Scene';
 import Disk from "../objects/Disk"
 import { initDistance, generateKeypoints } from "../../tools/keypoints_helper"
@@ -24,7 +25,7 @@ export default class BodyTrackerScene extends Scene {
 
     async init() {
         super.init();
-        Instrument.instrument_from_model("../../../static/models/DAFT_PUNK_HELMETS.fbx", "mic", this.keypoints.find(keypoint => keypoint.type=="body" && keypoint.order==0), this);
+        Instrument.instrument_from_model(require("../../../static/models/mic/microphone.fbx"), "mic", this.keypoints.find(keypoint => keypoint.type=="body" && keypoint.order==0), this);
 
         if (this.debug)
             this.initDebug();
