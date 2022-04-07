@@ -3,18 +3,15 @@ declare function require(name:string);
 import * as THREE from 'three'
 import oc from 'three-orbit-controls';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+
+
 const OrbitControls = oc(THREE);
+
+/* Scene initialization */
 
 const scene = new THREE.Scene();
 scene.background =  new THREE.Color( 0x33CEA4 );
 scene.add(new THREE.AxesHelper(5))
-
-const light1 = new THREE.PointLight()
-light1.position.set(0.8, 1.4, 30)
-scene.add(light1)
-
-const ambientLight = new THREE.AmbientLight(0x404040, 1.0)
-scene.add(ambientLight)
 
 
 const camera = new THREE.PerspectiveCamera(
@@ -22,42 +19,50 @@ const camera = new THREE.PerspectiveCamera(
     window.innerWidth / window.innerHeight,
     0.1,
     1000
-)
-camera.position.set(0.8, 1.4, 25)
+);
+camera.position.set(0.8, 1.4, 25);
 
-const renderer = new THREE.WebGLRenderer()
-renderer.setSize(window.innerWidth, window.innerHeight)
-document.body.appendChild(renderer.domElement)
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
-const controls = new OrbitControls(camera, renderer.domElement)
-controls.enableDamping = true
-controls.target.set(0, 1, 0)
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.target.set(0, 1, 0);
 
 //const material = new THREE.MeshNormalMaterial()
+/* ANCHOR 1 */
+const light1 = new THREE.PointLight();
+light1.position.set(0.8, 1.4, 30);
+scene.add(light1);
+
+const ambientLight = new THREE.AmbientLight(0x404040, 1.0);
+scene.add(ambientLight);
+
+/* ANCHOR 2 */
 const textureLoader = new THREE.TextureLoader();
 
 const loader = new FBXLoader();
 loader.load(
     require('../static/models/mic/microphone.fbx'),
     async (object) => {
+        /* ANCHOR 3 */
         object.position.y = -8;
         const baseColorMap = await textureLoader.load(require("../static/models/mic/textures/Microphone_FBX_Microphone_BaseColor.png"));
-        // const heightMap = await textureLoader.load(require("../static/models/mic/textures/Microphone_FBX_Microphone_Height.png"));
         const metallicMap = await textureLoader.load(require("../static/models/mic/textures/Microphone_FBX_Microphone_Metalness.png"));
         const normalMap = await textureLoader.load(require("../static/models/mic/textures/Microphone_FBX_Microphone_Normal.png"));
         const roughnessMap = await textureLoader.load(require("../static/models/mic/textures/Microphone_FBX_Microphone_Roughness.png"));
         
         
-        const minigunMaterial = new THREE.MeshStandardMaterial({
-          map: baseColorMap, 
-        //  displacementMap: heightMap,
+        const micMaterial = new THREE.MeshStandardMaterial({
+          map: baseColorMap,
           metalnessMap: metallicMap,
           normalMap: normalMap,
           roughnessMap : roughnessMap
         });
 
         for (let child of object.children) {
-          child.material = minigunMaterial;
+          child.material = micMaterial;
         };
         scene.add(object)
     },
