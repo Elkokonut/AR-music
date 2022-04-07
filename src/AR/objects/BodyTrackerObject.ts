@@ -15,7 +15,7 @@ export default class BodyTrackerObject extends Object3D {
         {
             this.obj.position.x = this.keypoint.x;
             this.obj.position.y = this.keypoint.y;
-            this.z = this.keypoint.z;
+            this.z = 0;
             this.obj.visible = true;
             super.animate(distance);
         }
