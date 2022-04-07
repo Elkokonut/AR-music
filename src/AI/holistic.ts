@@ -32,8 +32,8 @@ export default class poseDetector {
       enableSegmentation: false,
       smoothSegmentation: false,
       refineFaceLandmarks: false,
-      minDetectionConfidence: 0.5,
-      minTrackingConfidence: 0.5
+      minDetectionConfidence: 0.3,
+      minTrackingConfidence: 0.3
     });
     let nb_calls = 0;
     setInterval(() => {

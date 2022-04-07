@@ -27,7 +27,7 @@ export default class Scene {
 
     init() {
         console.log("Init Scene");
-        
+
 
         const ratio = window.innerWidth / this.video.videoWidth;
         const renderheight = ratio * this.video.videoHeight;
@@ -43,19 +43,25 @@ export default class Scene {
         this.camera.position.z = renderheight;
         this.camera.lookAt(0, 0, 0);
 
-        const light = new THREE.AmbientLight( 0x404040 ); // soft white light
-        this.scene.add( light );
+        const light = new THREE.AmbientLight(0x404040); // soft white light
+        this.scene.add(light);
+
+        const light1 = new THREE.PointLight()
+        light1.position.set(0.8, 1.4, renderheight + 5)
+        this.scene.add(light1)
 
         this.renderer = new THREE.WebGLRenderer();
 
         this.renderer.setSize(window.innerWidth, renderheight);
         document.body.appendChild(this.renderer.domElement);
 
+
+        //this.addControls();
+        this.addGridHelper();
         this.initialisation = true;
     }
 
-    resize()
-    {
+    resize() {
         const ratio = window.innerWidth / this.video.videoWidth;
         const renderheight = ratio * this.video.videoHeight;
 
@@ -68,8 +74,7 @@ export default class Scene {
         this.renderer.render(this.scene, this.camera);
     }
 
-    add3DObject(obj3D)
-    {
+    add3DObject(obj3D) {
         this.scene.add(obj3D.obj);
         this.objects.push(obj3D);
     }

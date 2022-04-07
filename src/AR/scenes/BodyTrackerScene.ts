@@ -25,7 +25,16 @@ export default class BodyTrackerScene extends Scene {
 
     async init() {
         super.init();
-        Instrument.instrument_from_model(require("../../../static/models/mic/microphone.fbx"), "mic", this.keypoints.find(keypoint => keypoint.type=="body" && keypoint.order==0), this);
+        Instrument.instrument_from_model(
+            require("../../../static/models/mic/microphone.fbx"),
+            "mic", 
+            [
+                this.keypoints.find(keypoint => keypoint.type=="right_hand" && keypoint.order==17),
+                this.keypoints.find(keypoint => keypoint.type=="right_hand" && keypoint.order==8),
+                this.keypoints.find(keypoint => keypoint.type=="right_hand" && keypoint.order==5)
+            ],
+            this
+            );
 
         if (this.debug)
             this.initDebug();

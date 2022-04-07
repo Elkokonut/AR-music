@@ -13,11 +13,9 @@ const light1 = new THREE.PointLight()
 light1.position.set(0.8, 1.4, 30)
 scene.add(light1)
 
-// const ambientLight = new THREE.AmbientLight(0x404040, 1.0)
-// scene.add(ambientLight)
+const ambientLight = new THREE.AmbientLight(0x404040, 1.0)
+scene.add(ambientLight)
 
-const light = new THREE.HemisphereLight(0xFFFF80, 0x4040FF, 1.0);
-scene.add(light);
 
 const camera = new THREE.PerspectiveCamera(
     75,
@@ -36,12 +34,31 @@ controls.enableDamping = true
 controls.target.set(0, 1, 0)
 
 //const material = new THREE.MeshNormalMaterial()
+const textureLoader = new THREE.TextureLoader();
 
 const loader = new FBXLoader();
 loader.load(
-    require('../static/models/mic/uploads_files_3171311_Microphone_FBX.fbx'),
+    require('../static/models/mic/microphone.fbx'),
     async (object) => {
         object.position.y = -8;
+        const baseColorMap = await textureLoader.load(require("../static/models/mic/textures/Microphone_FBX_Microphone_BaseColor.png"));
+        // const heightMap = await textureLoader.load(require("../static/models/mic/textures/Microphone_FBX_Microphone_Height.png"));
+        const metallicMap = await textureLoader.load(require("../static/models/mic/textures/Microphone_FBX_Microphone_Metalness.png"));
+        const normalMap = await textureLoader.load(require("../static/models/mic/textures/Microphone_FBX_Microphone_Normal.png"));
+        const roughnessMap = await textureLoader.load(require("../static/models/mic/textures/Microphone_FBX_Microphone_Roughness.png"));
+        
+        
+        const minigunMaterial = new THREE.MeshStandardMaterial({
+          map: baseColorMap, 
+        //  displacementMap: heightMap,
+          metalnessMap: metallicMap,
+          normalMap: normalMap,
+          roughnessMap : roughnessMap
+        });
+
+        for (let child of object.children) {
+          child.material = minigunMaterial;
+        };
         scene.add(object)
     },
     (xhr) => {
