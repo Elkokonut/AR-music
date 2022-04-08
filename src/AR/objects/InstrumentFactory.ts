@@ -1,22 +1,25 @@
 declare function require(name: string);
 
 import * as THREE from "three";
-import BodyTrackerObject from "./BodyTrackerObject";
-import Keypoint from "../../tools/Keypoint";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
+import Microphone from "./microphone";
 
-export default class Instrument extends BodyTrackerObject {
-  keypoints: Array<Keypoint>;
+export default class InstrumentFactory {
+  instantiate_instrument(type, model_path, name, anchor, keypoints, scene) {
+    switch (type) {
+      case "microphone":
+        this._load_microphone(model_path, name, anchor, keypoints, scene);
+        break;
 
-  private constructor(obj, name, keypoints, scale) {
-    super(obj, name, keypoints[0], scale);
-    this.keypoints = keypoints;
+      default:
+        console.log("This is not a valid instrument type");
+        break;
+    }
   }
 
-  static instrument_from_model(model_path, name, keypoints, scene) {
+  _load_microphone(model_path, name, anchor, keypoints, scene) {
     const fbxLoader = new FBXLoader();
     const textureLoader = new THREE.TextureLoader();
-
     fbxLoader.load(
       model_path,
       async (object) => {
@@ -25,7 +28,6 @@ export default class Instrument extends BodyTrackerObject {
         const baseColorMap = await textureLoader.load(
           require("../../../static/models/mic/textures/Microphone_FBX_Microphone_BaseColor.png")
         );
-        // const heightMap = await textureLoader.load(require("../static/models/mic/textures/Microphone_FBX_Microphone_Height.png"));
         const metallicMap = await textureLoader.load(
           require("../../../static/models/mic/textures/Microphone_FBX_Microphone_Metalness.png")
         );
@@ -38,7 +40,6 @@ export default class Instrument extends BodyTrackerObject {
 
         const minigunMaterial = new THREE.MeshStandardMaterial({
           map: baseColorMap,
-          //  displacementMap: heightMap,
           metalnessMap: metallicMap,
           normalMap: normalMap,
           roughnessMap: roughnessMap,
@@ -49,10 +50,11 @@ export default class Instrument extends BodyTrackerObject {
         }
 
         console.log(object);
-        const inst = new Instrument(
+        const inst = new Microphone(
           object.children[0],
           name,
-          keypoints,
+          anchor,
+          keypoints[0],
           [10, 10, 10]
         );
 
@@ -65,14 +67,5 @@ export default class Instrument extends BodyTrackerObject {
         console.log(error);
       }
     );
-  }
-
-  animate(distance) {
-    super.animate(distance);
-    const kp_align_pos = new THREE.Vector3();
-    const v2 = new THREE.Vector3(this.keypoints[2].x, this.keypoints[2].y, 0);
-    kp_align_pos.subVectors(v2, this.obj.position).normalize();
-    this.obj.rotation.z =
-      -Math.sign(kp_align_pos.x) * this.obj.up.angleTo(kp_align_pos);
   }
 }
