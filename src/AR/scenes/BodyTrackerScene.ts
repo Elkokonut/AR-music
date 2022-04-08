@@ -68,6 +68,10 @@ export default class BodyTrackerScene extends Scene {
         {
           const type = obj.keypoints[0].type;
           obj.animate(self.distances[type].getValue());
+          if (obj.obj.visible)
+            obj.play_sound(self.keypoints.find(
+              (keypoint) => keypoint.type == "body" && keypoint.order == 10
+            ))
         }
       });
 
