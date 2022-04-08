@@ -63,7 +63,7 @@ loader.load(
 
         for (const child of object.children) {
           child.material = micMaterial;
-        };
+        }
         scene.add(object)
     },
     (xhr) => {
