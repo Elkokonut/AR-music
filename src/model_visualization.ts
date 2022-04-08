@@ -61,9 +61,9 @@ loader.load(
           roughnessMap : roughnessMap
         });
 
-        for (let child of object.children) {
+        for (const child of object.children) {
           child.material = micMaterial;
-        };
+        }
         scene.add(object)
     },
     (xhr) => {

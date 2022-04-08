@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import oc from 'three-orbit-controls';
-import BodyTrackerObject from '../objects/BodyTrackerObject';
+import Object3D from '../objects/Object3D';
 
 export default class Scene {
     video: HTMLVideoElement;
@@ -11,7 +11,7 @@ export default class Scene {
     /* eslint @typescript-eslint/no-explicit-any: 0 */
     controls: any;
     initialisation: boolean;
-    objects: BodyTrackerObject[];
+    objects: Object3D[];
 
     constructor(video) {
         this.video = video;

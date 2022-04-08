@@ -2,13 +2,13 @@ declare function require(name: string);
 
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
-import Microphone from "./microphone";
+import Microphone from "./Microphone";
 
 export default class InstrumentFactory {
-  instantiate_instrument(type, model_path, name, anchor, keypoints, scene) {
+  instantiate_instrument(type, scene) {
     switch (type) {
       case "microphone":
-        this._load_microphone(model_path, name, anchor, keypoints, scene);
+        this._load_microphone(scene);
         break;
 
       default:
@@ -17,7 +17,23 @@ export default class InstrumentFactory {
     }
   }
 
-  _load_microphone(model_path, name, anchor, keypoints, scene) {
+  _load_microphone(scene) {
+    const model_path = require("../../../static/models/mic/microphone.fbx");
+    const name = "mic";
+    const keypoints = [
+      scene.keypoints.find(
+        (keypoint) => keypoint.type == "right_hand" && keypoint.order == 1
+      ),
+      scene.keypoints.find(
+        (keypoint) => keypoint.type == "right_hand" && keypoint.order == 5
+      ),
+      scene.keypoints.find(
+        (keypoint) => keypoint.type == "right_hand" && keypoint.order == 0
+      ),
+      scene.keypoints.find(
+        (keypoint) => keypoint.type == "right_hand" && keypoint.order == 17
+      ),
+    ];
     const fbxLoader = new FBXLoader();
     const textureLoader = new THREE.TextureLoader();
     fbxLoader.load(
@@ -53,8 +69,7 @@ export default class InstrumentFactory {
         const inst = new Microphone(
           object.children[0],
           name,
-          anchor,
-          keypoints[0],
+          keypoints,
           [10, 10, 10]
         );
 

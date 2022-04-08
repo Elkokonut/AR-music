@@ -5,6 +5,7 @@ import Disk from "../objects/Disk";
 import { initDistance, generateKeypoints } from "../../tools/keypoints_helper";
 import Keypoint from "../../tools/Keypoint";
 import Distance from "../../tools/Distance";
+import BodyTrackerObject from "../objects/BodyTrackerObject"
 
 import InstrumentFactory from "../objects/InstrumentFactory";
 
@@ -26,16 +27,6 @@ export default class BodyTrackerScene extends Scene {
     const factory = new InstrumentFactory();
     factory.instantiate_instrument(
       "microphone",
-      require("../../../static/models/mic/microphone.fbx"),
-      "mic",
-      this.keypoints.find(
-        (keypoint) => keypoint.type == "right_hand" && keypoint.order == 17
-      ),
-      [
-        this.keypoints.find(
-          (keypoint) => keypoint.type == "right_hand" && keypoint.order == 5
-        ),
-      ],
       this
     );
 
@@ -70,7 +61,10 @@ export default class BodyTrackerScene extends Scene {
     async function render() {
       nb_calls_render++;
       self.objects.forEach((obj) => {
-        obj.animate(self.distances[obj.keypoint.type].getValue());
+        if (obj instanceof BodyTrackerObject)
+          obj.animate(self.distances[obj.keypoint.type].getValue());
+        else
+          obj.animate(null);
       });
 
       self.renderer.render(self.scene, self.camera);

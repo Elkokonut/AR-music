@@ -1,25 +1,25 @@
+import { ThisExpression } from "typescript";
 import OneEuroFilterMD from "./oneEuroFilter";
+import * as THREE from 'three';
 
 export default class Keypoint {
     type: string;
     order: number;
 
-    euroFilter: OneEuroFilterMD;
-
-    x: number;
-    y: number;
     z: number;
 
+    euroFilter: OneEuroFilterMD;
+    position: THREE.Vector3
     is_visible: boolean;
 
     constructor(type, order) {
         this.type = type;
         this.order = order;
 
-        this.euroFilter = null;
-        this.x = 0;
-        this.y = 0;
         this.z = 0;
+
+        this.euroFilter = null;
+        this.position = new THREE.Vector3(0, 0, 0);
 
         this.is_visible = false;
     }
@@ -70,11 +70,12 @@ export default class Keypoint {
             const positions = this.get_position(keypoint);
             if (positions) {
                 is_visible = true;
-                this.x = positions[0];
-                this.y = positions[1];
+                this.position.x = positions[0];
+                this.position.y = positions[1];
+                this.position.z = 0;
                 this.z = positions[2];
                 if (!this.euroFilter)
-                    this.euroFilter = new OneEuroFilterMD([this.x, this.y, this.z], Date.now(), 0.001, 1.0);
+                    this.euroFilter = new OneEuroFilterMD([this.position.x, this.position.y, this.position.z], Date.now(), 0.001, 1.0);
             }
         }
         this.is_visible = is_visible;
