@@ -9,6 +9,7 @@ import BodyTrackerObject from "../objects/BodyTrackerObject"
 
 import InstrumentFactory from "../objects/InstrumentFactory";
 import Microphone from "../objects/Microphone";
+import Occluser from "../objects/Occluser";
 
 export default class BodyTrackerScene extends Scene {
   keypoints: Keypoint[];
@@ -25,6 +26,8 @@ export default class BodyTrackerScene extends Scene {
 
   async init() {
     super.init();
+    this.initOcclusion();
+
     const factory = new InstrumentFactory();
     factory.instantiate_instrument(
       "microphone",
@@ -33,6 +36,13 @@ export default class BodyTrackerScene extends Scene {
 
     if (this.debug) this.initDebug();
     this.animate();
+  }
+
+  initOcclusion() {
+    this.keypoints.forEach((keypoint) => {
+      if (keypoint.type == "right_hand")
+        this.add3DObject(new Occluser(keypoint, [20, 40, 1]));
+    });
   }
 
   initDebug() {

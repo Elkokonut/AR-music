@@ -7,6 +7,7 @@ export default class Scene {
     scene: THREE.Scene;
     camera: THREE.PerspectiveCamera | THREE.OrthographicCamera;
     renderer: THREE.WebGLRenderer;
+    #renderOrder: number;
 
     /* eslint @typescript-eslint/no-explicit-any: 0 */
     controls: any;
@@ -21,6 +22,8 @@ export default class Scene {
         this.controls = null;
 
         this.initialisation = false;
+
+        this.#renderOrder = 0;
 
         this.objects = []
     }
@@ -56,7 +59,7 @@ export default class Scene {
         document.body.appendChild(this.renderer.domElement);
 
 
-        //this.addControls();
+        this.addControls();
         this.addGridHelper();
         this.initialisation = true;
     }
@@ -75,12 +78,16 @@ export default class Scene {
     }
 
     add3DObject(obj3D) {
+        obj3D.obj.renderOrder = this.#renderOrder++;
         this.scene.add(obj3D.obj);
         this.objects.push(obj3D);
     }
 
     addControls() {
-        this.controls = new oc(THREE)(this.camera, this.renderer.domElement);
+        const OrbitControls = oc(THREE);
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        this.controls.enableDamping = true;
+        this.controls.target.set(0, 1, 0);
     }
 
     addGridHelper() {
