@@ -8,6 +8,7 @@ import Distance from "../../tools/Distance";
 import BodyTrackerObject from "../objects/BodyTrackerObject"
 
 import InstrumentFactory from "../objects/InstrumentFactory";
+import Microphone from "../objects/Microphone";
 
 export default class BodyTrackerScene extends Scene {
   keypoints: Keypoint[];
@@ -63,8 +64,11 @@ export default class BodyTrackerScene extends Scene {
       self.objects.forEach((obj) => {
         if (obj instanceof BodyTrackerObject)
           obj.animate(self.distances[obj.keypoint.type].getValue());
-        else
-          obj.animate(null);
+        else if (obj instanceof Microphone)
+        {
+          const type = obj.keypoints[0].type;
+          obj.animate(self.distances[type].getValue());
+        }
       });
 
       self.renderer.render(self.scene, self.camera);
