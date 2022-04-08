@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import oc from 'three-orbit-controls';
-import BodyTrackerObject from '../objects/BodyTrackerObject';
+import Object3D from '../objects/Object3D';
 
 export default class Scene {
     video: HTMLVideoElement;
@@ -11,7 +11,7 @@ export default class Scene {
     /* eslint @typescript-eslint/no-explicit-any: 0 */
     controls: any;
     initialisation: boolean;
-    objects: BodyTrackerObject[];
+    objects: Object3D[];
 
     constructor(video) {
         this.video = video;
@@ -27,7 +27,7 @@ export default class Scene {
 
     init() {
         console.log("Init Scene");
-        
+
 
         const ratio = window.innerWidth / this.video.videoWidth;
         const renderheight = ratio * this.video.videoHeight;
@@ -43,16 +43,38 @@ export default class Scene {
         this.camera.position.z = renderheight;
         this.camera.lookAt(0, 0, 0);
 
+        const light = new THREE.AmbientLight(0x404040); // soft white light
+        this.scene.add(light);
+
+        const light1 = new THREE.PointLight()
+        light1.position.set(0.8, 1.4, renderheight + 5)
+        this.scene.add(light1)
+
         this.renderer = new THREE.WebGLRenderer();
 
         this.renderer.setSize(window.innerWidth, renderheight);
         document.body.appendChild(this.renderer.domElement);
 
+
+        //this.addControls();
+        this.addGridHelper();
         this.initialisation = true;
     }
 
-    add3DObject(obj3D)
-    {
+    resize() {
+        const ratio = window.innerWidth / this.video.videoWidth;
+        const renderheight = ratio * this.video.videoHeight;
+
+        globalThis.APPNamespace.height = renderheight;
+        globalThis.APPNamespace.width = window.innerWidth;
+
+        this.camera.aspect = window.innerWidth / renderheight;
+        this.camera.updateProjectionMatrix()
+        this.renderer.setSize(window.innerWidth, renderheight)
+        this.renderer.render(this.scene, this.camera);
+    }
+
+    add3DObject(obj3D) {
         this.scene.add(obj3D.obj);
         this.objects.push(obj3D);
     }

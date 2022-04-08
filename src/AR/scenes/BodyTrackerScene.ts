@@ -1,71 +1,80 @@
-declare function require(name:string);
+declare function require(name: string);
+const keypoint_json = require("../../../static/json/keypoints.json");
+import Scene from "./Scene";
+import Disk from "../objects/Disk";
+import { initDistance, generateKeypoints } from "../../tools/keypoints_helper";
+import Keypoint from "../../tools/Keypoint";
+import Distance from "../../tools/Distance";
+import BodyTrackerObject from "../objects/BodyTrackerObject"
 
-const keypoint_json = require("../../../ressources/keypoints.json");
-import Scene from './Scene.js';
-import Disk from "../objects/Disk.js"
-import { initDistance, generateKeypoints } from "../../tools/keypoints_helper.js"
-import Keypoint from '../../tools/Keypoint';
-import Distance from '../../tools/Distance';
-
+import InstrumentFactory from "../objects/InstrumentFactory";
+import Microphone from "../objects/Microphone";
 
 export default class BodyTrackerScene extends Scene {
-    keypoints: Keypoint[];
-    distances: { [key: string]: Distance };
-    debug: boolean;
+  keypoints: Keypoint[];
+  distances: { [key: string]: Distance };
+  debug: boolean;
 
-    constructor(video, debug) {
-        super(video);
-        this.keypoints = generateKeypoints(keypoint_json);
-        this.distances = initDistance(keypoint_json, this.keypoints);
+  constructor(video, debug) {
+    super(video);
+    this.keypoints = generateKeypoints(keypoint_json);
+    this.distances = initDistance(keypoint_json, this.keypoints);
 
-        this.debug =  debug;
-    }
+    this.debug = debug;
+  }
 
+  async init() {
+    super.init();
+    const factory = new InstrumentFactory();
+    factory.instantiate_instrument(
+      "microphone",
+      this
+    );
 
-    async init() {
-        super.init();
+    if (this.debug) this.initDebug();
+    this.animate();
+  }
 
-        if (this.debug)
-            this.initDebug();
-        this.animate();
-    }
+  initDebug() {
+    this.keypoints.forEach((keypoint) => {
+      this.add3DObject(new Disk(keypoint));
+    });
+  }
 
-    initDebug() {
-        this.keypoints.forEach(keypoint => {
-            this.add3DObject(new Disk(keypoint));
-        });
-    }
+  update_keypoints(new_keypoints) {
+    this.keypoints.forEach((kp) => {
+      kp.update(new_keypoints);
+    });
+  }
 
-    update_keypoints(new_keypoints) {
+  async animate() {
+    let nb_calls_render = 0;
 
-        this.keypoints.forEach(kp => {
-            kp.update(new_keypoints);
-        });
-    }
+    setInterval(() => {
+      document.getElementById("frameRateRender").innerHTML =
+        "Render FrameRate: " + nb_calls_render;
+      nb_calls_render = 0;
+    }, 1000);
 
+    /* eslint @typescript-eslint/no-this-alias: 0 */
+    const self = this;
 
-    async animate() {
-
-        let nb_calls_render = 0;
-
-        setInterval(() => {
-            document.getElementById("frameRateRender").innerHTML = 'Render FrameRate: ' + nb_calls_render;
-            nb_calls_render = 0;
-        }, 1000);
-
-        /* eslint @typescript-eslint/no-this-alias: 0 */
-        const self = this;
-
-        async function render() {
-            nb_calls_render++;
-            self.objects.forEach(obj => {
-                obj.animate(self.distances[obj.keypoint.type].getValue());
-            });
-
-            self.renderer.render(self.scene, self.camera);
-
-            requestAnimationFrame(render);
+    async function render() {
+      nb_calls_render++;
+      self.objects.forEach((obj) => {
+        if (obj instanceof BodyTrackerObject)
+          obj.animate(self.distances[obj.keypoint.type].getValue());
+        else if (obj instanceof Microphone)
+        {
+          const type = obj.keypoints[0].type;
+          obj.animate(self.distances[type].getValue());
         }
-        requestAnimationFrame(render);
+      });
+
+      self.renderer.render(self.scene, self.camera);
+
+      requestAnimationFrame(render);
     }
+    requestAnimationFrame(render);
+  }
 }
