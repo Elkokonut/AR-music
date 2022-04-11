@@ -2,7 +2,6 @@ import * as THREE from "three";
 import Keypoint from "../../tools/Keypoint";
 import Object3D from "./Object3D";
 import Pizzicato from "pizzicato";
-import { thomsonCrossSectionDependencies } from "mathjs";
 
 export default class Microphone extends Object3D {
   keypoints: Keypoint[];
