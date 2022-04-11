@@ -72,7 +72,7 @@ export default class InstrumentFactory {
           keypoints,
           [10, 10, 10]
         );
-
+        inst.obj.renderOrder = 4;
         scene.add3DObject(inst);
       },
       (xhr) => {

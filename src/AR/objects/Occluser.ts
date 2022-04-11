@@ -7,13 +7,15 @@ export default class Occluser extends BodyTrackerObject {
         const material = new THREE.MeshPhongMaterial();
         const cube = new THREE.Mesh(geometry, material);
         cube.material.color.set(0x0000ff);
-        cube.material.colorWrite = false;
+        cube.material.transparent = false;
+        // cube.material.colorWrite = false;
+        cube.renderOrder = 0;
 
         super(cube, `Occluser_${keypoint.type}_${keypoint.order}`, keypoint, scale);
     }
 
     animate(distance) {
         super.animate(distance);
-        this.obj.position.z = 10;
+        this.obj.position.z = 20;
     }
 }

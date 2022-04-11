@@ -40,7 +40,7 @@ export default class BodyTrackerScene extends Scene {
 
   initOcclusion() {
     this.keypoints.forEach((keypoint) => {
-      if (keypoint.type == "right_hand")
+      if (keypoint.type == "body")
         this.add3DObject(new Occluser(keypoint, [20, 40, 1]));
     });
   }

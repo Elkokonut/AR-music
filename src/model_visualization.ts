@@ -48,6 +48,16 @@ mesh.renderOrder = 0;
 mesh.position.z = 10;
 scene.add(mesh);
 
+
+
+const material3 = new THREE.MeshPhongMaterial({ color: 0x08ECA9 });
+const geometry3 = new THREE.CircleGeometry(1, 32);
+const circle = new THREE.Mesh(geometry3, material3);
+circle.position.z = 4;
+circle.renderOrder = 5;
+circle.position.y = 5;
+scene.add(circle);
+
 const mesh2 = new THREE.Mesh(geometry.clone(), material.clone());
 mesh2.material.color.set(0x0000ff);
 mesh2.material.colorWrite = false; // <================= new
@@ -81,7 +91,7 @@ loader.load(
         for (const child of object.children) {
             child.material = micMaterial;
         }
-        object.renderOrder = 2;
+        object.renderOrder = 0;
         scene.add(object)
     },
     (xhr) => {

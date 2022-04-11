@@ -56,6 +56,7 @@ export default class Scene {
         this.renderer = new THREE.WebGLRenderer();
 
         this.renderer.setSize(window.innerWidth, renderheight);
+        this.renderer.sortObjects = true;
         document.body.appendChild(this.renderer.domElement);
 
 
@@ -78,7 +79,7 @@ export default class Scene {
     }
 
     add3DObject(obj3D) {
-        obj3D.obj.renderOrder = this.#renderOrder++;
+        // obj3D.obj.renderOrder = this.#renderOrder++;
         this.scene.add(obj3D.obj);
         this.objects.push(obj3D);
     }
