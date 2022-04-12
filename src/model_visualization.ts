@@ -91,7 +91,8 @@ loader.load(
         for (const child of object.children) {
             child.material = micMaterial;
         }
-        object.renderOrder = 0;
+        object = object.children[0];
+        object.renderOrder = 1;
         scene.add(object)
     },
     (xhr) => {

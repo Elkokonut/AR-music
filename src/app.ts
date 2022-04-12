@@ -57,8 +57,7 @@ video.addEventListener('pause', async function () {
 
 
 async function initPage() {
-  const scene = new BodyTrackerScene(video, true);
-  await scene.init();
+  const scene = new BodyTrackerScene(video, false);
   const promise = video.play();
   if (promise !== undefined) {
     promise.catch(error => {

@@ -14,7 +14,7 @@ export default class Scene {
     initialisation: boolean;
     objects: Object3D[];
 
-    constructor(video) {
+    constructor(video, debug) {
         this.video = video;
         this.scene = null;
         this.camera = null;
@@ -26,9 +26,6 @@ export default class Scene {
         this.#renderOrder = 0;
 
         this.objects = []
-    }
-
-    init() {
         console.log("Init Scene");
 
 
@@ -41,7 +38,7 @@ export default class Scene {
 
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.VideoTexture(this.video);
-        this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / renderheight, 0.1, 0);
+        this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / renderheight, 0.1, 1000);
         // this.camera = new THREE.OrthographicCamera(this.width / - 2, this.width / 2, this.height / 2, this.height / - 2, .1, 1000);
         this.camera.position.z = renderheight;
         this.camera.lookAt(0, 0, 0);
@@ -49,19 +46,19 @@ export default class Scene {
         const light = new THREE.AmbientLight(0x404040); // soft white light
         this.scene.add(light);
 
-        const light1 = new THREE.PointLight()
-        light1.position.set(0.8, 1.4, renderheight + 5)
-        this.scene.add(light1)
+        const light1 = new THREE.PointLight();
+        light1.position.set(0.8, 1.4, renderheight + 5);
+        this.scene.add(light1);
 
         this.renderer = new THREE.WebGLRenderer();
 
         this.renderer.setSize(window.innerWidth, renderheight);
-        this.renderer.sortObjects = true;
         document.body.appendChild(this.renderer.domElement);
 
-
-        this.addControls();
-        this.addGridHelper();
+        if (debug) {
+            this.addControls();
+            this.addGridHelper();
+        }
         this.initialisation = true;
     }
 
@@ -79,7 +76,7 @@ export default class Scene {
     }
 
     add3DObject(obj3D) {
-        // obj3D.obj.renderOrder = this.#renderOrder++;
+        obj3D.obj.renderOrder = this.#renderOrder++;
         this.scene.add(obj3D.obj);
         this.objects.push(obj3D);
     }

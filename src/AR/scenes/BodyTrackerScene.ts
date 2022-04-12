@@ -14,18 +14,12 @@ import Occluser from "../objects/Occluser";
 export default class BodyTrackerScene extends Scene {
   keypoints: Keypoint[];
   distances: { [key: string]: Distance };
-  debug: boolean;
 
   constructor(video, debug) {
-    super(video);
+    super(video, debug);
     this.keypoints = generateKeypoints(keypoint_json);
     this.distances = initDistance(keypoint_json, this.keypoints);
 
-    this.debug = debug;
-  }
-
-  async init() {
-    super.init();
     this.initOcclusion();
 
     const factory = new InstrumentFactory();
@@ -34,14 +28,15 @@ export default class BodyTrackerScene extends Scene {
       this
     );
 
-    if (this.debug) this.initDebug();
+
+    if (debug) this.initDebug();
     this.animate();
   }
 
   initOcclusion() {
     this.keypoints.forEach((keypoint) => {
-      if (keypoint.type == "body")
-        this.add3DObject(new Occluser(keypoint, [20, 40, 1]));
+      if (keypoint.type == "right_hand")
+        this.add3DObject(Occluser.phalanx(keypoint));
     });
   }
 
@@ -76,8 +71,7 @@ export default class BodyTrackerScene extends Scene {
           obj.animate(self.distances[obj.keypoint.type].getValue());
         else if (obj instanceof Microphone)
         {
-          const type = obj.keypoints[0].type;
-          obj.animate(self.distances[type].getValue());
+          obj.animate();
         }
       });
 
