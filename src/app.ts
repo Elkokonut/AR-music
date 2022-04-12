@@ -1,7 +1,6 @@
 import BodyTrackerScene from './AR/scenes/BodyTrackerScene';
 import poseDetector from './AI/holistic';
 import enableInlineVideo from 'iphone-inline-video';
-import Pizzicato from "pizzicato";
 
 
 const webcam = true;
@@ -57,7 +56,6 @@ video.addEventListener('pause', async function () {
 
 
 async function initPage() {
-  Pizzicato.context.resume();
   const scene = new BodyTrackerScene(video, true);
   await scene.init();
   const promise = video.play();
