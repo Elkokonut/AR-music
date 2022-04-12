@@ -5,6 +5,7 @@ import * as THREE from 'three';
 export default class Keypoint {
     type: string;
     order: number;
+    name: string;
 
     z: number;
 
@@ -12,9 +13,10 @@ export default class Keypoint {
     position: THREE.Vector3
     is_visible: boolean;
 
-    constructor(type, order) {
+    constructor(type, order, name) {
         this.type = type;
         this.order = order;
+        this.name = name;
 
         this.z = 0;
 

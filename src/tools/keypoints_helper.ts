@@ -21,7 +21,7 @@ export function generateKeypoints(keypoint_json) {
     {
         const keypoints_names = keypoints_info[0];
         for (const index in keypoints_names)
-            res.push(new Keypoint(type, index));
+            res.push(new Keypoint(type, index, keypoints_names[index]));
     }
     return res;
 }

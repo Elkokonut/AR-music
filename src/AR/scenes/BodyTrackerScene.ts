@@ -9,7 +9,7 @@ import BodyTrackerObject from "../objects/BodyTrackerObject"
 
 import InstrumentFactory from "../objects/InstrumentFactory";
 import Microphone from "../objects/Microphone";
-import Occluser from "../objects/Occluser";
+import Phalanx from "../objects/Phalanx";
 
 export default class BodyTrackerScene extends Scene {
   keypoints: Keypoint[];
@@ -34,10 +34,24 @@ export default class BodyTrackerScene extends Scene {
   }
 
   initOcclusion() {
-    this.keypoints.forEach((keypoint) => {
-      if (keypoint.type == "right_hand")
-        this.add3DObject(Occluser.phalanx(keypoint));
-    });
+    const sides = ["right", "left"];
+    const fingers = ["thumb", "index_finger", "middle_finger", "ring_finger", "pinky_finger"];
+    sides.forEach(side =>
+      fingers.forEach(finger => {
+        const bot = this.keypoints.find(keypoint => keypoint.name == `${side}_${finger}_mcp`);
+        let mid = null;
+        if (finger == "thumb")
+          mid = this.keypoints.find(keypoint => keypoint.name == `${side}_${finger}_ip`);
+        else
+          mid = this.keypoints.find(keypoint => keypoint.name == `${side}_${finger}_pip`);
+        const top = this.keypoints.find(keypoint => keypoint.name == `${side}_${finger}_tip`);
+
+        this.add3DObject(new Phalanx(bot, mid));
+        this.add3DObject(new Phalanx(mid, top));
+      }
+      )
+    );
+
   }
 
   initDebug() {
@@ -69,8 +83,10 @@ export default class BodyTrackerScene extends Scene {
       self.objects.forEach((obj) => {
         if (obj instanceof BodyTrackerObject)
           obj.animate(self.distances[obj.keypoint.type].getValue());
-        else if (obj instanceof Microphone)
-        {
+        else if (obj instanceof Microphone) {
+          obj.animate();
+        }
+        else if (obj instanceof Phalanx) {
           obj.animate();
         }
       });
