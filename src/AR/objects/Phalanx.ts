@@ -11,7 +11,7 @@ export default class Phalanx extends Occluser {
 
     constructor(anchor, align_kp)
     {
-        const geometry = new THREE.CapsuleGeometry(10, 50, 4, 32);
+        const geometry = new THREE.CapsuleGeometry(10, 20, 4, 32);
         const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
         const cylinder = new THREE.Mesh(geometry, material);
         super(cylinder, ""); 
