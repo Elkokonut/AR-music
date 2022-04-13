@@ -2,9 +2,9 @@ import BodyTrackerScene from './AR/scenes/BodyTrackerScene';
 import poseDetector from './AI/holistic';
 import enableInlineVideo from 'iphone-inline-video';
 
+
 const webcam = true;
 const video: HTMLVideoElement = document.querySelector('#webcam');
-
 globalThis.APPNamespace = {};
 
 enableInlineVideo(video);
@@ -27,7 +27,6 @@ if (webcam) {
   }
 }
 let initialisation = false;
-
 
 video.addEventListener('canplay', async function () {
   console.log("canplay fired");

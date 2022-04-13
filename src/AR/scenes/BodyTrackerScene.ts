@@ -85,6 +85,11 @@ export default class BodyTrackerScene extends Scene {
           obj.animate(self.distances[obj.keypoint.type].getValue());
         else if (obj instanceof Microphone) {
           obj.animate();
+          const type = obj.keypoints[0].type;
+          obj.animate();
+          obj.play_sound(self.keypoints.find(
+            (keypoint) => keypoint.type == "body" && keypoint.order == 10
+          ));
         }
         else if (obj instanceof Phalanx) {
           obj.animate();

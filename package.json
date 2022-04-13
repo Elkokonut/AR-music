@@ -12,6 +12,7 @@
     "iphone-inline-video": "^2.2.2",
     "mathjs": "^10.4.2",
     "parcel": "^2.4.1",
+    "pizzicato": "^0.6.4",
     "three": "^0.139.0",
     "three-fbx-loader": "^1.0.3",
     "three-orbit-controls": "^82.1.0",

@@ -1,4 +1,3 @@
-import { ThisExpression } from "typescript";
 import OneEuroFilterMD from "./oneEuroFilter";
 import * as THREE from 'three';
 
