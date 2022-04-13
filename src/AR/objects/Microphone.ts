@@ -1,13 +1,49 @@
 import * as THREE from "three";
 import Keypoint from "../../tools/Keypoint";
 import Object3D from "./Object3D";
+import Pizzicato from "pizzicato";
 
 export default class Microphone extends Object3D {
   keypoints: Keypoint[];
+  sound: Pizzicato.Sound;
+  kp_align_pos: THREE.Vector3;
+  isPlaying: boolean;
   constructor(obj, name, keypoints, scale) {
     super(obj, name, scale);
     this.obj.visible = false;
     this.keypoints = keypoints;
+    this.sound = null;
+    this.kp_align_pos = new THREE.Vector3(0, 0, 0);
+
+    Pizzicato.context.resume();
+
+    this.sound = new Pizzicato.Sound(
+      {
+        source: "input"
+      }
+    );
+    this.sound.addEffect(
+      // new Pizzicato.Effects.Reverb({
+      //   time: 0.5,
+      //   decay: 0.5,
+      //   reverse: true,
+      //   mix: 1
+      // })
+      // new Pizzicato.Effects.Tremolo({
+      //   speed: 7,
+      //   depth: 0.8,
+      //   mix: 0.8
+      // })
+      //   new Pizzicato.Effects.Distortion({
+      //     gain: 0.4
+      // })
+      new Pizzicato.Effects.Delay({
+        feedback: 0.6,
+        time: 0.4,
+        mix: 0.5
+      })
+    );
+
   }
 
   animate(distance) {
@@ -26,6 +62,7 @@ export default class Microphone extends Object3D {
     left_middle.subVectors(this.keypoints[1].position, this.keypoints[0].position).multiplyScalar(2 / 3);
     right_middle.subVectors(this.keypoints[3].position, this.keypoints[2].position).multiplyScalar(1 / 2);
     kp_align_pos.addVectors(this.keypoints[0].position, left_middle);
+    this.kp_align_pos = kp_align_pos;
     anchor.addVectors(this.keypoints[2].position, right_middle);
 
     this.obj.position.x = anchor.x;
@@ -38,5 +75,15 @@ export default class Microphone extends Object3D {
     local_kp_align_pos.subVectors(kp_align_pos, anchor).normalize();
     this.obj.rotation.z =
       -Math.sign(local_kp_align_pos.x) * this.obj.up.angleTo(local_kp_align_pos);
+  }
+  play_sound(mouth_keypoint) {
+    if (this.kp_align_pos.distanceTo(mouth_keypoint.position) < 150 && this.obj.visible) {
+      this.sound.play();
+      console.log("play sound");
+    }
+    else {
+      this.sound.pause();
+      console.log("pause sound");
+    }
   }
 }
