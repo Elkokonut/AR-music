@@ -13,25 +13,38 @@ export default class Microphone extends Object3D {
     this.obj.visible = false;
     this.keypoints = keypoints;
     this.sound = null;
-    this.kp_align_pos = new THREE.Vector3(0,0,0);
+    this.kp_align_pos = new THREE.Vector3(0, 0, 0);
 
     Pizzicato.context.resume();
-  
+
     this.sound = new Pizzicato.Sound(
       {
         source: "input"
       }
     );
     this.sound.addEffect(
-      new Pizzicato.Effects.Reverb({
-        time: 0.5,
-        decay: 0.5,
-        reverse: true,
-        mix: 1
+      // new Pizzicato.Effects.Reverb({
+      //   time: 0.5,
+      //   decay: 0.5,
+      //   reverse: true,
+      //   mix: 1
+      // })
+      // new Pizzicato.Effects.Tremolo({
+      //   speed: 7,
+      //   depth: 0.8,
+      //   mix: 0.8
+      // })
+      //   new Pizzicato.Effects.Distortion({
+      //     gain: 0.4
+      // })
+      new Pizzicato.Effects.Delay({
+        feedback: 0.6,
+        time: 0.4,
+        mix: 0.5
       })
     );
-  
-}
+
+  }
 
   animate(distance) {
     super.animate(distance);
@@ -63,15 +76,12 @@ export default class Microphone extends Object3D {
     this.obj.rotation.z =
       -Math.sign(local_kp_align_pos.x) * this.obj.up.angleTo(local_kp_align_pos);
   }
-  play_sound(mouth_keypoint)
-  {
-    if (this.kp_align_pos.distanceTo(mouth_keypoint.position) < 150)
-    {
+  play_sound(mouth_keypoint) {
+    if (this.kp_align_pos.distanceTo(mouth_keypoint.position) < 150 && this.obj.visible) {
       this.sound.play();
       console.log("play sound");
     }
-    else
-    {
+    else {
       this.sound.pause();
       console.log("pause sound");
     }
