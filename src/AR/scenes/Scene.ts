@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import oc from 'three-orbit-controls';
 import Object3D from '../objects/Object3D';
+import VideoScene from './VideoScene';
 
 export default class Scene {
     video: HTMLVideoElement;
@@ -9,6 +10,8 @@ export default class Scene {
     renderer: THREE.WebGLRenderer;
     #renderOrder: number;
 
+    backgroundScene: VideoScene;
+
     /* eslint @typescript-eslint/no-explicit-any: 0 */
     controls: any;
     initialisation: boolean;
@@ -16,28 +19,16 @@ export default class Scene {
 
     constructor(video, debug) {
         this.video = video;
-        this.scene = null;
-        this.camera = null;
-        this.renderer = null;
-        this.controls = null;
-
         this.initialisation = false;
-
         this.#renderOrder = 0;
-
-        this.objects = []
+        this.objects = [];
         console.log("Init Scene");
 
+        this.backgroundScene = new VideoScene(video);
 
-        const ratio = window.innerWidth / this.video.videoWidth;
-        const renderheight = ratio * this.video.videoHeight;
-
-        globalThis.APPNamespace.height = renderheight;
-        globalThis.APPNamespace.width = window.innerWidth;
-
+        const renderheight = globalThis.APPNamespace.height;
 
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.VideoTexture(this.video);
         this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / renderheight, 0.1, 1000);
         // this.camera = new THREE.OrthographicCamera(this.width / - 2, this.width / 2, this.height / 2, this.height / - 2, .1, 1000);
         this.camera.position.z = renderheight;

@@ -83,6 +83,9 @@ export default class BodyTrackerScene extends Scene {
   }
 
   async animate() {
+
+
+    
     let nb_calls_render = 0;
 
     setInterval(() => {
@@ -93,6 +96,13 @@ export default class BodyTrackerScene extends Scene {
 
     /* eslint @typescript-eslint/no-this-alias: 0 */
     const self = this;
+
+    async function renderVideoScene() {
+      self.renderer.autoClear = false;
+      self.renderer.clear();
+      self.renderer.render(self.backgroundScene.scene, self.backgroundScene.camera);
+      requestAnimationFrame(renderVideoScene);
+    }
 
     async function render() {
       nb_calls_render++;
@@ -112,11 +122,12 @@ export default class BodyTrackerScene extends Scene {
           obj.animate();
         }
       });
-
       self.renderer.render(self.scene, self.camera);
 
       requestAnimationFrame(render);
     }
+
+    requestAnimationFrame(renderVideoScene);
     requestAnimationFrame(render);
   }
 }
