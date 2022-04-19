@@ -66,7 +66,20 @@ export default class BodyTrackerScene extends Scene {
         this.keypoints.find(keypoint => keypoint.name == `right_index_finger_mcp`)
       
       )
-    )
+    );
+
+    this.add3DObject(
+      new Palm(
+        [
+          this.keypoints.find(keypoint => keypoint.name == `left_index_finger_mcp`),
+          this.keypoints.find(keypoint => keypoint.name == `left_pinky_finger_mcp`),
+          this.keypoints.find(keypoint => keypoint.name == `left_wrist`),
+          this.keypoints.find(keypoint => keypoint.name == `left_thumb_cmc`)
+        ],
+        this.keypoints.find(keypoint => keypoint.name == `left_index_finger_mcp`)
+      
+      )
+    );
 
   }
 

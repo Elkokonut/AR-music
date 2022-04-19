@@ -20,7 +20,12 @@ export default class Palm extends Occluser {
 
 
     animate() {
-        const vertices = [this.vertices[0], this.vertices[1], this.vertices[2], this.vertices[0],this.vertices[2],this.vertices[3]]
+        const vertices = [
+            this.vertices[0], this.vertices[1], this.vertices[2], 
+            this.vertices[0],this.vertices[2],this.vertices[3],
+            this.vertices[2], this.vertices[1], this.vertices[0],
+            this.vertices[3],this.vertices[2],this.vertices[0]
+        ]
         const pts = new Float32Array(vertices.reduce(function (array, vertex) {
             array.push(vertex.position.x);
             array.push(vertex.position.y);
