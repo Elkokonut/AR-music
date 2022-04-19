@@ -1,6 +1,7 @@
 // Register WebGL backend.
 import * as pipe_holistic from '@mediapipe/holistic'
 import * as pipe_camera from '@mediapipe/camera_utils'
+import * as tf from '@tensorflow/tfjs';
 
 export default class poseDetector {
   video: HTMLVideoElement;
@@ -17,6 +18,7 @@ export default class poseDetector {
 
   async init(scene) {
     console.log("INIT AI");
+    const pose_model = await tf.loadLayersModel('pose_ml_model/model.json');
     const camera = new pipe_camera.Camera(this.video, {
       onFrame: async () => {
         await this.model.send({ image: this.video });
@@ -53,6 +55,16 @@ export default class poseDetector {
         || (results.rightHandLandmarks && results.rightHandLandmarks.length > 0)) {
         scene.update_keypoints(keypoints);
       }
+      let poseLandmarks_to_pred = tf.tensor(results.poseLandmarks.reduce(function (array, data_point) {
+        array.push(data_point.x);
+        array.push(data_point.y);
+        array.push(data_point.z);
+        array.push(data_point.visibility);
+        return array;
+       }, []));
+      poseLandmarks_to_pred = poseLandmarks_to_pred.expandDims(0);
+      const pred = (pose_model.predict(poseLandmarks_to_pred) as tf.Tensor).dataSync();
+      console.log(pred);
       nb_calls++;
     }
     this.model.onResults(onResults);
