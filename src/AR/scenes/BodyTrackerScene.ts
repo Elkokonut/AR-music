@@ -10,6 +10,7 @@ import BodyTrackerObject from "../objects/BodyTrackerObject"
 import InstrumentFactory from "../objects/InstrumentFactory";
 import Microphone from "../objects/Microphone";
 import Phalanx from "../objects/Phalanx";
+import Palm from "../objects/Palm";
 
 export default class BodyTrackerScene extends Scene {
   keypoints: Keypoint[];
@@ -54,6 +55,18 @@ export default class BodyTrackerScene extends Scene {
       }
       )
     );
+    this.add3DObject(
+      new Palm(
+        [
+          this.keypoints.find(keypoint => keypoint.name == `right_index_finger_mcp`),
+          this.keypoints.find(keypoint => keypoint.name == `right_pinky_finger_mcp`),
+          this.keypoints.find(keypoint => keypoint.name == `right_wrist`),
+          this.keypoints.find(keypoint => keypoint.name == `right_thumb_cmc`)
+        ],
+        this.keypoints.find(keypoint => keypoint.name == `right_index_finger_mcp`)
+      
+      )
+    )
 
   }
 
@@ -88,13 +101,14 @@ export default class BodyTrackerScene extends Scene {
           obj.animate(self.distances[obj.keypoint.type].getValue());
         else if (obj instanceof Microphone) {
           obj.animate();
-          const type = obj.keypoints[0].type;
-          obj.animate();
           obj.play_sound(self.keypoints.find(
             (keypoint) => keypoint.type == "body" && keypoint.order == 10
           ));
         }
         else if (obj instanceof Phalanx) {
+          obj.animate();
+        }
+        else if (obj instanceof Palm) {
           obj.animate();
         }
       });

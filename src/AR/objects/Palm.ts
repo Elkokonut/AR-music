@@ -6,28 +6,31 @@ import { MeshLine, MeshLineMaterial } from 'three.meshline';
 
 
 export default class Palm extends Occluser {
-    points: Keypoint[];
+    vertices: Keypoint[];
     anchor: Keypoint;
 
-    constructor(points, anchor)
+    constructor(vertices, anchor)
     {
-        const geometry = new THREE.PlaneGeometry( 1, 1 );
-        const material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+        const geometry = new THREE.BufferGeometry();
+        const material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
         const palm = new THREE.Mesh( geometry, material );
 
         super(palm, "");
-
-        this.points = points;
+        this.vertices = vertices;
         this.anchor = anchor;
     }
 
 
     animate() {
-        this.obj.geometry.setPoints(this.points);
+        const vertices = [this.vertices[0], this.vertices[1], this.vertices[2], this.vertices[0],this.vertices[2],this.vertices[3]]
+        const pts = new Float32Array(vertices.reduce(function (array, vertex) {
+            array.push(vertex.position.x);
+            array.push(vertex.position.y);
+            array.push(vertex.position.z);
+            return array;
+           }, []));
+        this.obj.geometry.setAttribute( 'position', new THREE.BufferAttribute(pts, 3) );
         this.obj.visible = this.anchor.is_visible;
-
-        const distance = Distance.getDistance(this.points[0], this.points[1], [20, 60], [0.3, 1.3]);
-        this.obj.material.lineWidth = 35 * distance;
         super.animate(null);
     }
 }
