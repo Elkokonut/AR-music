@@ -55,6 +55,8 @@ export default class Scene {
         this.renderer.setSize(window.innerWidth, renderheight);
         document.body.appendChild(this.renderer.domElement);
 
+        window.addEventListener("resize", this.resize);
+
 
         //this.addControls();
         this.addGridHelper();
