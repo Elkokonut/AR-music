@@ -7,13 +7,14 @@ export default class Scene {
     scene: THREE.Scene;
     camera: THREE.PerspectiveCamera | THREE.OrthographicCamera;
     renderer: THREE.WebGLRenderer;
+    #renderOrder: number;
 
     /* eslint @typescript-eslint/no-explicit-any: 0 */
     controls: any;
     initialisation: boolean;
     objects: Object3D[];
 
-    constructor(video) {
+    constructor(video, debug) {
         this.video = video;
         this.scene = null;
         this.camera = null;
@@ -22,10 +23,9 @@ export default class Scene {
 
         this.initialisation = false;
 
-        this.objects = []
-    }
+        this.#renderOrder = 0;
 
-    init() {
+        this.objects = []
         console.log("Init Scene");
 
 
@@ -38,7 +38,7 @@ export default class Scene {
 
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.VideoTexture(this.video);
-        this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / renderheight, 0.1, 0);
+        this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / renderheight, 0.1, 1000);
         // this.camera = new THREE.OrthographicCamera(this.width / - 2, this.width / 2, this.height / 2, this.height / - 2, .1, 1000);
         this.camera.position.z = renderheight;
         this.camera.lookAt(0, 0, 0);
@@ -46,9 +46,9 @@ export default class Scene {
         const light = new THREE.AmbientLight(0x404040); // soft white light
         this.scene.add(light);
 
-        const light1 = new THREE.PointLight()
-        light1.position.set(0.8, 1.4, renderheight + 5)
-        this.scene.add(light1)
+        const light1 = new THREE.PointLight();
+        light1.position.set(0.8, 1.4, renderheight + 5);
+        this.scene.add(light1);
 
         this.renderer = new THREE.WebGLRenderer();
 
@@ -56,10 +56,10 @@ export default class Scene {
         document.body.appendChild(this.renderer.domElement);
 
         window.addEventListener("resize", this.resize);
-
-
-        //this.addControls();
-        this.addGridHelper();
+        if (debug) {
+            this.addControls();
+            this.addGridHelper();
+        }
         this.initialisation = true;
     }
 
@@ -77,12 +77,16 @@ export default class Scene {
     }
 
     add3DObject(obj3D) {
+        obj3D.obj.renderOrder = this.#renderOrder++;
         this.scene.add(obj3D.obj);
         this.objects.push(obj3D);
     }
 
     addControls() {
-        this.controls = new oc(THREE)(this.camera, this.renderer.domElement);
+        const OrbitControls = oc(THREE);
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        this.controls.enableDamping = true;
+        this.controls.target.set(0, 1, 0);
     }
 
     addGridHelper() {

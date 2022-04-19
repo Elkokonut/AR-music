@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import Distance from "../../tools/Distance";
 import Keypoint from "../../tools/Keypoint";
 import Object3D from "./Object3D";
 import Pizzicato from "pizzicato";
@@ -46,8 +47,7 @@ export default class Microphone extends Object3D {
 
   }
 
-  animate(distance) {
-    super.animate(distance);
+  animate() {
     // Compute anchor and kp_align_pos from given keypoints
     //keypoints from hand:
     //          [1]         [3]
@@ -75,6 +75,9 @@ export default class Microphone extends Object3D {
     local_kp_align_pos.subVectors(kp_align_pos, anchor).normalize();
     this.obj.rotation.z =
       -Math.sign(local_kp_align_pos.x) * this.obj.up.angleTo(local_kp_align_pos);
+
+    const distance = Distance.getDistance(anchor, kp_align_pos, [20, 100], [-0.9999999, 1])
+    super.animate(distance);
   }
   play_sound(mouth_keypoint) {
     if (this.kp_align_pos.distanceTo(mouth_keypoint.position) < 150 && this.obj.visible) {

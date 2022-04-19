@@ -1,4 +1,4 @@
-declare function require(name:string);
+declare function require(name: string);
 
 import * as THREE from 'three'
 import oc from 'three-orbit-controls';
@@ -10,7 +10,7 @@ const OrbitControls = oc(THREE);
 /* Scene initialization */
 
 const scene = new THREE.Scene();
-scene.background =  new THREE.Color( 0x33CEA4 );
+scene.background = new THREE.Color(0x33CEA4);
 scene.add(new THREE.AxesHelper(5))
 
 
@@ -39,6 +39,33 @@ scene.add(light1);
 const ambientLight = new THREE.AmbientLight(0x404040, 1.0);
 scene.add(ambientLight);
 
+const material = new THREE.MeshPhongMaterial();
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const mesh = new THREE.Mesh(geometry, material.clone());
+mesh.material.color.set(0x0000ff);
+mesh.material.colorWrite = false; // <================= new
+mesh.renderOrder = 0;
+mesh.position.z = 10;
+scene.add(mesh);
+
+
+
+const material3 = new THREE.MeshPhongMaterial({ color: 0x08ECA9 });
+const geometry3 = new THREE.CircleGeometry(1, 32);
+const circle = new THREE.Mesh(geometry3, material3);
+circle.position.z = 4;
+circle.renderOrder = 5;
+circle.position.y = 5;
+scene.add(circle);
+
+const mesh2 = new THREE.Mesh(geometry.clone(), material.clone());
+mesh2.material.color.set(0x0000ff);
+mesh2.material.colorWrite = false; // <================= new
+mesh2.renderOrder = 4;
+mesh2.position.z = 10;
+mesh2.position.y = 5;
+scene.add(mesh2);
+
 /* ANCHOR 2 */
 const textureLoader = new THREE.TextureLoader();
 
@@ -52,18 +79,20 @@ loader.load(
         const metallicMap = await textureLoader.load(require("../static/models/mic/textures/Microphone_FBX_Microphone_Metalness.png"));
         const normalMap = await textureLoader.load(require("../static/models/mic/textures/Microphone_FBX_Microphone_Normal.png"));
         const roughnessMap = await textureLoader.load(require("../static/models/mic/textures/Microphone_FBX_Microphone_Roughness.png"));
-        
-        
+
+
         const micMaterial = new THREE.MeshStandardMaterial({
-          map: baseColorMap,
-          metalnessMap: metallicMap,
-          normalMap: normalMap,
-          roughnessMap : roughnessMap
+            map: baseColorMap,
+            metalnessMap: metallicMap,
+            normalMap: normalMap,
+            roughnessMap: roughnessMap
         });
 
         for (const child of object.children) {
-          child.material = micMaterial;
+            child.material = micMaterial;
         }
+        object = object.children[0];
+        object.renderOrder = 1;
         scene.add(object)
     },
     (xhr) => {
