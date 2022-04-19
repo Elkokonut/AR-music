@@ -55,7 +55,6 @@ export default class Scene {
         this.renderer.setSize(window.innerWidth, renderheight);
         document.body.appendChild(this.renderer.domElement);
 
-        window.addEventListener("resize", this.resize);
         if (debug) {
             this.addControls();
             this.addGridHelper();
@@ -66,12 +65,6 @@ export default class Scene {
     resize() {
         const ratio = window.innerWidth / this.video.videoWidth;
         const renderheight = ratio * this.video.videoHeight;
-
-        globalThis.APPNamespace.height = renderheight;
-        globalThis.APPNamespace.width = window.innerWidth;
-
-        this.camera.aspect = window.innerWidth / renderheight;
-        this.camera.updateProjectionMatrix()
         this.renderer.setSize(window.innerWidth, renderheight)
         this.renderer.render(this.scene, this.camera);
     }
