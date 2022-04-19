@@ -29,4 +29,14 @@ export default class Distance {
         res = (res - this.in_min) * (this.out_max - this.out_min) / (this.in_max - this.in_min) + this.out_min;
         return res;
     }
+
+    static getDistance(vector1, vector2, in_interval, out_interval) {
+        const pos1 = [vector1.x, vector1.y, vector1.z];
+        const pos2 = [vector2.x, vector2.y, vector2.z];
+        let res = distance(pos1, pos2) as number;
+        res = Math.min(in_interval[1], res);
+        res = Math.max(in_interval[0], res);
+        res = (res - in_interval[0]) * (out_interval[1] - out_interval[0]) / (in_interval[1] - in_interval[0]) + out_interval[0];
+        return res;
+    }
 }
