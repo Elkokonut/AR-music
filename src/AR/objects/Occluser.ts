@@ -1,5 +1,3 @@
-import BodyTrackerObject from './BodyTrackerObject';
-import * as THREE from 'three';
 import Object3D from './Object3D';
 
 export default class Occluser extends Object3D {

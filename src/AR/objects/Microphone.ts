@@ -76,7 +76,7 @@ export default class Microphone extends Object3D {
     this.obj.rotation.z =
       -Math.sign(local_kp_align_pos.x) * this.obj.up.angleTo(local_kp_align_pos);
 
-    let distance = Distance.getDistance(anchor, kp_align_pos, [20, 100], [-0.9999999, 1])
+    const distance = Distance.getDistance(anchor, kp_align_pos, [20, 100], [-0.9999999, 1])
     super.animate(distance);
   }
   play_sound(mouth_keypoint) {
