@@ -2,28 +2,20 @@ import Occluser from "./Occluser";
 import * as THREE from 'three';
 import Keypoint from "../../tools/Keypoint";
 import Distance from "../../tools/Distance";
-import Rotate from "../../tools/rotate_towards";
 import { MeshLine, MeshLineMaterial } from 'three.meshline';
 
 
-export default class Phalanx extends Occluser {
+export default class Palm extends Occluser {
     points: Keypoint[];
     anchor: Keypoint;
 
     constructor(points, anchor)
     {
-        const material = new MeshLineMaterial( {
+        const geometry = new THREE.PlaneGeometry( 1, 1 );
+        const material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+        const palm = new THREE.Mesh( geometry, material );
 
-            color: 0x00ffff,
-            lineWidth: 35, // in world units with size attenuation, pixels otherwise
-        } );
-
-        const line = new MeshLine();
-        line.setPoints(points);
-        line.material = material;
-        const mesh = new THREE.Mesh(line, material);
-
-        super(mesh, ""); 
+        super(palm, "");
 
         this.points = points;
         this.anchor = anchor;
