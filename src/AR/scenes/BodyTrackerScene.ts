@@ -66,7 +66,20 @@ export default class BodyTrackerScene extends Scene {
         this.keypoints.find(keypoint => keypoint.name == `right_index_finger_mcp`)
       
       )
-    )
+    );
+
+    this.add3DObject(
+      new Palm(
+        [
+          this.keypoints.find(keypoint => keypoint.name == `left_index_finger_mcp`),
+          this.keypoints.find(keypoint => keypoint.name == `left_pinky_finger_mcp`),
+          this.keypoints.find(keypoint => keypoint.name == `left_wrist`),
+          this.keypoints.find(keypoint => keypoint.name == `left_thumb_cmc`)
+        ],
+        this.keypoints.find(keypoint => keypoint.name == `left_index_finger_mcp`)
+      
+      )
+    );
 
   }
 
@@ -83,19 +96,10 @@ export default class BodyTrackerScene extends Scene {
   }
 
   async animate() {
-    let nb_calls_render = 0;
-
-    setInterval(() => {
-      document.getElementById("frameRateRender").innerHTML =
-        "Render FrameRate: " + nb_calls_render;
-      nb_calls_render = 0;
-    }, 1000);
-
     /* eslint @typescript-eslint/no-this-alias: 0 */
     const self = this;
 
     async function render() {
-      nb_calls_render++;
       self.objects.forEach((obj) => {
         if (obj instanceof BodyTrackerObject)
           obj.animate(self.distances[obj.keypoint.type].getValue());

@@ -35,12 +35,6 @@ export default class poseDetector {
       minDetectionConfidence: 0.3,
       minTrackingConfidence: 0.3
     });
-    let nb_calls = 0;
-    setInterval(() => {
-      document.getElementById("frameRateAI").innerHTML = 'AI FrameRate: ' + nb_calls;
-      nb_calls = 0;
-    }
-      , 1000);
     function onResults(results) {
       const keypoints =
       {
@@ -53,7 +47,6 @@ export default class poseDetector {
         || (results.rightHandLandmarks && results.rightHandLandmarks.length > 0)) {
         scene.update_keypoints(keypoints);
       }
-      nb_calls++;
     }
     this.model.onResults(onResults);
     camera.start();

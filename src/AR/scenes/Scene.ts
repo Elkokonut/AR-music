@@ -38,7 +38,7 @@ export default class Scene {
 
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.VideoTexture(this.video);
-        this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / renderheight, 0.1, 1000);
+        this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / renderheight, 0.1, renderheight + 500);
         // this.camera = new THREE.OrthographicCamera(this.width / - 2, this.width / 2, this.height / 2, this.height / - 2, .1, 1000);
         this.camera.position.z = renderheight;
         this.camera.lookAt(0, 0, 0);
@@ -70,7 +70,10 @@ export default class Scene {
         globalThis.APPNamespace.width = window.innerWidth;
 
         this.camera.aspect = window.innerWidth / renderheight;
-        this.camera.updateProjectionMatrix()
+        this.camera.position.z = renderheight;
+        this.camera.far = renderheight + 500;
+        this.camera.lookAt(0, 0, 0);
+        this.camera.updateProjectionMatrix();
         this.renderer.setSize(window.innerWidth, renderheight)
         this.renderer.render(this.scene, this.camera);
     }
