@@ -71,6 +71,7 @@ export default class Scene {
 
         this.camera.aspect = window.innerWidth / renderheight;
         this.camera.position.z = renderheight;
+        this.camera.far = renderheight + 500;
         this.camera.lookAt(0, 0, 0);
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(window.innerWidth, renderheight)
