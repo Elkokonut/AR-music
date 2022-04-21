@@ -78,10 +78,16 @@ export default class Scene {
         this.renderer.render(this.scene, this.camera);
     }
 
-    add3DObject(obj3D) {
+    append3DObject(obj3D) {
         obj3D.obj.renderOrder = this.#renderOrder++;
         this.scene.add(obj3D.obj);
         this.objects.push(obj3D);
+    }
+
+    prepend3DObject(obj3D) {
+        obj3D.obj.renderOrder = this.#renderOrder++;
+        this.scene.add(obj3D.obj);
+        this.objects.unshift(...[obj3D]);
     }
 
     addControls() {

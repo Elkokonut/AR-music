@@ -15,12 +15,13 @@ scene.add(new THREE.AxesHelper(5))
 
 
 const camera = new THREE.PerspectiveCamera(
-    75,
+    50,
     window.innerWidth / window.innerHeight,
     0.1,
-    1000
+    window.innerHeight + 500
 );
-camera.position.set(0.8, 1.4, 25);
+camera.position.z = window.innerHeight;
+camera.lookAt(0, 0, 0);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -74,7 +75,6 @@ loader.load(
     require('../static/models/mic/microphone.fbx'),
     async (object) => {
         /* ANCHOR 3 */
-        object.position.y = -8;
         const baseColorMap = await textureLoader.load(require("../static/models/mic/textures/Microphone_FBX_Microphone_BaseColor.png"));
         const metallicMap = await textureLoader.load(require("../static/models/mic/textures/Microphone_FBX_Microphone_Metalness.png"));
         const normalMap = await textureLoader.load(require("../static/models/mic/textures/Microphone_FBX_Microphone_Normal.png"));
@@ -93,6 +93,14 @@ loader.load(
         }
         object = object.children[0];
         object.renderOrder = 1;
+        object.scale.x = 2;
+        object.scale.y = 2;
+        object.scale.z = 2;
+
+
+
+        const bbox = new THREE.Box3().setFromObject(object);
+        console.log(bbox);
         scene.add(object)
     },
     (xhr) => {
@@ -102,6 +110,8 @@ loader.load(
         console.log(error)
     }
 )
+
+
 
 window.addEventListener('resize', onWindowResize, false)
 function onWindowResize() {
