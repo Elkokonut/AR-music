@@ -9,6 +9,8 @@ export default class Microphone extends Object3D {
   sound: Pizzicato.Sound;
   kp_align_pos: THREE.Vector3;
   isPlaying: boolean;
+  static base_dimension_Z = 2.8;
+
   constructor(obj, name, keypoints, scale) {
     super(obj, name, scale);
     this.obj.visible = false;

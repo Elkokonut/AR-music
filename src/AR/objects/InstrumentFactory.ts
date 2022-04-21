@@ -72,7 +72,7 @@ export default class InstrumentFactory {
           keypoints,
           [10, 10, 10]
         );
-        scene.add3DObject(inst);
+        scene.prepend3DObject(inst);
       },
       (xhr) => {
         console.log((xhr.loaded / xhr.total) * 100 + "% loaded");

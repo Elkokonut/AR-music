@@ -29,12 +29,12 @@ export default class Phalanx extends Occluser {
     }
 
 
-    animate() {
+    animate(distance) {
         this.obj.geometry.setPoints(this.points);
         this.obj.visible = this.anchor.is_visible;
 
-        const distance = Distance.getDistance(this.points[0], this.points[1], [20, 60], [0.3, 1.3]);
-        this.obj.material.lineWidth = 35 * distance;
-        super.animate(null);
+        const size = Distance.getDistance(this.points[0], this.points[1], [20, 60], [0.3, 1.3]);
+        this.obj.material.lineWidth = 35 * size;
+        super.animate(distance);
     }
 }

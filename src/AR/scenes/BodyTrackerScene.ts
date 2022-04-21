@@ -35,9 +35,6 @@ export default class BodyTrackerScene extends Scene {
   }
 
   initOcclusion() {
-    // const bot = this.keypoints.find(keypoint => keypoint.name == `left_eye_inner`);
-    // const mid = this.keypoints.find(keypoint => keypoint.name == `right_eye_inner`);
-    // this.add3DObject(new Phalanx(bot, mid));
     const sides = ["right", "left"];
     const fingers = ["thumb", "index_finger", "middle_finger", "ring_finger", "pinky_finger"];
     sides.forEach(side =>
@@ -50,12 +47,12 @@ export default class BodyTrackerScene extends Scene {
           mid = this.keypoints.find(keypoint => keypoint.name == `${side}_${finger}_pip`);
         const top = this.keypoints.find(keypoint => keypoint.name == `${side}_${finger}_tip`);
 
-        this.add3DObject(new Phalanx([bot.position, mid.position], mid));
-        this.add3DObject(new Phalanx([mid.position, top.position], mid));
+        this.append3DObject(new Phalanx([bot.position, mid.position], mid));
+        this.append3DObject(new Phalanx([mid.position, top.position], mid));
       }
       )
     );
-    this.add3DObject(
+    this.append3DObject(
       new Palm(
         [
           this.keypoints.find(keypoint => keypoint.name == `right_index_finger_mcp`),
@@ -68,7 +65,7 @@ export default class BodyTrackerScene extends Scene {
       )
     );
 
-    this.add3DObject(
+    this.append3DObject(
       new Palm(
         [
           this.keypoints.find(keypoint => keypoint.name == `left_index_finger_mcp`),
@@ -85,7 +82,7 @@ export default class BodyTrackerScene extends Scene {
 
   initDebug() {
     this.keypoints.forEach((keypoint) => {
-      this.add3DObject(new Disk(keypoint));
+      this.append3DObject(new Disk(keypoint));
     });
   }
 
@@ -100,20 +97,22 @@ export default class BodyTrackerScene extends Scene {
     const self = this;
 
     async function render() {
+      let microphone_distance = 0;
       self.objects.forEach((obj) => {
         if (obj instanceof BodyTrackerObject)
           obj.animate(self.distances[obj.keypoint.type].getValue());
         else if (obj instanceof Microphone) {
           obj.animate();
+          microphone_distance = Microphone.base_dimension_Z * obj.obj.scale.z;
           obj.play_sound(self.keypoints.find(
             (keypoint) => keypoint.type == "body" && keypoint.order == 10
           ));
         }
         else if (obj instanceof Phalanx) {
-          obj.animate();
+          obj.animate(microphone_distance);
         }
         else if (obj instanceof Palm) {
-          obj.animate();
+          obj.animate(microphone_distance);
         }
       });
 

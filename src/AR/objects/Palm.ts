@@ -19,7 +19,7 @@ export default class Palm extends Occluser {
     }
 
 
-    animate() {
+    animate(distance) {
         const vertices = [
             this.vertices[0], this.vertices[1], this.vertices[2], 
             this.vertices[0],this.vertices[2],this.vertices[3],
@@ -34,6 +34,6 @@ export default class Palm extends Occluser {
            }, []));
         this.obj.geometry.setAttribute( 'position', new THREE.BufferAttribute(pts, 3) );
         this.obj.visible = this.anchor.is_visible;
-        super.animate(null);
+        super.animate(distance);
     }
 }
