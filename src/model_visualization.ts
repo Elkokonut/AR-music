@@ -99,7 +99,7 @@ loader.load(
 
 
 
-        var bbox = new THREE.Box3().setFromObject(object);
+        const bbox = new THREE.Box3().setFromObject(object);
         console.log(bbox);
         scene.add(object)
     },
