@@ -24,10 +24,8 @@ export default class BodyTrackerScene extends Scene {
     this.initOcclusion();
 
     const factory = new InstrumentFactory();
-    factory.instantiate_instrument(
-      "microphone",
-      this
-    );
+    factory.instantiate_instrument("microphone", this);
+    factory.instantiate_instrument("drums", this);
 
 
     if (debug) this.initDebug();

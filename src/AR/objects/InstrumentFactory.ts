@@ -2,6 +2,8 @@ declare function require(name: string);
 
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
+import { TDSLoader } from "three/examples/jsm/loaders/TDSLoader";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import Microphone from "./Microphone";
 
 export default class InstrumentFactory {
@@ -9,6 +11,11 @@ export default class InstrumentFactory {
     switch (type) {
       case "microphone":
         this._load_microphone(scene);
+        break;
+
+      case "drums":
+        // this._load_red_drum(scene);
+        this._load_ancien_drum(scene);
         break;
 
       default:
@@ -82,4 +89,85 @@ export default class InstrumentFactory {
       }
     );
   }
+
+
+
+  _load_drumsticks(scene) {
+    const model_path = require("../../../static/models/drumstick/drumstick.fbx");
+    const fbxLoader = new FBXLoader();
+    fbxLoader.load(
+      model_path,
+      async (object) => {
+        console.log("success in loading Drumstick");
+        scene.scene.add(object);
+      },
+      (xhr) => {
+        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+
+  _load_red_drum(scene) {
+    const model_path = require("../../../static/models/red_drum/red_drum.3DS");
+    const tdsLoader = new TDSLoader();
+    tdsLoader.load(
+      model_path,
+      async (object) => {
+        console.log("success in loading red Drum");
+
+        object.scale.x = 0.1;
+        object.scale.y = 0.1;
+        object.scale.z = 0.1;
+        object.up.x = 1;
+        object.up.y = 0;
+
+        console.log(object);
+        scene.scene.add(object);
+      },
+      (xhr) => {
+        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+
+  _load_ancien_drum(scene) {
+    const obj_path = require("../../../static/models/NAMDrum/NAMDrum01.obj");
+    new OBJLoader()
+      .load(obj_path,
+        async (object) => {
+          console.log("success in loading ancien drum");
+          object.scale.x = 5;
+          object.scale.y = 5;
+          object.scale.z = 5;
+          object.up.x = 1;
+          const textureLoader = new THREE.TextureLoader();
+          const baseColorMap = await textureLoader.load(
+            require("../../../static/models/NAMDrum/NAMDrum01.jpg")
+          );
+          const drumMaterial = new THREE.MeshStandardMaterial({
+            map: baseColorMap
+          });
+          for (const child of object.children) {
+            child.material = drumMaterial;
+          }
+          console.log(object);
+          scene.scene.add(object);
+        },
+        (xhr) => {
+          console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
+
 }

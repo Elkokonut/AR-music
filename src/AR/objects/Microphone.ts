@@ -27,7 +27,7 @@ export default class Microphone extends Object3D {
     );
     this.sound.addEffect(
       // new Pizzicato.Effects.Reverb({
-      //   time: 0.5,
+      //   time: 1,
       //   decay: 0.5,
       //   reverse: true,
       //   mix: 1
