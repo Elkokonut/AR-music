@@ -1,16 +1,16 @@
 declare function require(name: string);
 const keypoint_json = require("../../../static/json/keypoints.json");
 import Scene from "./Scene";
-import Disk from "../objects/Disk";
+import Disk from "../objects/Trackers/Disk";
 import { initDistance, generateKeypoints } from "../../tools/keypoints_helper";
 import Keypoint from "../../tools/Keypoint";
 import Distance from "../../tools/Distance";
-import BodyTrackerObject from "../objects/BodyTrackerObject"
+import BodyTrackerObject from "../objects/Trackers/BodyTrackerObject"
 
-import InstrumentFactory from "../objects/InstrumentFactory";
-import Microphone from "../objects/Microphone";
-import Phalanx from "../objects/Phalanx";
-import Palm from "../objects/Palm";
+import InstrumentFactory from "../objects/Instruments/InstrumentFactory";
+import Microphone from "../objects/Instruments/Microphone";
+import Phalanx from "../objects/Occlusers/Phalanx";
+import Palm from "../objects/Occlusers/Palm";
 
 export default class BodyTrackerScene extends Scene {
   keypoints: Keypoint[];

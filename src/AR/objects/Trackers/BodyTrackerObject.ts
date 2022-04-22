@@ -1,5 +1,5 @@
-import Object3D from './Object3D';
-import Keypoint from '../../tools/Keypoint'
+import Object3D from '../Object3D';
+import Keypoint from '../../../tools/Keypoint'
 
 export default class BodyTrackerObject extends Object3D {
     keypoint: Keypoint;

@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import Distance from "../../tools/Distance";
-import Keypoint from "../../tools/Keypoint";
-import Object3D from "./Object3D";
+import Distance from "../../../tools/Distance";
+import Keypoint from "../../../tools/Keypoint";
+import Object3D from "../Object3D";
 import Pizzicato from "pizzicato";
 
 export default class Microphone extends Object3D {

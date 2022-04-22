@@ -25,7 +25,7 @@ export default class InstrumentFactory {
   }
 
   _load_microphone(scene) {
-    const model_path = require("../../../static/models/mic/microphone.fbx");
+    const model_path = require("../../../../static/models/mic/microphone.fbx");
     const name = "mic";
     const keypoints = [
       scene.keypoints.find(
@@ -49,16 +49,16 @@ export default class InstrumentFactory {
         // success
         console.log("success");
         const baseColorMap = await textureLoader.load(
-          require("../../../static/models/mic/textures/Microphone_FBX_Microphone_BaseColor.png")
+          require("../../../../static/models/mic/textures/Microphone_FBX_Microphone_BaseColor.png")
         );
         const metallicMap = await textureLoader.load(
-          require("../../../static/models/mic/textures/Microphone_FBX_Microphone_Metalness.png")
+          require("../../../../static/models/mic/textures/Microphone_FBX_Microphone_Metalness.png")
         );
         const normalMap = await textureLoader.load(
-          require("../../../static/models/mic/textures/Microphone_FBX_Microphone_Normal.png")
+          require("../../../../static/models/mic/textures/Microphone_FBX_Microphone_Normal.png")
         );
         const roughnessMap = await textureLoader.load(
-          require("../../../static/models/mic/textures/Microphone_FBX_Microphone_Roughness.png")
+          require("../../../../static/models/mic/textures/Microphone_FBX_Microphone_Roughness.png")
         );
 
         const minigunMaterial = new THREE.MeshStandardMaterial({
@@ -93,7 +93,7 @@ export default class InstrumentFactory {
 
 
   _load_drumsticks(scene) {
-    const model_path = require("../../../static/models/drumstick/drumstick.fbx");
+    const model_path = require("../../../../static/models/drumstick/drumstick.fbx");
     const fbxLoader = new FBXLoader();
     fbxLoader.load(
       model_path,
@@ -112,7 +112,7 @@ export default class InstrumentFactory {
 
 
   _load_red_drum(scene) {
-    const model_path = require("../../../static/models/red_drum/red_drum.3DS");
+    const model_path = require("../../../../static/models/red_drum/red_drum.3DS");
     const tdsLoader = new TDSLoader();
     tdsLoader.load(
       model_path,
@@ -139,7 +139,7 @@ export default class InstrumentFactory {
 
 
   _load_ancien_drum(scene) {
-    const obj_path = require("../../../static/models/NAMDrum/NAMDrum01.obj");
+    const obj_path = require("../../../../static/models/NAMDrum/NAMDrum01.obj");
     new OBJLoader()
       .load(obj_path,
         async (object) => {
@@ -150,7 +150,7 @@ export default class InstrumentFactory {
           object.up.x = 1;
           const textureLoader = new THREE.TextureLoader();
           const baseColorMap = await textureLoader.load(
-            require("../../../static/models/NAMDrum/NAMDrum01.jpg")
+            require("../../../../static/models/NAMDrum/NAMDrum01.jpg")
           );
           const drumMaterial = new THREE.MeshStandardMaterial({
             map: baseColorMap

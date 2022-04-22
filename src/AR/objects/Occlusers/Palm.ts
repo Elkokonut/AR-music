@@ -1,6 +1,6 @@
 import Occluser from "./Occluser";
 import * as THREE from 'three';
-import Keypoint from "../../tools/Keypoint";
+import Keypoint from "../../../tools/Keypoint";
 
 
 export default class Palm extends Occluser {
