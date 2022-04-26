@@ -15,11 +15,15 @@ export default class poseDetector {
     });
   }
 
-  async init(scene) {
+  async init(scene, ui) {
     console.log("INIT AI");
+    let count_calls = 0;
     const camera = new pipe_camera.Camera(this.video, {
       onFrame: async () => {
+        if (count_calls == 1)
+          ui.hideLoading();
         await this.model.send({ image: this.video });
+        count_calls++;
       }, 
       width: this.video.videoWidth,
       height: this.video.videoHeight
