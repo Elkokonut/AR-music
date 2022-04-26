@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import oc from 'three-orbit-controls';
+import Drum from '../objects/Instruments/Drum';
 import Object3D from '../objects/Object3D';
 
 export default class Scene {
@@ -23,7 +24,7 @@ export default class Scene {
 
         this.initialisation = false;
 
-        this.#renderOrder = 0;
+        this.#renderOrder = 10;
 
         this.objects = []
         console.log("Init Scene");
@@ -76,6 +77,12 @@ export default class Scene {
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(window.innerWidth, renderheight)
         this.renderer.render(this.scene, this.camera);
+
+        this.objects.forEach((obj) => {
+            if (obj instanceof Drum) {
+                obj.refresh_position();
+            }
+          });
     }
 
     append3DObject(obj3D) {

@@ -11,6 +11,8 @@ import InstrumentFactory from "../objects/Instruments/InstrumentFactory";
 import Microphone from "../objects/Instruments/Microphone";
 import Phalanx from "../objects/Occlusers/Phalanx";
 import Palm from "../objects/Occlusers/Palm";
+import Drum from "../objects/Instruments/Drum";
+import Drumstick from "../objects/Instruments/Drumstick";
 
 export default class BodyTrackerScene extends Scene {
   keypoints: Keypoint[];
@@ -21,12 +23,12 @@ export default class BodyTrackerScene extends Scene {
     this.keypoints = generateKeypoints(keypoint_json);
     this.distances = initDistance(keypoint_json, this.keypoints);
 
-    this.initOcclusion();
 
     const factory = new InstrumentFactory();
-    factory.instantiate_instrument("microphone", this);
-    factory.instantiate_instrument("drums", this);
 
+    this.initOcclusion();
+    // factory.instantiate_instrument("microphone", this);
+    factory.instantiate_instrument("drums", this);
 
     if (debug) this.initDebug();
     this.animate();
@@ -59,7 +61,7 @@ export default class BodyTrackerScene extends Scene {
           this.keypoints.find(keypoint => keypoint.name == `right_thumb_cmc`)
         ],
         this.keypoints.find(keypoint => keypoint.name == `right_index_finger_mcp`)
-      
+
       )
     );
 
@@ -72,7 +74,7 @@ export default class BodyTrackerScene extends Scene {
           this.keypoints.find(keypoint => keypoint.name == `left_thumb_cmc`)
         ],
         this.keypoints.find(keypoint => keypoint.name == `left_index_finger_mcp`)
-      
+
       )
     );
 
@@ -111,6 +113,15 @@ export default class BodyTrackerScene extends Scene {
         }
         else if (obj instanceof Palm) {
           obj.animate(microphone_distance);
+        }
+        else if (obj instanceof Drum) {
+          obj.animate(self.objects.filter(
+            (stick) => stick.obj.name.includes("drumstick")
+            )
+          );
+        }
+        else if (obj instanceof Drumstick) {
+          obj.animate();
         }
       });
 

@@ -56,7 +56,7 @@ video.addEventListener('pause', async function () {
 
 
 async function initPage() {
-  const scene = new BodyTrackerScene(video, false);
+  const scene = new BodyTrackerScene(video, true);
 
   window.addEventListener("resize", function() {
     scene.resize();
