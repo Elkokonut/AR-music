@@ -100,7 +100,6 @@ loader.load(
 
 
         const bbox = new THREE.Box3().setFromObject(object);
-        console.log(bbox);
         scene.add(object)
     },
     (xhr) => {

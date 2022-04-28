@@ -7,8 +7,47 @@ import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import Microphone from "./Microphone";
 import Drum from "./Drum";
 import Drumstick from "./Drumstick";
+import Object3D from "../Object3D";
 
 export default class InstrumentFactory {
+  instruments: { [key: string]: Object3D[] };
+
+  constructor() {
+    this.instruments = {};
+  }
+
+  change_instrument(type, scene) {
+    if (this.instruments["microphone"] && type != "microphone") {
+      scene.removeByName("mic");
+    }
+    else if (type == "microphone") {
+      if (!this.instruments["microphone"])
+        this._load_microphone(scene);
+      else if (!scene.objects.includes(this.instruments["microphone"][0]))
+        scene.prepend3DObject(this.instruments["microphone"][0]);
+    }
+    if (this.instruments["drums"] && type != "drums") {
+      scene.removeByName("right_drumstick");
+      scene.removeByName("left_drumstick");
+      scene.removeByName("ancien_drum");
+      scene.removeByName("red_drum");
+    }
+    else if (type == "drums") {
+      if (!this.instruments["drums"]) {
+        this._load_red_drum(scene);
+        this._load_ancien_drum(scene);
+        this._load_drumsticks(scene);
+      }
+      else if (!scene.objects.includes(this.instruments["drums"][0])) {
+        this.instruments["drums"].forEach((obj) => {
+          scene.prepend3DObject(obj);
+          if (obj.obj.name == "ancien_drum" || obj.obj.name == "red_drum")
+            obj.obj.renderOrder = 0;
+        });
+      }
+    }
+  }
+
   instantiate_instrument(type, scene) {
     switch (type) {
       case "microphone":
@@ -75,13 +114,14 @@ export default class InstrumentFactory {
           child.material = minigunMaterial;
         }
 
-        console.log(object);
         const inst = new Microphone(
           object.children[0],
           name,
           keypoints,
           [10, 10, 10]
         );
+
+        this.instruments["microphone"] = [inst];
         scene.prepend3DObject(inst);
       },
       (xhr) => {
@@ -116,20 +156,27 @@ export default class InstrumentFactory {
       async (right_object) => {
         console.log("success in loading Drumstick");
         const left_object = right_object.clone();
-        const right_inst = new Drumstick(
+        const right_stick = new Drumstick(
           right_object,
           "right_drumstick",
           right_keypoints,
           [0.2, 0.2, 0.2]
         );
-        const left_inst = new Drumstick(
+        const left_stick = new Drumstick(
           left_object,
           "left_drumstick",
           left_keypoints,
           [0.2, 0.2, 0.2]
         );
-        scene.prepend3DObject(right_inst);
-        scene.prepend3DObject(left_inst);
+
+        if (!this.instruments["drums"])
+          this.instruments["drums"] = [];
+
+        this.instruments["drums"].push(right_stick);
+        this.instruments["drums"].push(left_stick);
+
+        scene.prepend3DObject(right_stick);
+        scene.prepend3DObject(left_stick);
       },
       (xhr) => {
         console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
@@ -161,8 +208,13 @@ export default class InstrumentFactory {
           require("url:../../../../static/sound sample/snare.wav"
           )
         );
+
+        if (!this.instruments["drums"])
+          this.instruments["drums"] = [];
+        this.instruments["drums"].push(drum);
+
         scene.append3DObject(drum);
-        drum.obj.renderOrder = 0;
+        drum.obj.renderOrder = 1;
       },
       (xhr) => {
         console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
@@ -201,6 +253,11 @@ export default class InstrumentFactory {
             require("url:../../../../static/sound sample/drum.wav"
             )
           );
+
+          if (!this.instruments["drums"])
+            this.instruments["drums"] = [];
+          this.instruments["drums"].push(drum);
+
           scene.append3DObject(drum);
           drum.obj.renderOrder = 0;
         },

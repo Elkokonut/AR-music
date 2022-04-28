@@ -82,19 +82,30 @@ export default class Scene {
             if (obj instanceof Drum) {
                 obj.refresh_position();
             }
-          });
+        });
     }
 
-    append3DObject(obj3D) {
+    append3DObject(obj3D: Object3D) {
         obj3D.obj.renderOrder = this.#renderOrder++;
         this.scene.add(obj3D.obj);
         this.objects.push(obj3D);
     }
 
-    prepend3DObject(obj3D) {
+    prepend3DObject(obj3D: Object3D) {
         obj3D.obj.renderOrder = this.#renderOrder++;
         this.scene.add(obj3D.obj);
         this.objects.unshift(...[obj3D]);
+    }
+
+    removeByName(name: string) {
+        const obj3D = this.objects.find((obj) => obj.obj.name == name);
+        if (obj3D) {
+            obj3D.obj.removeFromParent();
+            this.objects = this.objects.filter(function (obj, index, arr) {
+                return obj.obj.name != name;
+            });
+        }
+        return obj3D;
     }
 
     addControls() {

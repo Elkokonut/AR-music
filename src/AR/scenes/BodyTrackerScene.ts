@@ -17,19 +17,14 @@ import Drumstick from "../objects/Instruments/Drumstick";
 export default class BodyTrackerScene extends Scene {
   keypoints: Keypoint[];
   distances: { [key: string]: Distance };
+  factory: InstrumentFactory;
 
   constructor(video, debug) {
     super(video, debug);
     this.keypoints = generateKeypoints(keypoint_json);
     this.distances = initDistance(keypoint_json, this.keypoints);
-
-
-    const factory = new InstrumentFactory();
-
+    this.factory = new InstrumentFactory();
     this.initOcclusion();
-    // factory.instantiate_instrument("microphone", this);
-    factory.instantiate_instrument("drums", this);
-
     if (debug) this.initDebug();
     this.animate();
   }
@@ -97,28 +92,29 @@ export default class BodyTrackerScene extends Scene {
     const self = this;
 
     async function render() {
-      let microphone_distance = 0;
+      let occluser_dist = 0;
       self.objects.forEach((obj) => {
         if (obj instanceof BodyTrackerObject)
           obj.animate(self.distances[obj.keypoint.type].getValue());
         else if (obj instanceof Microphone) {
           obj.animate();
-          microphone_distance = Microphone.base_dimension_Z * obj.obj.scale.z;
+          occluser_dist = Math.max(occluser_dist,Microphone.base_dimension_Z * obj.obj.scale.z);
           obj.play_sound(self.keypoints.find(
             (keypoint) => keypoint.type == "body" && keypoint.order == 10
           ));
         }
         else if (obj instanceof Phalanx) {
-          obj.animate(microphone_distance);
+          obj.animate(occluser_dist);
         }
         else if (obj instanceof Palm) {
-          obj.animate(microphone_distance);
+          obj.animate(occluser_dist);
         }
         else if (obj instanceof Drum) {
           obj.animate(self.objects.filter(
             (stick) => stick.obj.name.includes("drumstick")
             )
           );
+          occluser_dist = Math.max(occluser_dist, Drumstick.base_dimension_Z * obj.obj.scale.z);
         }
         else if (obj instanceof Drumstick) {
           obj.animate();

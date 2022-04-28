@@ -30,7 +30,6 @@ if (webcam) {
 let initialisation = false;
 
 video.addEventListener('canplay', async function () {
-  console.log("canplay fired");
   if (!initialisation) {
     initialisation = true;
     await initPage();
@@ -39,7 +38,6 @@ video.addEventListener('canplay', async function () {
 });
 
 video.addEventListener('playing', async function () {
-  console.log("playing fired");
   if (!initialisation) {
     initialisation = true;
     await initPage();
@@ -47,7 +45,6 @@ video.addEventListener('playing', async function () {
 });
 
 video.addEventListener('pause', async function () {
-  console.log("pause fired");
   if (!initialisation) {
     initialisation = true;
     await initPage();
@@ -59,7 +56,7 @@ video.addEventListener('pause', async function () {
 async function initPage() {
   const ui = new UI();
   ui.showLoading();
-  const scene = new BodyTrackerScene(video, true);
+  const scene = new BodyTrackerScene(video, false);
 
   window.addEventListener("resize", function() {
     scene.resize();
@@ -67,7 +64,6 @@ async function initPage() {
   const promise = video.play();
   if (promise !== undefined) {
     promise.catch(error => {
-      console.log("Create Button: " + error);
       // Auto-play was prevented
       // Show a UI element to let the user manually start playback
       createButton();

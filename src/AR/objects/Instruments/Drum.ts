@@ -65,8 +65,6 @@ export default class Drum extends Object3D {
             this.canplay = false;
         }
         else {
-            if (this.canplay == false)
-                console.log("switch");
             this.canplay = true;
         }
     }
