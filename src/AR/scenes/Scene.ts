@@ -101,7 +101,7 @@ export default class Scene {
         const obj3D = this.objects.find((obj) => obj.obj.name == name);
         if (obj3D) {
             obj3D.obj.removeFromParent();
-            this.objects = this.objects.filter(function (obj, index, arr) {
+            this.objects = this.objects.filter(function (obj) {
                 return obj.obj.name != name;
             });
         }

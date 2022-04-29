@@ -1,5 +1,4 @@
-import { distance, i } from "mathjs";
-import Keypoint from "./Keypoint";
+import { distance } from "mathjs";
 
 
 export default class Distance {

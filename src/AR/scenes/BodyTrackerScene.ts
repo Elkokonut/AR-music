@@ -4,7 +4,6 @@ import Scene from "./Scene";
 import Disk from "../objects/Trackers/Disk";
 import { generateKeypoints } from "../../tools/keypoints_helper";
 import Keypoint from "../../tools/Keypoint";
-import Distance from "../../tools/Distance";
 import BodyTrackerObject from "../objects/Trackers/BodyTrackerObject"
 
 import InstrumentFactory from "../objects/Instruments/InstrumentFactory";
