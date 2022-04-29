@@ -63,22 +63,21 @@ export default class Microphone extends Object3D {
       const anchor = new THREE.Vector3();
 
       this.kp_align_pos.subVectors(this.keypoints[1].position, this.keypoints[0].position)
-      .multiplyScalar(2 / 3)
-      .add(this.keypoints[0].position);
+        .multiplyScalar(1 / 2)
+        .add(this.keypoints[0].position);
 
       anchor.subVectors(this.keypoints[3].position, this.keypoints[2].position)
-      .multiplyScalar(1 / 2)
-      .add(this.keypoints[2].position);
+        .multiplyScalar(1 / 2)
+        .add(this.keypoints[2].position);
 
       this.obj.position.x = anchor.x;
       this.obj.position.y = anchor.y;
       this.obj.position.z = anchor.z;
 
       // Get align vector from anchor referential.s
-      const local_kp_align_pos = new THREE.Vector3();
-      local_kp_align_pos.subVectors(this.kp_align_pos, anchor).normalize();
-      this.obj.rotation.z =
-        -Math.sign(local_kp_align_pos.x) * this.obj.up.angleTo(local_kp_align_pos);
+      const align_vector = new THREE.Vector3();
+      align_vector.subVectors(this.kp_align_pos, anchor).normalize();
+      this.obj.rotation.z = - Math.sign(align_vector.x) * this.obj.up.angleTo(align_vector);
     }
   }
   play_sound(mouth_keypoint) {

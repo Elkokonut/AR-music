@@ -9,7 +9,7 @@ export default class Drumstick extends Object3D {
 
   constructor(obj, name, keypoints, scale) {
     super(obj, name, scale);
-    // this.obj.visible = false;
+    this.obj.visible = false;
     this.keypoints = keypoints;
     this.box = new THREE.Box3().setFromObject(this.obj);
   }

@@ -70,18 +70,10 @@ export default class InstrumentFactory {
     const model_path = require("../../../../static/models/mic/microphone.fbx");
     const name = "mic";
     const keypoints = [
-      scene.keypoints.find(
-        (keypoint) => keypoint.type == "right_hand" && keypoint.order == 1
-      ),
-      scene.keypoints.find(
-        (keypoint) => keypoint.type == "right_hand" && keypoint.order == 5
-      ),
-      scene.keypoints.find(
-        (keypoint) => keypoint.type == "right_hand" && keypoint.order == 0
-      ),
-      scene.keypoints.find(
-        (keypoint) => keypoint.type == "right_hand" && keypoint.order == 17
-      ),
+      scene.keypoints.find((keypoint) => keypoint.name == "right_index_finger_mcp"),
+      scene.keypoints.find((keypoint) => keypoint.name == "right_index_finger_pip"),
+      scene.keypoints.find((keypoint) => keypoint.name == "right_pinky_finger_mcp"),
+      scene.keypoints.find((keypoint) => keypoint.name == "right_pinky_finger_pip")
     ];
     const fbxLoader = new FBXLoader();
     const textureLoader = new THREE.TextureLoader();
@@ -139,17 +131,17 @@ export default class InstrumentFactory {
     const model_path = require("../../../../static/models/drumstick/drumstick.fbx");
     const fbxLoader = new FBXLoader();
     const right_keypoints = [
-      scene.keypoints.find((keypoint) => keypoint.name == "right_thumb_cmc"),
       scene.keypoints.find((keypoint) => keypoint.name == "right_index_finger_mcp"),
-      scene.keypoints.find((keypoint) => keypoint.name == "right_wrist"),
-      scene.keypoints.find((keypoint) => keypoint.name == "right_pinky_finger_mcp")
+      scene.keypoints.find((keypoint) => keypoint.name == "right_index_finger_pip"),
+      scene.keypoints.find((keypoint) => keypoint.name == "right_pinky_finger_mcp"),
+      scene.keypoints.find((keypoint) => keypoint.name == "right_pinky_finger_pip")
     ];
 
     const left_keypoints = [
-      scene.keypoints.find((keypoint) => keypoint.name == "left_thumb_cmc"),
       scene.keypoints.find((keypoint) => keypoint.name == "left_index_finger_mcp"),
-      scene.keypoints.find((keypoint) => keypoint.name == "left_wrist"),
-      scene.keypoints.find((keypoint) => keypoint.name == "left_pinky_finger_mcp")
+      scene.keypoints.find((keypoint) => keypoint.name == "left_index_finger_pip"),
+      scene.keypoints.find((keypoint) => keypoint.name == "left_pinky_finger_mcp"),
+      scene.keypoints.find((keypoint) => keypoint.name == "left_pinky_finger_pip")
     ];
     fbxLoader.load(
       model_path,
