@@ -14,6 +14,7 @@ import Palm from "../objects/Occlusers/Palm";
 import Drum from "../objects/Instruments/Drum";
 import Drumstick from "../objects/Instruments/Drumstick";
 import Hand from "../../tools/Hand";
+import Occluser from "../objects/Occlusers/Occluser";
 
 export default class BodyTrackerScene extends Scene {
   keypoints: Keypoint[];
@@ -97,42 +98,46 @@ export default class BodyTrackerScene extends Scene {
     const self = this;
 
     async function render() {
-      let occluser_dist = 0;
       self.rightHand.refresh();
       self.leftHand.refresh();
+      let occlusionZ = 0;
 
       self.objects.forEach((obj) => {
         if (obj instanceof BodyTrackerObject)
           obj.animate();
-        else if (obj instanceof Phalanx) {
-          obj.animate(occluser_dist);
-        }
-        else if (obj instanceof Palm) {
-          obj.animate(occluser_dist);
+        else if (obj instanceof Occluser) {
+          if (obj.obj.name.includes("left"))
+            obj.animate(self.leftHand.is_closed);
+          else
+            obj.animate(self.rightHand.is_closed);
+          obj.obj.position.setZ(occlusionZ);
         }
         else if (obj instanceof Drum) {
           obj.animate(self.objects.filter(
             (stick) => stick.obj.name.includes("drumstick")
-          )
-          );
+          ));
         }
         else if (obj instanceof Microphone) {
-          obj.animate();
-          occluser_dist = Math.max(occluser_dist, Microphone.base_dimension_Z * obj.obj.scale.z);
+          obj.animate(self.rightHand.is_closed);
           obj.play_sound(self.keypoints.find(
             (keypoint) => keypoint.type == "body" && keypoint.order == 10
           ));
-          obj.obj.visible = obj.obj.visible ? self.rightHand.is_closed : false;
+          obj.scaling(self.rightHand.distance);
+          occlusionZ = Math.max(occlusionZ, Microphone.base_dimension_Z * obj.obj.scale.z);
         }
         else if (obj instanceof Drumstick) {
-          obj.animate();
-          if (obj.obj.name.includes("left"))
-            obj.obj.visible = obj.obj.visible ? self.leftHand.is_closed : false;
-          else
-            obj.obj.visible = obj.obj.visible ? self.rightHand.is_closed : false;
+          if (obj.obj.name.includes("left")) {
+            obj.animate(self.leftHand.is_closed);
+            obj.scaling(self.leftHand.distance);
+          }
+          else {
+            obj.animate(self.rightHand.is_closed);
+            obj.scaling(self.rightHand.distance);
+          }
+          occlusionZ = Math.max(occlusionZ, Drumstick.base_dimension_Z * obj.obj.scale.z);
         }
 
-        occluser_dist = Math.max(occluser_dist, Drumstick.base_dimension_Z * obj.obj.scale.z);
+
       });
 
       self.renderer.render(self.scene, self.camera);
