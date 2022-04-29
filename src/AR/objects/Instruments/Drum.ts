@@ -1,7 +1,7 @@
 import Object3D from "../Object3D";
 import * as THREE from "three";
 import { Howl } from 'howler';
-import Keypoint from "../../../tools/Keypoint";
+import Keypoint from "../../../Geometry/Keypoint";
 import Drumstick from "./Drumstick";
 
 export default class Drum extends Object3D {

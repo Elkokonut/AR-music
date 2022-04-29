@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import oc from 'three-orbit-controls';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Drum from '../objects/Instruments/Drum';
 import Object3D from '../objects/Object3D';
 
@@ -9,33 +9,22 @@ export default class Scene {
     camera: THREE.PerspectiveCamera | THREE.OrthographicCamera;
     renderer: THREE.WebGLRenderer;
     #renderOrder: number;
-
-    /* eslint @typescript-eslint/no-explicit-any: 0 */
-    controls: any;
+    controls: OrbitControls;
     initialisation: boolean;
     objects: Object3D[];
 
     constructor(video, debug) {
         this.video = video;
-        this.scene = null;
-        this.camera = null;
-        this.renderer = null;
         this.controls = null;
-
         this.initialisation = false;
-
         this.#renderOrder = 10;
-
         this.objects = []
         console.log("Init Scene");
-
-
         const ratio = window.innerWidth / this.video.videoWidth;
         const renderheight = ratio * this.video.videoHeight;
 
         globalThis.APPNamespace.height = renderheight;
         globalThis.APPNamespace.width = window.innerWidth;
-
 
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.VideoTexture(this.video);
@@ -55,6 +44,7 @@ export default class Scene {
 
         this.renderer.setSize(window.innerWidth, renderheight);
         document.body.appendChild(this.renderer.domElement);
+        document.querySelector('canvas').setAttribute("id", "scene");
 
         if (debug) {
             this.addControls();
@@ -109,7 +99,6 @@ export default class Scene {
     }
 
     addControls() {
-        const OrbitControls = oc(THREE);
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.enableDamping = true;
         this.controls.target.set(0, 1, 0);

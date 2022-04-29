@@ -1,7 +1,7 @@
 import Occluser from "./Occluser";
 import * as THREE from 'three';
-import Keypoint from "../../../tools/Keypoint";
-import Distance from "../../../tools/Distance";
+import Keypoint from "../../../Geometry/Keypoint";
+import Distance from "../../../Geometry/Distance";
 import { MeshLine, MeshLineMaterial } from 'three.meshline';
 
 

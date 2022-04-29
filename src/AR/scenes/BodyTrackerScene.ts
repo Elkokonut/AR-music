@@ -2,8 +2,7 @@ declare function require(name: string);
 const keypoint_json = require("../../../static/json/keypoints.json");
 import Scene from "./Scene";
 import Disk from "../objects/Trackers/Disk";
-import { generateKeypoints } from "../../tools/keypoints_helper";
-import Keypoint from "../../tools/Keypoint";
+import Keypoint from "../../Geometry/Keypoint";
 import BodyTrackerObject from "../objects/Trackers/BodyTrackerObject"
 
 import InstrumentFactory from "../objects/Instruments/InstrumentFactory";
@@ -12,7 +11,7 @@ import Phalanx from "../objects/Occlusers/Phalanx";
 import Palm from "../objects/Occlusers/Palm";
 import Drum from "../objects/Instruments/Drum";
 import Drumstick from "../objects/Instruments/Drumstick";
-import Hand from "../../tools/Hand";
+import Hand from "../../Geometry/Hand";
 import Occluser from "../objects/Occlusers/Occluser";
 
 export default class BodyTrackerScene extends Scene {
@@ -23,7 +22,7 @@ export default class BodyTrackerScene extends Scene {
 
   constructor(video, debug) {
     super(video, debug);
-    this.keypoints = generateKeypoints(keypoint_json);
+    this.keypoints = Keypoint.generateKeypoints(keypoint_json);
     this.factory = new InstrumentFactory();
 
     this.leftHand = new Hand(this.keypoints.filter(keypoint => keypoint.type == "left_hand"));

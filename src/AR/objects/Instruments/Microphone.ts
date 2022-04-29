@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import Keypoint from "../../../tools/Keypoint";
+import Keypoint from "../../../Geometry/Keypoint";
 import Object3D from "../Object3D";
 import Pizzicato from "pizzicato";
 

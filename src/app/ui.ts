@@ -1,6 +1,3 @@
-declare function require(name: string);
-require("../loading.scss");
-
 export class UI {
     loadingModal: HTMLElement;
     constructor() {

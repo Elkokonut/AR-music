@@ -3,7 +3,6 @@ import Distance from './Distance';
 import Keypoint from "./Keypoint";
 
 
-
 export default class Hand {
     type: string;
     keypoints: Keypoint[];
