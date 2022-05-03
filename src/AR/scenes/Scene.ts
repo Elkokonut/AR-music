@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import oc from 'three-orbit-controls';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import Drum from '../objects/Instruments/Drum';
 import Object3D from '../objects/Object3D';
 
 export default class Scene {
@@ -8,33 +9,22 @@ export default class Scene {
     camera: THREE.PerspectiveCamera | THREE.OrthographicCamera;
     renderer: THREE.WebGLRenderer;
     #renderOrder: number;
-
-    /* eslint @typescript-eslint/no-explicit-any: 0 */
-    controls: any;
+    controls: OrbitControls;
     initialisation: boolean;
     objects: Object3D[];
 
     constructor(video, debug) {
         this.video = video;
-        this.scene = null;
-        this.camera = null;
-        this.renderer = null;
         this.controls = null;
-
         this.initialisation = false;
-
-        this.#renderOrder = 0;
-
+        this.#renderOrder = 10;
         this.objects = []
         console.log("Init Scene");
-
-
         const ratio = window.innerWidth / this.video.videoWidth;
         const renderheight = ratio * this.video.videoHeight;
 
         globalThis.APPNamespace.height = renderheight;
         globalThis.APPNamespace.width = window.innerWidth;
-
 
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.VideoTexture(this.video);
@@ -54,6 +44,7 @@ export default class Scene {
 
         this.renderer.setSize(window.innerWidth, renderheight);
         document.body.appendChild(this.renderer.domElement);
+        document.querySelector('canvas').setAttribute("id", "scene");
 
         if (debug) {
             this.addControls();
@@ -76,22 +67,38 @@ export default class Scene {
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(window.innerWidth, renderheight)
         this.renderer.render(this.scene, this.camera);
+
+        this.objects.forEach((obj) => {
+            if (obj instanceof Drum) {
+                obj.refresh_position();
+            }
+        });
     }
 
-    append3DObject(obj3D) {
+    append3DObject(obj3D: Object3D) {
         obj3D.obj.renderOrder = this.#renderOrder++;
         this.scene.add(obj3D.obj);
         this.objects.push(obj3D);
     }
 
-    prepend3DObject(obj3D) {
+    prepend3DObject(obj3D: Object3D) {
         obj3D.obj.renderOrder = this.#renderOrder++;
         this.scene.add(obj3D.obj);
         this.objects.unshift(...[obj3D]);
     }
 
+    removeByName(name: string) {
+        const obj3D = this.objects.find((obj) => obj.obj.name == name);
+        if (obj3D) {
+            obj3D.obj.removeFromParent();
+            this.objects = this.objects.filter(function (obj) {
+                return obj.obj.name != name;
+            });
+        }
+        return obj3D;
+    }
+
     addControls() {
-        const OrbitControls = oc(THREE);
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.enableDamping = true;
         this.controls.target.set(0, 1, 0);
