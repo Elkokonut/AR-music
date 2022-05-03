@@ -105,9 +105,13 @@ export default class BodyTrackerScene extends Scene {
           obj.animate();
         else if (obj instanceof Occluser) {
           if (obj.obj.name.includes("left"))
+          {
             obj.animate(self.leftHand.is_closed);
+          }
           else
+          {
             obj.animate(self.rightHand.is_closed);
+          }
           obj.obj.position.setZ(occlusionZ);
         }
         else if (obj instanceof Drum) {
@@ -117,9 +121,7 @@ export default class BodyTrackerScene extends Scene {
         }
         else if (obj instanceof Microphone) {
           obj.animate(self.rightHand.is_closed);
-          obj.play_sound(self.keypoints.find(
-            (keypoint) => keypoint.type == "body" && keypoint.order == 10
-          ));
+          obj.play_sound(self.keypoints.find((keypoint) => keypoint.name == "mouth_right"));
           obj.scaling(self.rightHand.distance);
           occlusionZ = Math.max(occlusionZ, Microphone.base_dimension_Z * obj.obj.scale.z);
         }
@@ -134,8 +136,6 @@ export default class BodyTrackerScene extends Scene {
           }
           occlusionZ = Math.max(occlusionZ, Drumstick.base_dimension_Z * obj.obj.scale.z);
         }
-
-
       });
 
       self.renderer.render(self.scene, self.camera);
