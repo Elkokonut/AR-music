@@ -1,6 +1,7 @@
 import BodyTrackerScene from './AR/scenes/BodyTrackerScene';
 import poseDetector from './AI/holistic';
 import enableInlineVideo from 'iphone-inline-video';
+import { UI } from './ui';
 
 
 const webcam = true;
@@ -56,6 +57,8 @@ video.addEventListener('pause', async function () {
 
 
 async function initPage() {
+  const ui = new UI();
+  ui.showLoading();
   const scene = new BodyTrackerScene(video, true);
 
   window.addEventListener("resize", function() {
@@ -83,7 +86,7 @@ async function initPage() {
                                           max-width: 100%; \
                                           height: 100%;');
   const pose_detector = new poseDetector(video);
-  await pose_detector.init(scene);
+  await pose_detector.init(scene, ui);
 }
 
 
