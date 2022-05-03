@@ -1,6 +1,6 @@
 import Occluser from "./Occluser";
 import * as THREE from 'three';
-import Keypoint from "../../../tools/Keypoint";
+import Keypoint from "../../../Geometry/Keypoint";
 
 
 export default class Palm extends Occluser {
@@ -19,7 +19,7 @@ export default class Palm extends Occluser {
     }
 
 
-    animate(distance) {
+    animate(display) {
         const vertices = [
             this.vertices[0], this.vertices[1], this.vertices[2], 
             this.vertices[0],this.vertices[2],this.vertices[3],
@@ -33,7 +33,6 @@ export default class Palm extends Occluser {
             return array;
            }, []));
         this.obj.geometry.setAttribute( 'position', new THREE.BufferAttribute(pts, 3) );
-        this.obj.visible = this.anchor.is_visible;
-        super.animate(distance);
+        super.animate(this.anchor.is_visible && display);
     }
 }

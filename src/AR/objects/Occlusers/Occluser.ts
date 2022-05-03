@@ -9,8 +9,7 @@ export default class Occluser extends Object3D {
     }
 
 
-    animate(distance) {
-        super.animate(null);
-        this.obj.position.z = distance;
+    animate(display) {
+        this.obj.visible = display;
     }
 }

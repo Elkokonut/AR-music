@@ -1,5 +1,5 @@
 import Object3D from '../Object3D';
-import Keypoint from '../../../tools/Keypoint'
+import Keypoint from '../../../Geometry/Keypoint'
 
 export default class BodyTrackerObject extends Object3D {
     keypoint: Keypoint;
@@ -10,13 +10,12 @@ export default class BodyTrackerObject extends Object3D {
         this.keypoint = keypoint;
     }
 
-    animate(distance) {
+    animate() {
         if (this.keypoint.is_visible) {
             this.obj.position.x = this.keypoint.position.x;
             this.obj.position.y = this.keypoint.position.y;
             this.obj.position.z = this.keypoint.position.z;
             this.obj.visible = true;
-            super.animate(distance);
         }
         else {
             this.obj.visible = false;

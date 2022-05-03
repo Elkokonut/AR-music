@@ -1,4 +1,4 @@
-import OneEuroFilterMD from "./oneEuroFilter";
+import OneEuroFilterMD from "../tools/oneEuroFilter";
 import * as THREE from 'three';
 
 export default class Keypoint {
@@ -23,6 +23,15 @@ export default class Keypoint {
         this.position = new THREE.Vector3(0, 0, 0);
 
         this.is_visible = false;
+    }
+
+    static generateKeypoints(keypoint_json : { [key :string] : string[] }) {
+        const res = [];
+        for (const [type, keypoints_info] of Object.entries(keypoint_json)) {
+            for (let index = 0; index < keypoints_info.length; index++)
+                res.push(new Keypoint(type, index, keypoints_info[index]));
+        }
+        return res;
     }
 
     _normalized_to_pixel_coordinates(normalized_values, max_values) {

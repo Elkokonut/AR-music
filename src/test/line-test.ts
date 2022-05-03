@@ -12,7 +12,6 @@ camera.lookAt( 0, 0, 0 );
 
 const scene = new THREE.Scene();
 
-
 const material = new MeshLineMaterial( {
 
     color: 0xffffff,
