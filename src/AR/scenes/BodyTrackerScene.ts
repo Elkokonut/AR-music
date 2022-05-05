@@ -13,6 +13,8 @@ import Drum from "../objects/Instruments/Drum";
 import Drumstick from "../objects/Instruments/Drumstick";
 import Hand from "../../Geometry/Hand";
 import Occluser from "../objects/Occlusers/Occluser";
+import * as ThreeMeshUI from 'three-mesh-ui';
+import Interface from "../objects/Interface/Interface";
 
 export default class BodyTrackerScene extends Scene {
   keypoints: Keypoint[];
@@ -27,7 +29,10 @@ export default class BodyTrackerScene extends Scene {
 
     this.leftHand = new Hand(this.keypoints.filter(keypoint => keypoint.type == "left_hand"));
     this.rightHand = new Hand(this.keypoints.filter(keypoint => keypoint.type == "right_hand"));
+
     this.initOcclusion();
+
+    this.append3DObject(new Interface(this));
     if (debug) this.initDebug();
     this.animate();
   }
@@ -104,15 +109,19 @@ export default class BodyTrackerScene extends Scene {
         if (obj instanceof BodyTrackerObject)
           obj.animate();
         else if (obj instanceof Occluser) {
-          if (obj.obj.name.includes("left"))
-          {
+          if (obj.obj.name.includes("left")) {
             obj.animate(self.leftHand.is_closed);
           }
-          else
-          {
+          else {
             obj.animate(self.rightHand.is_closed);
           }
           obj.obj.position.setZ(occlusionZ);
+        }
+        else if (obj instanceof Interface) {
+          obj.interact([
+            self.keypoints.find(keypoint => keypoint.name == `right_index_finger_tip`),
+            self.keypoints.find(keypoint => keypoint.name == `left_index_finger_tip`)
+          ]);
         }
         else if (obj instanceof Drum) {
           obj.animate(self.objects.filter(
@@ -123,7 +132,8 @@ export default class BodyTrackerScene extends Scene {
           obj.animate(self.rightHand.is_closed);
           obj.play_sound(self.keypoints.find((keypoint) => keypoint.name == "mouth_right"));
           obj.scaling(self.rightHand.distance);
-          occlusionZ = Math.max(occlusionZ, Microphone.base_dimension_Z * obj.obj.scale.z);
+          if (obj.obj.visible)
+            occlusionZ = Math.max(occlusionZ, Microphone.base_dimension_Z * obj.obj.scale.z);
         }
         else if (obj instanceof Drumstick) {
           if (obj.obj.name.includes("left")) {
@@ -134,11 +144,14 @@ export default class BodyTrackerScene extends Scene {
             obj.animate(self.rightHand.is_closed);
             obj.scaling(self.rightHand.distance);
           }
-          occlusionZ = Math.max(occlusionZ, Drumstick.base_dimension_Z * obj.obj.scale.z);
+          if (obj.obj.visible)
+            occlusionZ = Math.max(occlusionZ, Drumstick.base_dimension_Z * obj.obj.scale.z);
         }
       });
 
-      self.renderer.render(self.scene, self.camera);
+      ThreeMeshUI.update();
+
+      self.render();
 
       requestAnimationFrame(render);
     }

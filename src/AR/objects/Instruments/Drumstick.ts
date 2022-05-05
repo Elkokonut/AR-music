@@ -5,7 +5,7 @@ import Object3D from "../Object3D";
 export default class Drumstick extends Object3D {
   keypoints: Keypoint[];
   box: THREE.Box3;
-  static base_dimension_Z = 17.54;
+  static base_dimension_Z = 17.6;
 
   constructor(obj, name, keypoints, scale) {
     super(obj, name, scale);
