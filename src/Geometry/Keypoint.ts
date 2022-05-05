@@ -63,7 +63,7 @@ export default class Keypoint {
         if (!kp_pix_coord) {
             return null;
         }
-        const positions = [(kp_pix_coord[0] - width / 2), - (kp_pix_coord[1] - height / 2), keypoint.z];
+        const positions = [- (kp_pix_coord[0] - width / 2), - (kp_pix_coord[1] - height / 2), keypoint.z];
         if (this.euroFilter) {
             const estimation = this.euroFilter.call(positions);
             if (estimation) {

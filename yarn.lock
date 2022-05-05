@@ -2121,6 +2121,11 @@ three-fbx-loader@^1.0.3:
     pako "^1.0.6"
     three "^0.89.0"
 
+three-mesh-ui@^6.4.3:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/three-mesh-ui/-/three-mesh-ui-6.4.3.tgz#77ca0270b95f3e09aec9dc579ec4c275ed78ba53"
+  integrity sha512-XcS3ZNKoghtdH393XT2bgFz+T/Mcy4sekjeJ8edNjjTsXHQGsZ3ngAVMYv17QmTqCSxg0J5Oq0wZPqtOrue+yA==
+
 three-orbit-controls@^82.1.0:
   version "82.1.0"
   resolved "https://registry.npmjs.org/three-orbit-controls/-/three-orbit-controls-82.1.0.tgz"

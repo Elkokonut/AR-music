@@ -27,7 +27,10 @@ export default class Scene {
         globalThis.APPNamespace.width = window.innerWidth;
 
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.VideoTexture(this.video);
+        const texture = new THREE.VideoTexture(this.video);
+        texture.center.set(0.5, 0.5);
+        texture.repeat.set(- 1, 1);
+        this.scene.background = texture;
         this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / renderheight, 0.1, renderheight + 500);
         // this.camera = new THREE.OrthographicCamera(this.width / - 2, this.width / 2, this.height / 2, this.height / - 2, .1, 1000);
         this.camera.position.z = renderheight;
@@ -75,14 +78,20 @@ export default class Scene {
         });
     }
 
-    append3DObject(obj3D: Object3D) {
-        obj3D.obj.renderOrder = this.#renderOrder++;
+    append3DObject(obj3D: Object3D, renderOrder = null) {
+        if (renderOrder != null)
+            obj3D.obj.renderOrder = renderOrder;
+        else
+            obj3D.obj.renderOrder = this.#renderOrder++;
         this.scene.add(obj3D.obj);
         this.objects.push(obj3D);
     }
 
-    prepend3DObject(obj3D: Object3D) {
-        obj3D.obj.renderOrder = this.#renderOrder++;
+    prepend3DObject(obj3D: Object3D, renderOrder = null) {
+        if (renderOrder  != null)
+            obj3D.obj.renderOrder = renderOrder;
+        else
+            obj3D.obj.renderOrder = this.#renderOrder++;
         this.scene.add(obj3D.obj);
         this.objects.unshift(...[obj3D]);
     }
@@ -95,6 +104,7 @@ export default class Scene {
                 return obj.obj.name != name;
             });
         }
+        this.render();
         return obj3D;
     }
 
@@ -109,6 +119,12 @@ export default class Scene {
         const axesHelper = new THREE.AxesHelper(1000);
         this.scene.add(axesHelper);
         this.scene.add(gridHelper);
+    }
+
+
+    render()
+    {
+        this.renderer.render(this.scene, this.camera)
     }
 
 }
