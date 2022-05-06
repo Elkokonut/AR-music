@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Drum from '../objects/Instruments/Drum';
+import Microphone from '../objects/Instruments/Microphone';
 import Object3D from '../objects/Object3D';
 
 export default class Scene {
@@ -99,6 +100,8 @@ export default class Scene {
     removeByName(name: string) {
         const obj3D = this.objects.find((obj) => obj.obj.name == name);
         if (obj3D) {
+            if (obj3D instanceof Microphone)
+                obj3D.play_sound(null);
             obj3D.obj.removeFromParent();
             this.objects = this.objects.filter(function (obj) {
                 return obj.obj.name != name;
