@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import BodyTrackerScene from "../../scenes/BodyTrackerScene";
 import Button from "./Button";
 import * as ThreeMeshUI from 'three-mesh-ui';

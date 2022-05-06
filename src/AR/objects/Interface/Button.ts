@@ -4,7 +4,7 @@ import Keypoint from '../../../Geometry/Keypoint';
 import Object3D from '../Object3D';
 
 export default class Button extends Object3D {
-    static instancesCounter: number = 0;
+    static instancesCounter = 0;
     action: (x) => void;
     counter: number;
     bbox: THREE.Box3;
