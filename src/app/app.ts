@@ -1,11 +1,10 @@
 import BodyTrackerScene from '../AR/scenes/BodyTrackerScene';
 import poseDetector from '../AI/holistic';
 import enableInlineVideo from 'iphone-inline-video';
-import { UI } from './ui';
+import { UI } from './Ui';
 
 
 export default class App {
-  static webcam = true;
   debugMode: boolean;
   video: HTMLVideoElement;
   initialisation: boolean;
@@ -20,17 +19,15 @@ export default class App {
 
     enableInlineVideo(this.video);
     this.video.style.display = "none";
-    if (App.webcam) {
-      if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true })
-          .then((localMediaStream) => this.getStream(localMediaStream))
-          .catch(function (error) {
-            console.log("Something went wrong!", error);
-          });
-      }
-      else {
-        console.log('Ce navigateur ne supporte pas la méthode getUserMedia');
-      }
+    if (navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then((localMediaStream) => this.getStream(localMediaStream))
+        .catch(function (error) {
+          console.log("Something went wrong!", error);
+        });
+    }
+    else {
+      console.log('Ce navigateur ne supporte pas la méthode getUserMedia');
     }
 
     this.video.addEventListener('canplay', () => this.callInitPage());

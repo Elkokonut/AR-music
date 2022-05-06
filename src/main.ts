@@ -1,4 +1,4 @@
-import App from "./app/app";
+import App from "./app/App";
 
 async function main() {
     globalThis.APPNamespace = {};
