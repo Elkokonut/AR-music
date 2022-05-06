@@ -15,11 +15,11 @@ export default class Interface extends Object3D {
     {
         super(new ThreeMeshUI.Block({
             fontSize: 12,
-		    padding: 0.02,
-		    borderRadius: 0.11,
+            padding: 0.02,
+            borderRadius: 0.11,
             backgroundOpacity: 0,
             justifyContent: 'center',
-		    contentDirection: 'row-reverse',
+            contentDirection: 'row-reverse',
             fontFamily: 'https://unpkg.com/three-mesh-ui/examples/assets/Roboto-msdf.json',
             fontTexture: 'https://unpkg.com/three-mesh-ui/examples/assets/Roboto-msdf.png'
         }), "interface", null);

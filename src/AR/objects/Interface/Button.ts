@@ -5,13 +5,13 @@ import Object3D from '../Object3D';
 
 export default class Button extends Object3D {
     static instancesCounter: number = 0;
-    action: Function;
+    action: (x) => void;
     counter: number;
     bbox: THREE.Box3;
 
     constructor(
         content: string = null,
-        action: Function = null,
+        action = null,
         btnOptions = null,
         hoveredStateAttributes = null,
         idleStateAttributes = null,
