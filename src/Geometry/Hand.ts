@@ -70,12 +70,6 @@ export default class Hand {
 
         this.is_closed = d - 0.10 * this.worldDistance < this.worldDistance || d2 - 0.10 * this.worldDistance < this.worldDistance ;
 
-        if (this.is_closed)
-            console.log("fist closed");
-        else {
-            console.log("open hand");
-        }
-
         return this.is_closed;
     }
 }
