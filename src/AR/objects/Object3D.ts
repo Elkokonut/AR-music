@@ -16,7 +16,7 @@ export default class Object3D {
         }
     }
 
-    animate(distance) {
+    scaling(distance) {
         if (distance != null) {
             this.obj.scale.x = this.scale[0] * (distance + 1);
             this.obj.scale.y = this.scale[1] * (distance + 1);

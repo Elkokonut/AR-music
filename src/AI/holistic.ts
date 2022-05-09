@@ -6,7 +6,7 @@ import * as tf from '@tensorflow/tfjs';
 export default class poseDetector {
   video: HTMLVideoElement;
   model: pipe_holistic.Holistic;
-  
+
   constructor(video) {
     this.video = video;
     this.model = new pipe_holistic.Holistic({
@@ -16,18 +16,23 @@ export default class poseDetector {
     });
   }
 
-  async init(scene) {
+  async init(scene, ui) {
     console.log("INIT AI");
     const pose_model = await tf.loadLayersModel('pose_ml_model/model.json');
-    const camera = new pipe_camera.Camera(this.video, {
-      onFrame: async () => {
-        await this.model.send({ image: this.video });
-      }, 
-      width: this.video.videoWidth,
-      height: this.video.videoHeight
-      // width: window.APPNamespace.width,
-      // height: window.APPNamespace.height
-    });
+    let sendCounter = 0;
+    const camera = new pipe_camera.Camera(
+      this.video,
+      {
+        onFrame: async () => {
+          if (sendCounter == 1) ui.hideLoading();
+          await this.model.send({ image: this.video });
+          sendCounter++;
+        },
+        width: this.video.videoWidth,
+        height: this.video.videoHeight
+      }
+    );
+
     this.model.setOptions({
       modelComplexity: 0,
       smoothLandmarks: true,
@@ -37,12 +42,7 @@ export default class poseDetector {
       minDetectionConfidence: 0.3,
       minTrackingConfidence: 0.3
     });
-    let nb_calls = 0;
-    setInterval(() => {
-      document.getElementById("frameRateAI").innerHTML = 'AI FrameRate: ' + nb_calls;
-      nb_calls = 0;
-    }
-      , 1000);
+
     function onResults(results) {
       const keypoints =
       {
@@ -65,8 +65,8 @@ export default class poseDetector {
       poseLandmarks_to_pred = poseLandmarks_to_pred.expandDims(0);
       const pred = (pose_model.predict(poseLandmarks_to_pred) as tf.Tensor).dataSync();
       console.log(pred);
-      nb_calls++;
     }
+
     this.model.onResults(onResults);
     camera.start();
   }

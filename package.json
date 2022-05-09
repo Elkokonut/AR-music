@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@parcel/transformer-sass": "2.4.1",
     "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.17.0",
     "buffer": "^6.0.3",
@@ -12,6 +13,7 @@
     "@mediapipe/holistic": "^0.5.1635989137",
     "@parcel/config-default": "^2.4.1",
     "@tensorflow/tfjs": "^3.15.0",
+    "howler": "^2.2.3",
     "iphone-inline-video": "^2.2.2",
     "mathjs": "^10.4.2",
     "parcel": "^2.4.1",
