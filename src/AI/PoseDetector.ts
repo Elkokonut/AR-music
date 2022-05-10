@@ -83,7 +83,6 @@ export default class poseDetector {
         let poseLandmarks_to_pred = tf.tensor(results.poseLandmarks.reduce(function (array, data_point) {
           array.push(data_point.x);
           array.push(data_point.y);
-          array.push(data_point.z);
           array.push(data_point.visibility);
           return array;
         }, []));
@@ -92,7 +91,6 @@ export default class poseDetector {
         poseDetector.changeInstrument(scene, pred);
       }
     }
-
     this.model.onResults(onResults);
     camera.start();
   }
