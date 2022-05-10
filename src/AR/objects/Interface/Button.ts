@@ -1,13 +1,11 @@
 import * as THREE from 'three';
 import * as ThreeMeshUI from 'three-mesh-ui';
-import Keypoint from '../../../Geometry/Keypoint';
 import Object3D from '../Object3D';
 
 export default class Button extends Object3D {
     static instancesCounter = 0;
     action: (x) => void;
     counter: number;
-    bbox: THREE.Box3;
 
     constructor(
         content: string = null,
@@ -19,12 +17,12 @@ export default class Button extends Object3D {
     ) {
         if (!btnOptions)
             btnOptions = {
-                width: 100,
-                height: 100,
+                width: 1,
+                height: 1,
                 justifyContent: 'center',
+                borderRadius: 0.2,
                 offset: 0.05,
                 margin: 0.02,
-                borderRadius: 0.075
             };
 
         if (!hoveredStateAttributes)
@@ -61,8 +59,6 @@ export default class Button extends Object3D {
 
         this.action = action;
         this.counter = 0;
-        this.bbox = new THREE.Box3().setFromObject(this.obj);
-        this.bbox.min.setZ(-1);
 
         this.obj.setupState({
             state: 'selected',
@@ -76,20 +72,10 @@ export default class Button extends Object3D {
         this.obj.setupState(idleStateAttributes);
     }
 
-    checkTrigger(keypoints: Keypoint[]) {
-        this.bbox = new THREE.Box3().setFromObject(this.obj);
-        this.bbox.min.setZ(-1);
-        let collision = false;
-        keypoints.forEach(kp => { collision = collision || (kp.is_visible && this.bbox.containsPoint(kp.position)); });
-
-        if (collision) {
-            this.onHover()
-            if (this.counter == 3)
-                this.onSelected();
-        }
-        else {
-            this.onIdle();
-        }
+    intersect() {
+        this.onHover()
+        if (this.counter == 3)
+            this.onSelected();
     }
 
     onHover() {
@@ -98,8 +84,6 @@ export default class Button extends Object3D {
     }
 
     onSelected() {
-        if (this.action)
-            this.action.call(this);
         this.obj.setState('selected');
         this.counter = 0;
     }

@@ -1,6 +1,7 @@
 declare function require(name: string);
 const keypoint_json = require("../../../static/json/keypoints.json");
 import Scene from "./Scene";
+import * as THREE from 'three';
 import Disk from "../objects/Trackers/Disk";
 import Keypoint from "../../Geometry/Keypoint";
 import BodyTrackerObject from "../objects/Trackers/BodyTrackerObject"
@@ -118,10 +119,15 @@ export default class BodyTrackerScene extends Scene {
           obj.obj.position.setZ(occlusionZ);
         }
         else if (obj instanceof Interface) {
-          obj.interact([
+          const pointers = [
             self.keypoints.find(keypoint => keypoint.name == `right_index_finger_tip`),
             self.keypoints.find(keypoint => keypoint.name == `left_index_finger_tip`)
-          ]);
+          ].filter(kp => kp.is_visible).map(kp => new THREE.Vector2(kp.position.x / globalThis.APPNamespace.width * 2, kp.position.y / globalThis.APPNamespace.height * 2));
+          pointers.forEach(pointer => {
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(pointer, self.camera);
+            obj.interact(raycaster);
+          });
         }
         else if (obj instanceof Drum) {
           obj.animate(self.objects.filter(
