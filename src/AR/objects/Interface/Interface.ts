@@ -48,7 +48,6 @@ export default class Interface extends Object3D {
         if (ratio < 1) {
             // WEB
             const button_size = height / 8;
-            let count = 1;
 
             // this.children.forEach(child => {
             //     // if (child instanceof Button) {
