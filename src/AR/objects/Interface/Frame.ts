@@ -1,4 +1,3 @@
-import BodyTrackerScene from "../../scenes/BodyTrackerScene";
 import Button from "./Button";
 import * as ThreeMeshUI from 'three-mesh-ui';
 import * as THREE from 'three';
@@ -40,7 +39,7 @@ export default class Frame extends Object3D {
     interact(raycast: THREE.Raycast) {
         const children = this.children.map(c => c.obj);
         const intersects = raycast.intersectObjects(children);
-        let res: string = null;
+        // let res: string = null;
         this.children.forEach(child => {
             if (child instanceof Button) {
                 if (intersects && intersects.find(o => o.object.parent && o.object.parent.name === child.obj.name)) {
@@ -50,16 +49,16 @@ export default class Frame extends Object3D {
                 } else
                     child.onIdle();
             }
-            else if (child instanceof Toggle) {
-                if (intersects && intersects.find(o => o.object.parent && o.object.parent.name === child.obj.name)) {
-                    child.onHover();
-                    if (child.counter > 5) {
-                        this.children.forEach(c => { if (c instanceof Button) c.selected = false; });
-                        res = child.type;
-                    }
-                } else
-                    child.onIdle();
-            }
+            // else if (child instanceof Toggle) {
+            //     if (intersects && intersects.find(o => o.object.parent && o.object.parent.name === child.obj.name)) {
+            //         child.onHover();
+            //         if (child.counter > 5) {
+            //             this.children.forEach(c => { if (c instanceof Button) c.selected = false; });
+            //             // res = child.type;
+            //         }
+            //     } else
+            //         child.onIdle();
+            // }
         });
     }
 }
