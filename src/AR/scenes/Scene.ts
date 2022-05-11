@@ -50,6 +50,7 @@ export default class Scene {
         this.renderer.setSize(window.innerWidth, renderheight);
         document.body.appendChild(this.renderer.domElement);
         document.querySelector('canvas').setAttribute("id", "scene");
+        document.getElementById("scene").style.display = "none";
 
         if (debug) {
             this.addControls();
@@ -90,9 +91,6 @@ export default class Scene {
         this.objects.forEach((obj) => {
             if (obj instanceof Drum) {
                 obj.refresh_position();
-            }
-            if (obj instanceof Interface) {
-                obj.resize();
             }
         });
     }
