@@ -18,7 +18,7 @@ export default class PoseDetector {
 
   async init(scene, ui) {
     console.log("INIT AI");
-    var classifier = new Classifier();
+    const classifier = new Classifier();
     let sendCounter = 0;
     const camera = new pipe_camera.Camera(
       this.video,
