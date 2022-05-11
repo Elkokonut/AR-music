@@ -47,19 +47,35 @@ export default class FrameFactory {
         });
 
 
-        frame.addElement(new Button("Train",
+        frame.addElement(new Button("Train Drum",
             function () {
-                globalThis.APPNamespace.detectInstrument = true;
+                globalThis.APPNamespace.Classifier.startLearning(0);
+                globalThis.APPNamespace.Classifier.disable();
+                scene.factory.change_instrument("", scene);
+            }));
+        frame.addElement(new Button("Train Mic",
+            function () {
+                globalThis.APPNamespace.Classifier.startLearning(1);
+                globalThis.APPNamespace.Classifier.disable();
+                scene.factory.change_instrument("", scene);
+            }));
+        frame.addElement(new Button("Auto",
+            function () {
+                globalThis.APPNamespace.Classifier.stopLearning();
+                globalThis.APPNamespace.Classifier.enable();
+                scene.factory.change_instrument("", scene);
             }));
         frame.addElement(new Button("Mic",
             function () {
-                globalThis.APPNamespace.detectInstrument = false;
+                globalThis.APPNamespace.Classifier.stopLearning();
+                globalThis.APPNamespace.Classifier.disable();
                 scene.factory.change_instrument("microphone", scene);
             }));
 
         frame.addElement(new Button("Drums",
             function () {
-                globalThis.APPNamespace.detectInstrument = false;
+                globalThis.APPNamespace.Classifier.stopLearning();
+                globalThis.APPNamespace.Classifier.disable();
                 scene.factory.change_instrument("drums", scene);
             }));
 

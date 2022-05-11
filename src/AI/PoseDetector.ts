@@ -1,7 +1,6 @@
 // Register WebGL backend.
 import * as pipe_holistic from '@mediapipe/holistic'
 import * as pipe_camera from '@mediapipe/camera_utils'
-import Classifier from './Classifier';
 
 export default class PoseDetector {
   video: HTMLVideoElement;
@@ -18,7 +17,6 @@ export default class PoseDetector {
 
   async init(scene, ui) {
     console.log("INIT AI");
-    const classifier = new Classifier();
     let sendCounter = 0;
     const camera = new pipe_camera.Camera(
       this.video,
@@ -56,25 +54,7 @@ export default class PoseDetector {
             scene.update_keypoints(keypoints);
       }
 
-      if ((results.poseLandmarks && results.poseLandmarks.length > 0)
-      && (results.leftHandLandmarks && results.leftHandLandmarks.length > 0)
-      && (results.rightHandLandmarks && results.rightHandLandmarks.length > 0)) {
-        if (classifier.isLearning)
-        {
-          classifier.addExample(results);
-        }
-        else
-        {
-          if (classifier.enabled)
-          {
-            //var classifier_pred = classifier.predict(results);
-            // call the function that will handle the prediction. Either load new models, or play sounds.
-            // handler(classifier_pred);
-          }
-        }
-    }
-
-
+      globalThis.APPNamespace.Classifier.call(results);
     }
 
     this.model.onResults(onResults);

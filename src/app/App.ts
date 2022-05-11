@@ -2,6 +2,7 @@ import BodyTrackerScene from '../AR/scenes/BodyTrackerScene';
 import PoseDetector from '../AI/PoseDetector';
 import enableInlineVideo from 'iphone-inline-video';
 import { UI } from './Ui';
+import Classifier from '../AI/Classifier';
 
 
 export default class App {
@@ -20,7 +21,7 @@ export default class App {
     enableInlineVideo(this.video);
     this.video.style.display = "none";
     if (navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia({ video: true })
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
         .then((localMediaStream) => this.getStream(localMediaStream))
         .catch(function (error) {
           console.log("Something went wrong!", error);
@@ -54,6 +55,8 @@ export default class App {
     if (promise !== undefined) {
       promise.catch(() => this.createButton()).then(() => console.log("Autoplay!"));
     }
+
+    globalThis.APPNamespace.Classifier = new Classifier();
 
     const pose_detector = new PoseDetector(this.video);
     await pose_detector.init(scene, this.ui);

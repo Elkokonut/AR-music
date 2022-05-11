@@ -100,6 +100,24 @@ export default class BodyTrackerScene extends Scene {
     });
   }
 
+
+
+poseHandler()
+{
+  const prediction = globalThis.APPNamespace.Classifier.prediction;
+  if (globalThis.APPNamespace.Classifier.enabled)
+    switch (prediction) {
+        case 0:
+            this.factory.change_instrument("drums", this);
+            break;
+        case 1:
+            this.factory.change_instrument("microphone", this);
+            break;
+        default:
+            break;
+    }
+}
+
   async animate() {
     /* eslint @typescript-eslint/no-this-alias: 0 */
     const self = this;
@@ -108,8 +126,6 @@ export default class BodyTrackerScene extends Scene {
       self.rightHand.refresh();
       self.leftHand.refresh();
       let occlusionZ = 0;
-
-
       [
         self.keypoints.find(keypoint => keypoint.name == `right_index_finger_tip`),
         self.keypoints.find(keypoint => keypoint.name == `left_index_finger_tip`)
@@ -159,6 +175,8 @@ export default class BodyTrackerScene extends Scene {
             occlusionZ = Math.max(occlusionZ, Drumstick.base_dimension_Z * obj.obj.scale.z);
         }
       });
+
+      self.poseHandler();
 
       ThreeMeshUI.update();
 

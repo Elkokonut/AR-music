@@ -85,7 +85,7 @@ export default class Button extends Object3D {
 
     intersect() {
         this.onHover()
-        if (this.counter >= 3)
+        if (this.counter >= 1)
             this.onSelected();
     }
 

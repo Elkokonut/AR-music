@@ -7,13 +7,17 @@ export default class Classifier
     isLearning: boolean;
     current_label: number;
     enabled: boolean;
+    scene: any;
+    prediction: number;
 
-    constructor()
+    constructor(scene)
     {
+        this.scene = scene;
         this.knn = knnClassifier.create();
         this.isLearning = false;
-        this.current_label = 0;
+        this.current_label = -1;
         this.enabled = false;
+        this.prediction = -1;
     }
     
     createExample(results)
@@ -52,7 +56,53 @@ export default class Classifier
     predict(results)
     {
         const example = this.createExample(results);
-        this.knn.predictClass(example)
+
+        const promise = this.knn.predictClass(example);
+      if (promise !== undefined) {
+      promise.catch((res) => this.prediction = res);
+      }
+    }
+
+    call(keypoints)
+    {
+      if ((keypoints.poseLandmarks && keypoints.poseLandmarks.length > 0)
+      && (keypoints.leftHandLandmarks && keypoints.leftHandLandmarks.length > 0)
+      && (keypoints.rightHandLandmarks && keypoints.rightHandLandmarks.length > 0))
+      {
+        if (this.isLearning)
+        {
+          this.addExample(keypoints);
+        }
+        else
+        {
+          if (this.enabled)
+          {
+            this.predict(keypoints);
+            console.log(this.prediction);
+          }
+        }
+      }
+    }
+    
+    startLearning(label) {
+      this.isLearning = true;
+      this.current_label = label;
+    }
+
+    stopLearning() {
+      this.isLearning = false;
+      this.current_label = -1;
+    }
+
+    enable()
+    {
+      this.enabled = true;
+    }
+
+    disable()
+    {
+      this.enabled = false;
+      this.prediction = -1;
     }
 
 }
