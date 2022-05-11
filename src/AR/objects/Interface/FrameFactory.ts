@@ -3,16 +3,14 @@ import Button from "./Button";
 import * as ThreeMeshUI from 'three-mesh-ui';
 import * as THREE from 'three';
 import Frame from "./Frame";
-import Toogle, { ToogleType } from "./Toogle";
-import ImageTexture from "../../utils/ImageTexture";
 
 declare function require(name: string);
 
 export default class FrameFactory {
 
-    static text_frame() {
+    // static text_frame() {
 
-    }
+    // }
 
     static default_frame(scene: BodyTrackerScene) {
         const frame = new Frame(new ThreeMeshUI.Block({
