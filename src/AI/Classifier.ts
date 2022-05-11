@@ -53,14 +53,10 @@ export default class Classifier
         this.knn.addExample(example , this.current_label);
     }
     
-    predict(results)
+    async predict(results)
     {
         const example = this.createExample(results);
-
-        const promise = this.knn.predictClass(example);
-      if (promise !== undefined) {
-      promise.catch((res) => this.prediction = res);
-      }
+        this.prediction = (await this.knn.predictClass(example)).classIndex;
     }
 
     call(keypoints)

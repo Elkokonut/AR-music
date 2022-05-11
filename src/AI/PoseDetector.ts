@@ -41,7 +41,7 @@ export default class PoseDetector {
       minTrackingConfidence: 0.3
     });
 
-    function onResults(results) {
+    async function onResults(results) {
       const keypoints =
       {
         "body": results.poseLandmarks,
@@ -54,7 +54,7 @@ export default class PoseDetector {
             scene.update_keypoints(keypoints);
       }
 
-      globalThis.APPNamespace.Classifier.call(results);
+      await globalThis.APPNamespace.Classifier.call(results);
     }
 
     this.model.onResults(onResults);
