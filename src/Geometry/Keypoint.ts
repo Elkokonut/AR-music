@@ -1,4 +1,4 @@
-import OneEuroFilterMD from "../tools/oneEuroFilter";
+import OneEuroFilterMD from "../tools/OneEuroFilter";
 import * as THREE from 'three';
 
 export default class Keypoint {

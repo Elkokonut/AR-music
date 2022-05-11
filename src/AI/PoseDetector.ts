@@ -3,7 +3,7 @@ import * as pipe_holistic from '@mediapipe/holistic'
 import * as pipe_camera from '@mediapipe/camera_utils'
 import Classifier from './Classifier';
 
-export default class poseDetector {
+export default class PoseDetector {
   video: HTMLVideoElement;
   model: pipe_holistic.Holistic;
 
