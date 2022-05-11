@@ -11,39 +11,56 @@ import Object3D from "../Object3D";
 
 export default class InstrumentFactory {
   instruments: { [key: string]: Object3D[] };
+  loadingModel: number;
+
+  loadingManager: THREE.LoadingManager;
 
   constructor() {
     this.instruments = {};
+    this.loadingModel = 0;
+    this.loadingManager = new THREE.LoadingManager();
+    this.loadingManager.onStart = () => this.onStart();
+    this.loadingManager.onLoad = () => this.onLoad();
+  }
+
+  onStart() {
+    this.loadingModel++;
+  }
+
+  onLoad() {
+    this.loadingModel--;
   }
 
   change_instrument(type, scene) {
-    if (this.instruments["microphone"] && type != "microphone") {
-      scene.removeByName("mic");
-    }
-    else if (type == "microphone") {
-      if (!this.instruments["microphone"])
-        this._load_microphone(scene);
-      else if (!scene.objects.includes(this.instruments["microphone"][0]))
-        scene.prepend3DObject(this.instruments["microphone"][0]);
-    }
-    if (this.instruments["drums"] && type != "drums") {
-      scene.removeByName("right_drumstick");
-      scene.removeByName("left_drumstick");
-      scene.removeByName("ancien_drum");
-      scene.removeByName("red_drum");
-    }
-    else if (type == "drums") {
-      if (!this.instruments["drums"]) {
-        this._load_red_drum(scene);
-        this._load_ancien_drum(scene);
-        this._load_drumsticks(scene);
+    if (this.loadingModel == 0) {
+      if (this.instruments["microphone"] && type != "microphone") {
+        scene.removeByName("mic");
       }
-      else if (!scene.objects.includes(this.instruments["drums"][0])) {
-        this.instruments["drums"].forEach((obj) => {
-          scene.prepend3DObject(obj);
-          if (obj.obj.name == "ancien_drum" || obj.obj.name == "red_drum")
-            obj.obj.renderOrder = 0;
-        });
+      else if (type == "microphone") {
+        if (!this.instruments["microphone"])
+          this._load_microphone(scene);
+        else if (!scene.objects.includes(this.instruments["microphone"][0]))
+          scene.prepend3DObject(this.instruments["microphone"][0]);
+      }
+      if (this.instruments["drums"] && type != "drums") {
+        scene.removeByName("right_drumstick");
+        scene.removeByName("left_drumstick");
+        scene.removeByName("ancien_drum");
+        scene.removeByName("red_drum");
+      }
+      else if (type == "drums") {
+        if (!this.instruments["drums"]) {
+          this._load_red_drum(scene);
+          this._load_ancien_drum(scene);
+          this._load_drumsticks(scene);
+        }
+        else if (!scene.objects.includes(this.instruments["drums"][0])) {
+          this.instruments["drums"].forEach((obj) => {
+            scene.prepend3DObject(obj);
+            if (obj.obj.name == "ancien_drum" || obj.obj.name == "red_drum")
+              obj.obj.renderOrder = 0;
+          });
+        }
       }
     }
   }
@@ -75,7 +92,7 @@ export default class InstrumentFactory {
       scene.keypoints.find((keypoint) => keypoint.name == "right_pinky_finger_mcp"),
       scene.keypoints.find((keypoint) => keypoint.name == "right_pinky_finger_pip")
     ];
-    const fbxLoader = new FBXLoader();
+    const fbxLoader = new FBXLoader(this.loadingManager);
     const textureLoader = new THREE.TextureLoader();
     fbxLoader.load(
       model_path,
@@ -129,7 +146,7 @@ export default class InstrumentFactory {
 
   _load_drumsticks(scene) {
     const model_path = require("../../../../static/models/drumstick/drumstick.fbx");
-    const fbxLoader = new FBXLoader();
+    const fbxLoader = new FBXLoader(this.loadingManager);
     const right_keypoints = [
       scene.keypoints.find((keypoint) => keypoint.name == "right_index_finger_mcp"),
       scene.keypoints.find((keypoint) => keypoint.name == "right_index_finger_pip"),
@@ -182,7 +199,7 @@ export default class InstrumentFactory {
 
   _load_red_drum(scene) {
     const model_path = require("../../../../static/models/red_drum/red_drum.3DS");
-    const tdsLoader = new TDSLoader();
+    const tdsLoader = new TDSLoader(this.loadingManager);
     tdsLoader.load(
       model_path,
       async (object) => {
@@ -220,7 +237,7 @@ export default class InstrumentFactory {
 
   _load_ancien_drum(scene) {
     const obj_path = require("../../../../static/models/NAMDrum/NAMDrum01.obj");
-    new OBJLoader()
+    new OBJLoader(this.loadingManager)
       .load(obj_path,
         async (object) => {
           console.log("success in loading ancien drum");

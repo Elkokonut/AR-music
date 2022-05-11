@@ -8,10 +8,12 @@ export default class Microphone extends Object3D {
   sound: Pizzicato.Sound;
   kp_align_pos: THREE.Vector3;
   isPlaying: boolean;
+  initialized: boolean;
   static base_dimension_Z = 2.8;
 
   constructor(obj, name, keypoints, scale) {
     super(obj, name, scale);
+    this.initialized = false;
     this.obj.visible = false;
     this.keypoints = keypoints;
     this.sound = null;
@@ -19,11 +21,7 @@ export default class Microphone extends Object3D {
 
     Pizzicato.context.resume();
 
-    this.sound = new Pizzicato.Sound(
-      {
-        source: "input"
-      }
-    );
+    this.sound = new Pizzicato.Sound( { source: "input" }, () => this.initialized = true );
     this.sound.addEffect(
       // new Pizzicato.Effects.Reverb({
       //   time: 1,
@@ -45,7 +43,6 @@ export default class Microphone extends Object3D {
         mix: 0.5
       })
     );
-
   }
 
   animate(display) {
@@ -81,7 +78,7 @@ export default class Microphone extends Object3D {
     }
   }
   play_sound(mouth_keypoint) {
-    if (this.kp_align_pos.distanceTo(mouth_keypoint.position) < 150 && this.obj.visible) {
+    if (this.initialized && mouth_keypoint && this.kp_align_pos.distanceTo(mouth_keypoint.position) < 150 && this.obj.visible) {
       this.sound.play();
     }
     else {
