@@ -46,7 +46,12 @@ export default class FrameFactory {
 
         });
 
-
+        frame.addElement(new Button("Third Move",
+            function () {
+                globalThis.APPNamespace.Classifier.startLearning(2);
+                globalThis.APPNamespace.Classifier.disable();
+                scene.factory.change_instrument("", scene);
+            }));
         frame.addElement(new Button("Train Drum",
             function () {
                 globalThis.APPNamespace.Classifier.startLearning(0);

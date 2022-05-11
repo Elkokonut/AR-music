@@ -102,21 +102,23 @@ export default class BodyTrackerScene extends Scene {
 
 
 
-poseHandler()
-{
-  const prediction = globalThis.APPNamespace.Classifier.prediction;
-  if (globalThis.APPNamespace.Classifier.enabled)
-    switch (prediction) {
+  poseHandler() {
+    const prediction = globalThis.APPNamespace.Classifier.prediction;
+    if (globalThis.APPNamespace.Classifier.enabled)
+      switch (prediction) {
         case 0:
-            this.factory.change_instrument("drums", this);
-            break;
+          this.factory.change_instrument("drums", this);
+          break;
         case 1:
-            this.factory.change_instrument("microphone", this);
-            break;
+          this.factory.change_instrument("microphone", this);
+          break;
+        case 2:
+          this.factory.change_instrument("", this);
+          break;
         default:
-            break;
-    }
-}
+          break;
+      }
+  }
 
   async animate() {
     /* eslint @typescript-eslint/no-this-alias: 0 */

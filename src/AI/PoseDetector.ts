@@ -51,7 +51,7 @@ export default class PoseDetector {
       if ((results.poseLandmarks && results.poseLandmarks.length > 0)
         || (results.leftHandLandmarks && results.leftHandLandmarks.length > 0)
         || (results.rightHandLandmarks && results.rightHandLandmarks.length > 0)) {
-            scene.update_keypoints(keypoints);
+        scene.update_keypoints(keypoints);
       }
 
       await globalThis.APPNamespace.Classifier.call(results);
