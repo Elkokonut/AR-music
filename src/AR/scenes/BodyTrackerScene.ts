@@ -22,6 +22,7 @@ export default class BodyTrackerScene extends Scene {
   factory: InstrumentFactory;
   leftHand: Hand;
   rightHand: Hand;
+  interface: Interface;
 
   constructor(video, debug) {
     super(video, debug);
@@ -33,8 +34,10 @@ export default class BodyTrackerScene extends Scene {
 
     this.initOcclusion();
 
-    this.append3DObject(new Interface(this));
+    this.interface = new Interface(this);
     if (debug) this.initDebug();
+
+    globalThis.APPNamespace.detectInstrument = true;
     this.animate();
   }
 
@@ -106,6 +109,19 @@ export default class BodyTrackerScene extends Scene {
       self.leftHand.refresh();
       let occlusionZ = 0;
 
+
+      [
+        self.keypoints.find(keypoint => keypoint.name == `right_index_finger_tip`),
+        self.keypoints.find(keypoint => keypoint.name == `left_index_finger_tip`)
+      ].filter(kp => kp.is_visible)
+        .forEach(kp => {
+          const pointer = new THREE.Vector2(kp.position.x / globalThis.APPNamespace.width * 2,
+            kp.position.y / globalThis.APPNamespace.height * 2)
+          const raycaster = new THREE.Raycaster();
+          raycaster.setFromCamera(pointer, self.camera);
+          self.interface.interact(raycaster);
+        });
+
       self.objects.forEach((obj) => {
         if (obj instanceof BodyTrackerObject)
           obj.animate();
@@ -117,17 +133,6 @@ export default class BodyTrackerScene extends Scene {
             obj.animate(self.rightHand.is_closed);
           }
           obj.obj.position.setZ(occlusionZ);
-        }
-        else if (obj instanceof Interface) {
-          const pointers = [
-            self.keypoints.find(keypoint => keypoint.name == `right_index_finger_tip`),
-            self.keypoints.find(keypoint => keypoint.name == `left_index_finger_tip`)
-          ].filter(kp => kp.is_visible).map(kp => new THREE.Vector2(kp.position.x / globalThis.APPNamespace.width * 2, kp.position.y / globalThis.APPNamespace.height * 2));
-          pointers.forEach(pointer => {
-            const raycaster = new THREE.Raycaster();
-            raycaster.setFromCamera(pointer, self.camera);
-            obj.interact(raycaster);
-          });
         }
         else if (obj instanceof Drum) {
           obj.animate(self.objects.filter(
@@ -162,5 +167,12 @@ export default class BodyTrackerScene extends Scene {
       requestAnimationFrame(render);
     }
     requestAnimationFrame(render);
+  }
+
+
+  resize(): void {
+    super.resize();
+
+    this.interface.resize();
   }
 }

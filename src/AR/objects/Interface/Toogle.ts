@@ -2,16 +2,20 @@ import * as THREE from 'three';
 import * as ThreeMeshUI from 'three-mesh-ui';
 import Object3D from '../Object3D';
 
-export default class Button extends Object3D {
+export enum ToogleType {
+    Next= "next",
+    Prev = "prev"
+}
+
+export default class Toggle extends Object3D {
     static instancesCounter = 0;
-    action: (x) => void;
-    selected: boolean;
     counter: number;
+    type:ToogleType;
+
 
     constructor(
         content: string = null,
-        action = null,
-        selected = false,
+        type=ToogleType.Next,
         btnOptions = null,
         hoveredStateAttributes = null,
         idleStateAttributes = null,
@@ -51,59 +55,35 @@ export default class Button extends Object3D {
 
         if (!selectedAttributes)
             selectedAttributes = {
-                offset: 0.02,
-                backgroundOpacity: 1,
-                backgroundColor: new THREE.Color(0x12a69e),
-                fontColor: new THREE.Color(0xffffff)
+                state: 'selected',
+                attributes: {
+                    offset: 0.02,
+                    backgroundOpacity: 1,
+                    backgroundColor: new THREE.Color(0x12a69e),
+                    fontColor: new THREE.Color(0xffffff)
+                }
             };
 
-        super(new ThreeMeshUI.Block(btnOptions), `button_${Button.instancesCounter++}`, null);
-        this.obj.add(new ThreeMeshUI.Text({ content: content }));
-
-        this.action = action;
+        super(new ThreeMeshUI.Block(btnOptions), `button_${Toggle.instancesCounter++}`, null);
+        // if (content)
+            this.obj.add(new ThreeMeshUI.Text({ content: content }));
+        this.type = type;
         this.counter = 0;
-
-        this.obj.setupState({
-            state: 'selected',
-            attributes: selectedAttributes,
-            onSet: () => {
-                if (this.action)
-                    this.action.call(this);
-            }
-        });
+        this.obj.setupState(selectedAttributes);
         this.obj.setupState(hoveredStateAttributes);
         this.obj.setupState(idleStateAttributes);
-        this.selected = selected;
-
-        if (this.selected) {
-            this.onSelected();
-        }
-        else {
-            this.onIdle();
-        }
-    }
-
-    intersect() {
-        this.onHover()
-        if (this.counter >= 3)
-            this.onSelected();
+        this.onIdle();
     }
 
     onHover() {
         this.counter++;
-        this.selected = false;
         this.obj.setState('hovered')
     }
 
-    onSelected() {
-        this.obj.setState('selected');
-        this.selected = true;
-    }
-
     onIdle() {
-        if (!this.selected) {
             this.counter = 0;
             this.obj.setState("idle");
-        }
     }
 }
+
+
