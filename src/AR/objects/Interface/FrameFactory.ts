@@ -46,34 +46,35 @@ export default class FrameFactory {
 
         });
 
-        frame.addElement(new Button("Third Move",
+        frame.addElement(new Button("Train Sign 2",
             function () {
-                globalThis.APPNamespace.Classifier.startLearning(2);
-                globalThis.APPNamespace.Classifier.disable();
+                scene.classifier.startLearning(2);
+                scene.classifier.disable();
                 scene.factory.change_instrument("", scene);
             }));
-        frame.addElement(new Button("Train Drum",
+        frame.addElement(new Button("Train Sign 1",
             function () {
-                globalThis.APPNamespace.Classifier.startLearning(0);
-                globalThis.APPNamespace.Classifier.disable();
+                scene.classifier.startLearning(1);
+                scene.classifier.disable();
                 scene.factory.change_instrument("", scene);
             }));
-        frame.addElement(new Button("Train Mic",
+        frame.addElement(new Button("Train Sign 0",
             function () {
-                globalThis.APPNamespace.Classifier.startLearning(1);
-                globalThis.APPNamespace.Classifier.disable();
+                scene.classifier.startLearning(0);
+                scene.classifier.disable();
+
                 scene.factory.change_instrument("", scene);
             }));
         frame.addElement(new Button("Auto",
             function () {
-                globalThis.APPNamespace.Classifier.stopLearning();
-                globalThis.APPNamespace.Classifier.enable();
+                scene.classifier.stopLearning();
+                scene.classifier.enable();
                 scene.factory.change_instrument("", scene);
             }));
         frame.addElement(new Button("Mic",
             function () {
-                globalThis.APPNamespace.Classifier.stopLearning();
-                globalThis.APPNamespace.Classifier.disable();
+                scene.classifier.stopLearning();
+                scene.classifier.disable();
                 scene.factory.change_instrument("microphone", scene);
             }));
 

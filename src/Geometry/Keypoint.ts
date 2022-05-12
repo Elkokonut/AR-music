@@ -25,7 +25,7 @@ export default class Keypoint {
         this.is_visible = false;
     }
 
-    static generateKeypoints(keypoint_json : { [key :string] : string[] }) {
+    static generateKeypoints(keypoint_json: { [key: string]: string[] }) {
         const res = [];
         for (const [type, keypoints_info] of Object.entries(keypoint_json)) {
             for (let index = 0; index < keypoints_info.length; index++)

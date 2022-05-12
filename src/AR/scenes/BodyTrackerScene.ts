@@ -1,10 +1,10 @@
 declare function require(name: string);
 const keypoint_json = require("../../../static/json/keypoints.json");
 import Scene from "./Scene";
-import * as THREE from 'three';
+import * as THREE from "three";
 import Disk from "../objects/Trackers/Disk";
 import Keypoint from "../../Geometry/Keypoint";
-import BodyTrackerObject from "../objects/Trackers/BodyTrackerObject"
+import BodyTrackerObject from "../objects/Trackers/BodyTrackerObject";
 
 import InstrumentFactory from "../objects/Instruments/InstrumentFactory";
 import Microphone from "../objects/Instruments/Microphone";
@@ -14,8 +14,9 @@ import Drum from "../objects/Instruments/Drum";
 import Drumstick from "../objects/Instruments/Drumstick";
 import Hand from "../../Geometry/Hand";
 import Occluser from "../objects/Occlusers/Occluser";
-import * as ThreeMeshUI from 'three-mesh-ui';
+import * as ThreeMeshUI from "three-mesh-ui";
 import Interface from "../objects/Interface/Interface";
+import Classifier from "../../AI/Classifier";
 
 export default class BodyTrackerScene extends Scene {
   keypoints: Keypoint[];
@@ -23,14 +24,20 @@ export default class BodyTrackerScene extends Scene {
   leftHand: Hand;
   rightHand: Hand;
   interface: Interface;
+  classifier: Classifier;
 
   constructor(video, debug) {
     super(video, debug);
+    this.classifier = new Classifier();
     this.keypoints = Keypoint.generateKeypoints(keypoint_json);
     this.factory = new InstrumentFactory();
 
-    this.leftHand = new Hand(this.keypoints.filter(keypoint => keypoint.type == "left_hand"));
-    this.rightHand = new Hand(this.keypoints.filter(keypoint => keypoint.type == "right_hand"));
+    this.leftHand = new Hand(
+      this.keypoints.filter((keypoint) => keypoint.type == "left_hand")
+    );
+    this.rightHand = new Hand(
+      this.keypoints.filter((keypoint) => keypoint.type == "right_hand")
+    );
 
     this.initOcclusion();
 
@@ -43,54 +50,75 @@ export default class BodyTrackerScene extends Scene {
 
   initOcclusion() {
     const sides = ["right", "left"];
-    const fingers = ["thumb", "index_finger", "middle_finger", "ring_finger", "pinky_finger"];
-    sides.forEach(side =>
-      fingers.forEach(finger => {
-        const bot = this.keypoints.find(keypoint => keypoint.name == `${side}_${finger}_mcp`);
+    const fingers = [
+      "thumb",
+      "index_finger",
+      "middle_finger",
+      "ring_finger",
+      "pinky_finger",
+    ];
+    sides.forEach((side) =>
+      fingers.forEach((finger) => {
+        const bot = this.keypoints.find(
+          (keypoint) => keypoint.name == `${side}_${finger}_mcp`
+        );
         let mid = null;
         if (finger == "thumb")
-          mid = this.keypoints.find(keypoint => keypoint.name == `${side}_${finger}_ip`);
+          mid = this.keypoints.find(
+            (keypoint) => keypoint.name == `${side}_${finger}_ip`
+          );
         else
-          mid = this.keypoints.find(keypoint => keypoint.name == `${side}_${finger}_pip`);
-        const top = this.keypoints.find(keypoint => keypoint.name == `${side}_${finger}_tip`);
+          mid = this.keypoints.find(
+            (keypoint) => keypoint.name == `${side}_${finger}_pip`
+          );
+        const top = this.keypoints.find(
+          (keypoint) => keypoint.name == `${side}_${finger}_tip`
+        );
 
         this.append3DObject(new Phalanx([bot.position, mid.position], mid));
         this.append3DObject(new Phalanx([mid.position, top.position], mid));
-      }
-      )
+      })
     );
     this.append3DObject(
       new Palm(
         [
-          this.keypoints.find(keypoint => keypoint.name == `right_index_finger_mcp`),
-          this.keypoints.find(keypoint => keypoint.name == `right_pinky_finger_mcp`),
-          this.keypoints.find(keypoint => keypoint.name == `right_wrist`),
-          this.keypoints.find(keypoint => keypoint.name == `right_thumb_cmc`)
+          this.keypoints.find(
+            (keypoint) => keypoint.name == `right_index_finger_mcp`
+          ),
+          this.keypoints.find(
+            (keypoint) => keypoint.name == `right_pinky_finger_mcp`
+          ),
+          this.keypoints.find((keypoint) => keypoint.name == `right_wrist`),
+          this.keypoints.find((keypoint) => keypoint.name == `right_thumb_cmc`),
         ],
-        this.keypoints.find(keypoint => keypoint.name == `right_index_finger_mcp`)
-
+        this.keypoints.find(
+          (keypoint) => keypoint.name == `right_index_finger_mcp`
+        )
       )
     );
 
     this.append3DObject(
       new Palm(
         [
-          this.keypoints.find(keypoint => keypoint.name == `left_index_finger_mcp`),
-          this.keypoints.find(keypoint => keypoint.name == `left_pinky_finger_mcp`),
-          this.keypoints.find(keypoint => keypoint.name == `left_wrist`),
-          this.keypoints.find(keypoint => keypoint.name == `left_thumb_cmc`)
+          this.keypoints.find(
+            (keypoint) => keypoint.name == `left_index_finger_mcp`
+          ),
+          this.keypoints.find(
+            (keypoint) => keypoint.name == `left_pinky_finger_mcp`
+          ),
+          this.keypoints.find((keypoint) => keypoint.name == `left_wrist`),
+          this.keypoints.find((keypoint) => keypoint.name == `left_thumb_cmc`),
         ],
-        this.keypoints.find(keypoint => keypoint.name == `left_index_finger_mcp`)
-
+        this.keypoints.find(
+          (keypoint) => keypoint.name == `left_index_finger_mcp`
+        )
       )
     );
-
   }
 
   initDebug() {
     this.keypoints.forEach((keypoint) => {
-      if (keypoint.type != "body")
-        this.append3DObject(new Disk(keypoint));
+      if (keypoint.type != "body") this.append3DObject(new Disk(keypoint));
     });
   }
 
@@ -100,24 +128,52 @@ export default class BodyTrackerScene extends Scene {
     });
   }
 
-
-
-  poseHandler() {
-    const prediction = globalThis.APPNamespace.Classifier.prediction;
-    if (globalThis.APPNamespace.Classifier.enabled)
-      switch (prediction) {
-        case 0:
-          this.factory.change_instrument("drums", this);
-          break;
-        case 1:
-          this.factory.change_instrument("microphone", this);
-          break;
-        case 2:
-          this.factory.change_instrument("", this);
-          break;
-        default:
-          break;
+  async signHandler() {
+    if (this.classifier.isLearning) {
+      this.classifier.addExample(this.leftHand, this.rightHand);
+    } else if (this.classifier.enabled) {
+      const prediction = await this.classifier.predict(
+        this.leftHand,
+        this.rightHand
+      );
+      if (this.classifier.pred_buffer.filter((n) => n == prediction).length == 10) {
+        switch (prediction) {
+          case 0:
+            // TODO: Call appropriate sound
+            console.log("Sign number 0 !");
+            break;
+          case 1:
+            console.log("Sign number 1 !");
+            break;
+          case 2:
+            console.log("Sign number 2 !");
+            break;
+          default:
+            break;
+        }
       }
+    }
+  }
+
+  interact() {
+    [
+      this.keypoints.find(
+        (keypoint) => keypoint.name == `right_index_finger_tip`
+      ),
+      this.keypoints.find(
+        (keypoint) => keypoint.name == `left_index_finger_tip`
+      ),
+    ]
+      .filter((kp) => kp.is_visible)
+      .forEach((kp) => {
+        const pointer = new THREE.Vector2(
+          (kp.position.x / globalThis.APPNamespace.width) * 2,
+          (kp.position.y / globalThis.APPNamespace.height) * 2
+        );
+        const raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera(pointer, this.camera);
+        this.interface.interact(raycaster);
+      });
   }
 
   async animate() {
@@ -128,67 +184,55 @@ export default class BodyTrackerScene extends Scene {
       self.rightHand.refresh();
       self.leftHand.refresh();
       let occlusionZ = 0;
-      [
-        self.keypoints.find(keypoint => keypoint.name == `right_index_finger_tip`),
-        self.keypoints.find(keypoint => keypoint.name == `left_index_finger_tip`)
-      ].filter(kp => kp.is_visible)
-        .forEach(kp => {
-          const pointer = new THREE.Vector2(kp.position.x / globalThis.APPNamespace.width * 2,
-            kp.position.y / globalThis.APPNamespace.height * 2)
-          const raycaster = new THREE.Raycaster();
-          raycaster.setFromCamera(pointer, self.camera);
-          self.interface.interact(raycaster);
-        });
+      self.interact();
 
       self.objects.forEach((obj) => {
-        if (obj instanceof BodyTrackerObject)
-          obj.animate();
+        if (obj instanceof BodyTrackerObject) obj.animate();
         else if (obj instanceof Occluser) {
           if (obj.obj.name.includes("left")) {
             obj.animate(self.leftHand.is_closed);
-          }
-          else {
+          } else {
             obj.animate(self.rightHand.is_closed);
           }
           obj.obj.position.setZ(occlusionZ);
-        }
-        else if (obj instanceof Drum) {
-          obj.animate(self.objects.filter(
-            (stick) => stick.obj.name.includes("drumstick")
-          ));
-        }
-        else if (obj instanceof Microphone) {
+        } else if (obj instanceof Drum) {
+          obj.animate(
+            self.objects.filter((stick) => stick.obj.name.includes("drumstick"))
+          );
+        } else if (obj instanceof Microphone) {
           obj.animate(self.rightHand.is_closed);
-          obj.play_sound(self.keypoints.find((keypoint) => keypoint.name == "mouth_right"));
+          obj.play_sound(
+            self.keypoints.find((keypoint) => keypoint.name == "mouth_right")
+          );
           obj.scaling(self.rightHand.distance);
           if (obj.obj.visible)
-            occlusionZ = Math.max(occlusionZ, Microphone.base_dimension_Z * obj.obj.scale.z);
-        }
-        else if (obj instanceof Drumstick) {
+            occlusionZ = Math.max(
+              occlusionZ,
+              Microphone.base_dimension_Z * obj.obj.scale.z
+            );
+        } else if (obj instanceof Drumstick) {
           if (obj.obj.name.includes("left")) {
             obj.animate(self.leftHand.is_closed);
             obj.scaling(self.leftHand.distance);
-          }
-          else {
+          } else {
             obj.animate(self.rightHand.is_closed);
             obj.scaling(self.rightHand.distance);
           }
           if (obj.obj.visible)
-            occlusionZ = Math.max(occlusionZ, Drumstick.base_dimension_Z * obj.obj.scale.z);
+            occlusionZ = Math.max(
+              occlusionZ,
+              Drumstick.base_dimension_Z * obj.obj.scale.z
+            );
         }
       });
 
-      self.poseHandler();
-
+      await self.signHandler();
       ThreeMeshUI.update();
-
       self.render();
-
       requestAnimationFrame(render);
     }
     requestAnimationFrame(render);
   }
-
 
   resize(): void {
     super.resize();
