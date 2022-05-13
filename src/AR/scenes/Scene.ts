@@ -62,14 +62,13 @@ export default class Scene {
     resize() {
         let width = window.innerWidth;
         const ratio = window.innerWidth / this.video.videoWidth;
-        let height = ratio *this.video.videoHeight;
+        let height = ratio * this.video.videoHeight;
 
         const min = 150;
 
-        if (height < min)
-        {
+        if (height < min) {
             height = min;
-            width = min /ratio;
+            width = min / ratio;
         }
 
         globalThis.APPNamespace.height = height;

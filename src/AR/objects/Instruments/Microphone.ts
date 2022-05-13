@@ -21,7 +21,7 @@ export default class Microphone extends Object3D {
 
     Pizzicato.context.resume();
 
-    this.sound = new Pizzicato.Sound( { source: "input" }, () => this.initialized = true );
+    this.sound = new Pizzicato.Sound({ source: "input" }, () => this.initialized = true);
     this.sound.addEffect(
       // new Pizzicato.Effects.Reverb({
       //   time: 1,

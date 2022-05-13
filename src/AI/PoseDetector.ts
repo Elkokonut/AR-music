@@ -78,17 +78,6 @@ export default class PoseDetector {
         || (results.rightHandLandmarks && results.rightHandLandmarks.length > 0)) {
         scene.update_keypoints(keypoints);
       }
-      if (results.poseLandmarks) {
-        let poseLandmarks_to_pred = tf.tensor(results.poseLandmarks.reduce(function (array, data_point) {
-          array.push(data_point.x);
-          array.push(data_point.y);
-          array.push(data_point.visibility);
-          return array;
-        }, []));
-        poseLandmarks_to_pred = poseLandmarks_to_pred.expandDims(0);
-        const pred = (pose_model.predict(poseLandmarks_to_pred) as tf.Tensor).dataSync();
-        PoseDetector.changeInstrument(scene, pred);
-      }
     }
 
     this.model.onResults(onResults);

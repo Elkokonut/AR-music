@@ -6,6 +6,7 @@
     "*.gltf": ["@parcel/transformer-raw"],
     "*.obj": ["@parcel/transformer-raw"],
     "*.3DS": ["@parcel/transformer-raw"],
-    "*.mtl": ["@parcel/transformer-raw"]
+    "*.mtl": ["@parcel/transformer-raw"],
+    "*.wav": ["@parcel/transformer-raw"]
   }
 }

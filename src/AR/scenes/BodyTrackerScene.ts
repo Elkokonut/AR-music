@@ -18,6 +18,9 @@ import * as ThreeMeshUI from "three-mesh-ui";
 import Interface from "../objects/Interface/Interface";
 import Classifier from "../../AI/Classifier";
 
+import Pizzicato from "pizzicato";
+
+
 export default class BodyTrackerScene extends Scene {
   keypoints: Keypoint[];
   factory: InstrumentFactory;
@@ -136,17 +139,22 @@ export default class BodyTrackerScene extends Scene {
         this.leftHand,
         this.rightHand
       );
-      if (this.classifier.pred_buffer.filter((n) => n == prediction).length == 10) {
+      if (true || this.classifier.pred_buffer.filter((n) => n == prediction).length == 7) {
+        Pizzicato.context.resume();
         switch (prediction) {
           case 0:
-            // TODO: Call appropriate sound
             console.log("Sign number 0 !");
+            // TODO: Call appropriate sound
+            const acousticGuitar = new Pizzicato.Sound('sound sample/Harp 1.wav', () => { acousticGuitar.play(); });
+            //acousticGuitar.play();
             break;
           case 1:
-            console.log("Sign number 1 !");
+            console.log("Mic !");
+            this.factory.change_instrument("microphone", this);
             break;
           case 2:
-            console.log("Sign number 2 !");
+            console.log("Drums !");
+            this.factory.change_instrument("drums", this);
             break;
           default:
             break;

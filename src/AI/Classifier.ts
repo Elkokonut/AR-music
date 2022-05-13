@@ -41,12 +41,16 @@ export default class Classifier {
   }
 
   async predict(left_hand, right_hand) {
+
+    if (this.knn.getNumClasses() <= 0)
+      return -1;
     const example = this.createExample(left_hand, right_hand);
     const prediction = await this.knn.predictClass(example, 30);
     // Because we increment the label starting from 0, label and prediction.classIndex should match.
-    const returned_label = prediction.confidences[prediction.classIndex] == 1 ? parseInt(prediction.label) : -1;
+    console.log(prediction);
+    const returned_label = prediction.confidences[prediction.label] == 1 ? parseInt(prediction.label) : -1;
     this.pred_buffer.unshift(...[returned_label]);
-    if (this.pred_buffer.length == 11)
+    if (this.pred_buffer.length == 8)
       this.pred_buffer.pop();
     return returned_label;
   }

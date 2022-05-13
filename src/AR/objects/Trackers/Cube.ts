@@ -9,9 +9,9 @@ export default class Cube extends BodyTrackerObject {
         super(cube, `Cube_${keypoint.type}_${keypoint.order}`, keypoint, scale);
     }
 
-    animate(distance) {
+    animate() {
         this.obj.rotation.x += 0.01;
         this.obj.rotation.y += 0.01;
-        super.animate(distance);
+        super.animate();
     }
 }

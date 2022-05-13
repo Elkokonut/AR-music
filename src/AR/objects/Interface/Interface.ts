@@ -9,12 +9,17 @@ export default class Interface {
 
     constructor(scene: BodyTrackerScene) {
         this.children = [];
-        this.currentFrame = FrameFactory.default_frame(scene);
-        this.children.push(this.currentFrame);
-
-        scene.scene.add(this.currentFrame.obj);
+        this.currentFrame = FrameFactory.text_frame("Welcome! \nPlease use headphones.\n Interact with the interface using your indexes.", this);
+        this.addChildren(this.currentFrame, scene);
+        this.addChildren(FrameFactory.default_frame(scene, this), scene);
+        this.addChildren(FrameFactory.training_instructions(this), scene);
         this.currentFrame.show();
         this.resize();
+    }
+
+    addChildren(frame: Frame, scene: BodyTrackerScene) {
+        this.children.push(frame);
+        scene.scene.add(frame.obj);
     }
 
     resize() {
@@ -22,6 +27,13 @@ export default class Interface {
     }
 
     interact(raycast: THREE.Raycast) {
-        const res = this.currentFrame.interact(raycast);
+        this.currentFrame.interact(raycast);
+    }
+
+    next(index) {
+        this.currentFrame.hide();
+        this.currentFrame = this.children[index];
+        this.currentFrame.show();
+        this.resize();
     }
 }
