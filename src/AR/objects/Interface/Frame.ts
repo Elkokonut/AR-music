@@ -19,10 +19,24 @@ export default class Frame extends Object3D {
 
     show() {
         this.obj.visible = true;
+        this.children.forEach(child => {
+            if (child instanceof Frame) {
+                child.show();
+            }
+        });
     }
 
     hide() {
         this.obj.visible = false;
+
+        this.children.forEach(child => {
+            if (child instanceof Button) {
+                child.forceIdle();
+            }
+            else if (child instanceof Frame) {
+                child.hide();
+            }
+        });
     }
 
 
@@ -47,6 +61,9 @@ export default class Frame extends Object3D {
                         this.children.forEach(c => { if (c instanceof Button && c != child) c.selected = false; });
                 } else
                     child.onIdle();
+            }
+            else if (child instanceof Frame) {
+                child.interact(raycast);
             }
         });
     }

@@ -100,6 +100,12 @@ export default class Button extends Object3D {
         this.selected = true;
     }
 
+    forceIdle() {
+        this.counter = 0;
+        this.obj.setState("idle");
+        this.selected = false;
+    }
+
     onIdle() {
         if (!this.selected) {
             this.counter = 0;

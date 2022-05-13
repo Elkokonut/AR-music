@@ -18,7 +18,7 @@ import * as ThreeMeshUI from "three-mesh-ui";
 import Interface from "../objects/Interface/Interface";
 import Classifier from "../../AI/Classifier";
 
-import Pizzicato from "pizzicato";
+import soundManager from "../../tools/soundManager";
 
 
 export default class BodyTrackerScene extends Scene {
@@ -28,12 +28,14 @@ export default class BodyTrackerScene extends Scene {
   rightHand: Hand;
   interface: Interface;
   classifier: Classifier;
+  soundManager: soundManager;
 
   constructor(video, debug) {
     super(video, debug);
     this.classifier = new Classifier();
     this.keypoints = Keypoint.generateKeypoints(keypoint_json);
     this.factory = new InstrumentFactory();
+    this.soundManager = new soundManager();
 
     this.leftHand = new Hand(
       this.keypoints.filter((keypoint) => keypoint.type == "left_hand")
@@ -140,24 +142,12 @@ export default class BodyTrackerScene extends Scene {
         this.rightHand
       );
       if (true || this.classifier.pred_buffer.filter((n) => n == prediction).length == 7) {
-        Pizzicato.context.resume();
-        switch (prediction) {
-          case 0:
-            console.log("Sign number 0 !");
-            // TODO: Call appropriate sound
-            const acousticGuitar = new Pizzicato.Sound('sound sample/Harp 1.wav', () => { acousticGuitar.play(); });
-            //acousticGuitar.play();
-            break;
-          case 1:
-            console.log("Mic !");
-            this.factory.change_instrument("microphone", this);
-            break;
-          case 2:
-            console.log("Drums !");
-            this.factory.change_instrument("drums", this);
-            break;
-          default:
-            break;
+        if (prediction == "microphone")
+          this.factory.change_instrument("microphone", this);
+        else if (prediction == "drums")
+          this.factory.change_instrument("drums", this);
+        else if (prediction != "") {
+          this.soundManager.playSound(prediction);
         }
       }
     }

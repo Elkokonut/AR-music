@@ -5,15 +5,14 @@ import Hand from "../Geometry/Hand";
 export default class Classifier {
   knn: knnClassifier.KNNClassifier;
   isLearning: boolean;
-  current_label: number;
+  current_label: string;
   enabled: boolean;
-  pred_buffer: Array<number>;
+  pred_buffer: Array<string>;
 
   constructor() {
     this.pred_buffer = [];
     this.knn = knnClassifier.create();
     this.isLearning = false;
-    this.current_label = -1;
     this.enabled = false;
   }
 
@@ -43,12 +42,12 @@ export default class Classifier {
   async predict(left_hand, right_hand) {
 
     if (this.knn.getNumClasses() <= 0)
-      return -1;
+      return "";
     const example = this.createExample(left_hand, right_hand);
     const prediction = await this.knn.predictClass(example, 30);
     // Because we increment the label starting from 0, label and prediction.classIndex should match.
     console.log(prediction);
-    const returned_label = prediction.confidences[prediction.label] == 1 ? parseInt(prediction.label) : -1;
+    const returned_label = prediction.confidences[prediction.label] == 1 ? prediction.label : "";
     this.pred_buffer.unshift(...[returned_label]);
     if (this.pred_buffer.length == 8)
       this.pred_buffer.pop();
@@ -56,14 +55,14 @@ export default class Classifier {
   }
 
 
-  startLearning(label) {
+  startLearning(label: string) {
     this.isLearning = true;
     this.current_label = label;
   }
 
   stopLearning() {
     this.isLearning = false;
-    this.current_label = -1;
+    this.current_label = "";
   }
 
   enable() {
