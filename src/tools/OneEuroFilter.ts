@@ -10,7 +10,7 @@ function exponential_smoothing(a, x, x_prev) {
 
 export default class OneEuroFilterMD {
     filters: OneEuroFilter[];
-    
+
     constructor(entries, t0 = Date.now(), min_cutoff, beta) {
         this.filters = []
         entries.forEach(point => {
@@ -21,8 +21,7 @@ export default class OneEuroFilterMD {
     call(points, t = Date.now()) {
         const res = [];
         const length = points.length < this.filters.length ? points.length : this.filters.length;
-        for (let i = 0; i < length; i++)
-        {
+        for (let i = 0; i < length; i++) {
             res.push(this.filters[i].call(points[i], t));
         }
         return res;

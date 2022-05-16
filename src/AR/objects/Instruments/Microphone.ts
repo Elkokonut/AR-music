@@ -11,7 +11,7 @@ export default class Microphone extends Object3D {
   initialized: boolean;
   static base_dimension_Z = 2.8;
 
-  constructor(obj, name, keypoints, scale) {
+  constructor(obj: THREE.Object3D, name, keypoints, scale) {
     super(obj, name, scale);
     this.initialized = false;
     this.obj.visible = false;
@@ -21,7 +21,7 @@ export default class Microphone extends Object3D {
 
     Pizzicato.context.resume();
 
-    this.sound = new Pizzicato.Sound( { source: "input" }, () => this.initialized = true );
+    this.sound = new Pizzicato.Sound({ source: "input" }, () => this.initialized = true);
     this.sound.addEffect(
       // new Pizzicato.Effects.Reverb({
       //   time: 1,
@@ -71,10 +71,20 @@ export default class Microphone extends Object3D {
       this.obj.position.y = anchor.y;
       this.obj.position.z = anchor.z;
 
-      // Get align vector from anchor referential.s
-      const align_vector = new THREE.Vector3();
-      align_vector.subVectors(this.kp_align_pos, anchor).normalize();
-      this.obj.rotation.z = - Math.sign(align_vector.x) * this.obj.up.angleTo(align_vector);
+      // Ratio computes the depth of the mic using Z values of pinky and index.
+      var ratio = (this.keypoints[0].z - this.keypoints[2].z) * 10;
+      this.kp_align_pos.add(new THREE.Vector3(0, 0, ratio * -100));
+
+      //YESSSSSSSSSSSs
+      this.obj.lookAt(this.kp_align_pos); // The lookAt method align the Z axis of the object with our vector
+      this.obj.rotateX(-80); // so now we rotate on the world X axis the object so it is on it's former local Z axis set by lookAt.
+      // rotate 80 and not 90 because kp_align_pos goes a bit too far.
+
+      // const depth = new THREE.Vector3(0, 0, 1);
+      // this.obj.rotation.z = - Math.sign(align_vector.x) * this.obj.up.angleTo(align_vector);
+      // const sign = this.keypoints[0].z > this.keypoints[2].z ? 1 : -1;
+      // this.obj.rotation.x = sign * this.obj.up.angleTo(align_vector);
+      //this.obj.rotation.y = - Math.sign(this.keypoints[0].z) * depth.angleTo(align_vector);
     }
   }
   play_sound(mouth_keypoint) {
