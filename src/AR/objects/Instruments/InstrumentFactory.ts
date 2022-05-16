@@ -23,12 +23,20 @@ export default class InstrumentFactory {
     this.loadingManager.onLoad = () => this.onLoad();
   }
 
+  isLoaded(instrument) {
+    if (this.instruments[instrument])
+      return true;
+    return false;
+  }
+
   onStart() {
     this.loadingModel++;
+    globalThis.APPNamespace.App.ui.showModelLoading();
   }
 
   onLoad() {
     this.loadingModel--;
+    globalThis.APPNamespace.App.ui.hideModelLoading();
   }
 
   change_instrument(type, scene) {

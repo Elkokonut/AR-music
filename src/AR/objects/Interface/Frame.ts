@@ -8,16 +8,23 @@ import Object3D from '../Object3D';
 export default class Frame extends Object3D {
     children: Object3D[];
     private resize_func: (Frame) => void
+    onBefore: () => void
+    onAfter: () => void
 
-    constructor(frame: ThreeMeshUI.Block, name: string, resize_func: (Frame) => void) {
+    constructor(frame: ThreeMeshUI.Block, name: string, resize_func: (Frame) => void, onBefore = null, onAfter = null) {
         super(frame, name, null);
         this.children = [];
         this.resize_func = resize_func;
         this.resize();
         this.hide();
+
+        this.onBefore = onBefore;
+        this.onAfter = onAfter;
     }
 
     show() {
+        if (this.onBefore)
+            this.onBefore();
         this.obj.visible = true;
         this.children.forEach(child => {
             if (child instanceof Frame) {
@@ -37,6 +44,9 @@ export default class Frame extends Object3D {
                 child.hide();
             }
         });
+
+        if (this.onAfter)
+            this.onAfter();
     }
 
 

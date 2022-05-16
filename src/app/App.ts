@@ -59,7 +59,7 @@ export default class App {
     globalThis.APPNamespace.Classifier = new Classifier();
 
     const pose_detector = new PoseDetector(this.video);
-    await pose_detector.init(scene, this.ui);
+    await pose_detector.init(scene);
   }
 
   createButton() {

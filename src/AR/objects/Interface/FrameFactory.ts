@@ -23,36 +23,44 @@ export default class FrameFactory {
     static train_mic(scene, front: Interface) {
         const text_frame = "Mimick singing in a mic to train AI";
         const learningProcess = function (label) {
-            front.next(5);
-            setTimeout(() => {
-                front.next(4);
-            }, 1000);
-            setTimeout(() => {
-                front.next(3);
-            }, 2000);
-            setTimeout(() => {
-                scene.classifier.startLearning(label);
-                scene.classifier.disable();
-                scene.factory.change_instrument(label, scene);
-                front.next(6);
-            }, 3000);
-            setTimeout(() => {
-                front.hide();
-            }, 4000);
-            setTimeout(() => {
-                scene.classifier.stopLearning();
-                scene.factory.change_instrument("", scene);
-                front.next(8);
-            }, 13000);
+            scene.factory.change_instrument(label, scene);
+            if (scene.factory.isLoaded(label)) {
+                front.next(5);
+                setTimeout(() => {
+                    front.next(4);
+                }, 1000);
+                setTimeout(() => {
+                    front.next(3);
+                }, 2000);
+                setTimeout(() => {
+                    scene.classifier.startLearning(label);
+                    scene.classifier.disable();
+                    front.next(6);
+                }, 3000);
+                setTimeout(() => {
+                    front.hide();
+                }, 4000);
+                setTimeout(() => {
+                    scene.classifier.stopLearning();
+                    scene.factory.change_instrument("", scene);
+                    front.next(8);
+                }, 13000);
+            }
         }
-        return FrameFactory.content_button_frame(text_frame, function () { learningProcess("microphone") }, "Start");
+        const frame = FrameFactory.content_button_frame(text_frame, function () { learningProcess("microphone") }, "Start");
+
+        frame.onBefore = () => { scene.factory.change_instrument("microphone", scene); }
+
+        return frame;
     }
 
 
     static train_drums(scene, front: Interface) {
         const text_frame = "Mimick playing the drum to train AI";
         const learningProcess = function (label) {
+            scene.factory.change_instrument(label, scene);
             front.next(5);
+
             setTimeout(() => {
                 front.next(4);
             }, 1000);
@@ -62,7 +70,6 @@ export default class FrameFactory {
             setTimeout(() => {
                 scene.classifier.startLearning(label);
                 scene.classifier.disable();
-                scene.factory.change_instrument(label, scene);
                 front.next(6);
             }, 3000);
             setTimeout(() => {
@@ -75,7 +82,10 @@ export default class FrameFactory {
                 front.next(9);
             }, 13000);
         }
-        return FrameFactory.content_button_frame(text_frame, function () { learningProcess("drums") }, "Start");
+        const frame = FrameFactory.content_button_frame(text_frame, function () { learningProcess("drums") }, "Start");
+        frame.onBefore = () => { scene.factory.change_instrument("drums", scene); }
+
+        return frame;
     }
 
     static info_training_frame(front: Interface) {
@@ -219,10 +229,13 @@ export default class FrameFactory {
                 scene.classifier.stopLearning();
                 scene.classifier.disable();
                 scene.factory.change_instrument("", scene);
-                if (scene.classifier.knn.getNumClasses() <= 1)
+                if (scene.classifier.knn.getNumClasses() <= 1) {
                     front.next(7);
-                else
+                }
+                else {
+
                     front.next(2);
+                }
             }));
 
         return frame;

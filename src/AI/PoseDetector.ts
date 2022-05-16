@@ -39,7 +39,7 @@ export default class PoseDetector {
     }
   }
 
-  async init(scene, ui) {
+  async init(scene) {
     console.log("INIT AI");
     let sendCounter = 0;
     const pose_model = await tf.loadLayersModel('pose_ml_model/model.json');
@@ -47,7 +47,7 @@ export default class PoseDetector {
       this.video,
       {
         onFrame: async () => {
-          if (sendCounter == 1) ui.hideLoading();
+          if (sendCounter == 1) globalThis.APPNamespace.App.ui.hideLoading();
           await this.model.send({ image: this.video });
           sendCounter++;
         },
