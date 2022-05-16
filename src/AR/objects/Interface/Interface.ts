@@ -9,14 +9,18 @@ export default class Interface {
 
     constructor(scene: BodyTrackerScene) {
         this.children = [];
-        this.currentFrame = FrameFactory.starting_frame("Welcome! \nPlease use headphones.\n Interact with the interface using your indexes.", this);
-        this.addChildren(this.currentFrame, scene);
+        this.addChildren(FrameFactory.starting_frame(this), scene);
         this.addChildren(FrameFactory.default_frame(scene, this), scene);
         this.addChildren(FrameFactory.training_instructions(scene, this), scene);
         this.addChildren(FrameFactory.text_frame("1"), scene);
         this.addChildren(FrameFactory.text_frame("2"), scene);
         this.addChildren(FrameFactory.text_frame("3"), scene);
         this.addChildren(FrameFactory.text_frame("GO!"), scene);
+        this.addChildren(FrameFactory.train_mic(scene, this), scene);
+        this.addChildren(FrameFactory.train_drums(scene, this), scene);
+        this.addChildren(FrameFactory.info_training_frame(this), scene);
+
+        this.currentFrame = this.children[0];
         this.currentFrame.show();
         this.resize();
     }
@@ -38,9 +42,11 @@ export default class Interface {
     show() { this.currentFrame.show(); }
 
     next(index) {
-        this.currentFrame.hide();
-        this.currentFrame = this.children[index];
-        this.currentFrame.show();
-        this.resize();
+        if (index >= 0 && index < this.children.length) {
+            this.currentFrame.hide();
+            this.currentFrame = this.children[index];
+            this.currentFrame.show();
+            this.resize();
+        }
     }
 }

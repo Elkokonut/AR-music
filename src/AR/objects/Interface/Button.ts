@@ -66,10 +66,6 @@ export default class Button extends Object3D {
         this.obj.setupState({
             state: 'selected',
             attributes: selectedAttributes,
-            onSet: () => {
-                if (this.action)
-                    this.action.call(this);
-            }
         });
         this.obj.setupState(hoveredStateAttributes);
         this.obj.setupState(idleStateAttributes);
@@ -85,7 +81,7 @@ export default class Button extends Object3D {
 
     intersect() {
         this.onHover()
-        if (this.counter >= 1)
+        if (this.counter >= 7)
             this.onSelected();
     }
 
@@ -96,14 +92,16 @@ export default class Button extends Object3D {
     }
 
     onSelected() {
-        this.obj.setState('selected');
         this.selected = true;
+        this.obj.setState('selected');
+        if (this.action)
+            this.action.call(this);
     }
 
     forceIdle() {
         this.counter = 0;
-        this.obj.setState("idle");
         this.selected = false;
+        this.obj.setState("idle");
     }
 
     onIdle() {
