@@ -18,7 +18,7 @@ import * as ThreeMeshUI from "three-mesh-ui";
 import Interface from "../objects/Interface/Interface";
 import Classifier from "../../AI/Classifier";
 
-import soundManager from "../../tools/soundManager";
+import soundManager from "../../tools/SoundManager";
 
 
 export default class BodyTrackerScene extends Scene {
