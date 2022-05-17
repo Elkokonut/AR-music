@@ -224,7 +224,7 @@ export default class FrameFactory {
                 scene.factory.change_instrument("", scene);
             }));
 
-        frame.addElement(new Button("Start Training",
+        frame.addElement(new Button("AI Training",
             function () {
                 scene.classifier.stopLearning();
                 scene.classifier.disable();
