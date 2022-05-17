@@ -62,6 +62,13 @@ export default class Classifier {
     return returned_label;
   }
 
+  removeLabel(label) {
+    this.knn.clearClass(label);
+  }
+
+  removeAllLabels(label) {
+    this.knn.clearAllClasses();
+  }
 
   startLearning(label: string) {
     this.isLearning = true;
