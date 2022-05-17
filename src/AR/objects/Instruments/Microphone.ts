@@ -77,7 +77,7 @@ export default class Microphone extends Object3D {
 
       //YESSSSSSSSSSSs
       this.obj.lookAt(this.kp_align_pos); // The lookAt method align the Z axis of the object with our vector
-      this.obj.rotateX(-80); // so now we rotate on the world X axis the object so it is on it's former local Z axis set by lookAt.
+      this.obj.rotateX(Math.PI / 2); // so now we rotate on the world X axis the object so it is on it's former local Z axis set by lookAt.
       // rotate 80 and not 90 because kp_align_pos goes a bit too far.
 
       // const depth = new THREE.Vector3(0, 0, 1);
