@@ -127,7 +127,7 @@ export default class InstrumentFactory {
           object.children[0],
           name,
           keypoints,
-          [10, 10, 10]
+          [13, 13, 13]
         );
 
         this.instruments["microphone"] = [inst];
