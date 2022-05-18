@@ -39,9 +39,14 @@ export default class Drumstick extends Object3D {
     this.obj.position.y = anchor.y;
     this.obj.position.z = anchor.z;
     // Get align vector from anchor referential.s
-    const align_vector = new THREE.Vector3();
-    align_vector.subVectors(kp_align_pos, anchor).normalize();
-    this.obj.rotation.z = - Math.sign(align_vector.x) * this.obj.up.angleTo(align_vector) + Math.PI;
+    // Ratio computes the depth of the mic using Z values of pinky and index.
+    const ratio = (this.keypoints[0].z - this.keypoints[2].z) * 10;
+    kp_align_pos.add(new THREE.Vector3(0, 0, ratio * 200));
+
+    // Rotate the object to the align point
+    this.obj.lookAt(kp_align_pos); // The lookAt method align the Z axis of the object with our vector
+    this.obj.rotateX((3 / 2) * Math.PI); // so now we rotate on the world X axis the object so it is on it's former local Z axis set by lookAt.
+    // rotate 80 and not 90 because kp_align_pos goes a bit too far.
   }
 }
 
