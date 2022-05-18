@@ -76,7 +76,7 @@ export default class Microphone extends Object3D {
       this.kp_align_pos.y -= 20;
 
       // Ratio computes the depth of the mic using Z values of pinky and index.
-      var ratio = (this.keypoints[0].z - this.keypoints[2].z) * 10;
+      const ratio = (this.keypoints[0].z - this.keypoints[2].z) * 10;
       this.kp_align_pos.add(new THREE.Vector3(0, 0, ratio * -200));
 
       // Rotate the object to the align point
