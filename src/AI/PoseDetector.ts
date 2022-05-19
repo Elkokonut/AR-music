@@ -20,29 +20,10 @@ export default class PoseDetector {
     });
   }
 
-  private static changeInstrument(scene, pred) {
-    const pred_instrument = pred.indexOf(Math.max(...pred))
-    PoseDetector.pred_buffer.unshift(...[pred_instrument])
-    if (PoseDetector.pred_buffer.length == 6)
-      PoseDetector.pred_buffer.pop()
-    if (PoseDetector.pred_buffer.filter((n) => n == pred_instrument).length == 5) {
-      switch (pred_instrument) {
-        case 0:
-          scene.factory.change_instrument("drums", scene);
-          break;
-        case 1:
-          scene.factory.change_instrument("microphone", scene);
-          break;
-        default:
-          break;
-      }
-    }
-  }
 
   async init(scene) {
     console.log("INIT AI");
     let sendCounter = 0;
-    const pose_model = await tf.loadLayersModel('pose_ml_model/model.json');
     const camera = new pipe_camera.Camera(
       this.video,
       {
