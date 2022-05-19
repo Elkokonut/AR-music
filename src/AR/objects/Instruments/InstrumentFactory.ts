@@ -209,7 +209,7 @@ export default class InstrumentFactory {
             "ancien_drum_left",
             new THREE.Vector3(-5, -13, 0),
             new THREE.Vector3(scale / 1440, scale / 1080, scale / 1080),
-            require("url:../../../../static/sound sample/drum.wav"
+            require("url:../../../../static/sound sample/drum_left.wav"
             )
           );
 
@@ -218,7 +218,7 @@ export default class InstrumentFactory {
             "ancien_drum_right",
             new THREE.Vector3(5, -13, 0),
             new THREE.Vector3(scale / 1440, scale / 1080, scale / 1080),
-            require("url:../../../../static/sound sample/drum.wav"
+            require("url:../../../../static/sound sample/drum_right.wav"
             )
           );
 
