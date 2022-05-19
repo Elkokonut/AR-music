@@ -59,7 +59,7 @@ export default class Drum extends Object3D {
         });
 
         if (collision) {
-            if (this.canplay && !this.sound.playing()) {
+            if (this.canplay) {
                 this.sound.play();
             }
             this.canplay = false;
