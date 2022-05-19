@@ -71,7 +71,7 @@ export default class Scene {
     resize_background(width, height) {
         this.scene.background.matrixAutoUpdate = false;
         const aspect = width / height;
-        var imageAspect = this.video.videoWidth / this.video.videoHeight;
+        const imageAspect = this.video.videoWidth / this.video.videoHeight;
 
         globalThis.APPNamespace.height = height;
         globalThis.APPNamespace.width = width;
