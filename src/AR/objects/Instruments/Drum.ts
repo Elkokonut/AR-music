@@ -2,7 +2,6 @@ import Object3D from "../Object3D";
 import * as THREE from "three";
 import { Howl } from 'howler';
 import Keypoint from "../../../Geometry/Keypoint";
-import Drumstick from "./Drumstick";
 
 export default class Drum extends Object3D {
     base_dimension: THREE.Vector3;
@@ -54,12 +53,10 @@ export default class Drum extends Object3D {
         colliders.forEach(collider => {
             if (collider instanceof Keypoint && collider.is_visible)
                 collision = collision || this.box.containsPoint(collider.position);
-            else if (collider instanceof Drumstick)
-                collision = collision || this.box.intersectsBox(collider.box);
         });
 
         if (collision) {
-            if (this.canplay) {
+            if (this.canplay && !this.sound.playing()) {
                 this.sound.play();
             }
             this.canplay = false;
