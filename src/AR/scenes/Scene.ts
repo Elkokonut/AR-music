@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Drum from '../objects/Instruments/Drum';
 import Microphone from '../objects/Instruments/Microphone';
-import Interface from '../objects/Interface/Interface';
 import Object3D from '../objects/Object3D';
 
 export default class Scene {
@@ -22,35 +21,32 @@ export default class Scene {
         this.#renderOrder = 10;
         this.objects = []
         console.log("Init Scene");
-        const ratio = window.innerWidth / this.video.videoWidth;
-        const renderheight = ratio * this.video.videoHeight;
 
-        globalThis.APPNamespace.height = renderheight;
-        globalThis.APPNamespace.width = window.innerWidth;
+        const coordinates = this.get_canvas_size();
+        const width = coordinates["width"];
+        const height = coordinates["height"];
 
         this.scene = new THREE.Scene();
         const texture = new THREE.VideoTexture(this.video);
-        texture.center.set(0.5, 0.5);
-        texture.repeat.set(-1, 1);
         this.scene.background = texture;
-        this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / renderheight, 0.1, renderheight + 500);
-        // this.camera = new THREE.OrthographicCamera(this.width / - 2, this.width / 2, this.height / 2, this.height / - 2, .1, 1000);
-        this.camera.position.z = renderheight;
-        this.camera.lookAt(0, 0, 0);
+
+        this.resize_background(width, height);
+
+        this.camera = new THREE.PerspectiveCamera(50, width / height, 0.1, height + 500);
+        this.resize_camera(width, height);
 
         const light = new THREE.AmbientLight(0x404040); // soft white light
         this.scene.add(light);
 
         const light1 = new THREE.PointLight();
-        light1.position.set(0.8, 1.4, renderheight + 5);
+        light1.position.set(0.8, 1.4, height + 5);
         this.scene.add(light1);
 
         this.renderer = new THREE.WebGLRenderer();
-
-        this.renderer.setSize(window.innerWidth, renderheight);
         document.body.appendChild(this.renderer.domElement);
         document.querySelector('canvas').setAttribute("id", "scene");
         document.getElementById("scene").style.display = "none";
+        this.resize_renderer(width, height);
 
         if (debug) {
             this.addControls();
@@ -59,32 +55,70 @@ export default class Scene {
         this.initialisation = true;
     }
 
-    resize() {
+    get_canvas_size() {
         let width = window.innerWidth;
-        const ratio = window.innerWidth / this.video.videoWidth;
-        let height = ratio * this.video.videoHeight;
-
+        let height = window.innerHeight;
         const min = 150;
 
-        if (height < min) {
-            height = min;
-            width = min / ratio;
+        if (width < min || height < min) {
+            height = this.video.videoHeight;
+            width = this.video.videoWidth;
         }
+
+        globalThis.APPNamespace.canvasHeight = height;
+        globalThis.APPNamespace.canvasWidth = width;
+
+        return { "width": width, "height": height };
+    }
+
+    resize_background(width, height) {
+        this.scene.background.matrixAutoUpdate = false;
+        const aspect = width / height;
+        const imageAspect = this.video.videoWidth / this.video.videoHeight;
 
         globalThis.APPNamespace.height = height;
         globalThis.APPNamespace.width = width;
 
+
+
+        if (aspect < imageAspect) {
+            this.scene.background.matrix.setUvTransform(0, 0, -aspect / imageAspect, 1, 0, 0.5, 0.5);
+            globalThis.APPNamespace.width = height / this.video.videoHeight * this.video.videoWidth;
+
+        } else {
+            this.scene.background.matrix.setUvTransform(0, 0, -1, imageAspect / aspect, 0, 0.5, 0.5);
+            globalThis.APPNamespace.height = width / this.video.videoWidth * this.video.videoHeight;
+        }
+    }
+
+    resize_camera(width, height) {
+        this.camera.aspect = width / height;
+        this.camera.position.z = height;
+        this.camera.far = height + 500;
+        this.camera.lookAt(0, 0, 0);
+        this.camera.updateProjectionMatrix();
+    }
+
+    resize_renderer(width, height) {
+        this.renderer.setSize(width, height);
+        this.renderer.render(this.scene, this.camera);
+    }
+
+    resize() {
+        const coordinates = this.get_canvas_size();
+        const width = coordinates["width"];
+        const height = coordinates["height"];
+
+        if (this.scene && this.scene.background) {
+            this.resize_background(width, height);
+        }
+
         if (this.camera) {
-            this.camera.aspect = width / height;
-            this.camera.position.z = height;
-            this.camera.far = height + 500;
-            this.camera.lookAt(0, 0, 0);
-            this.camera.updateProjectionMatrix();
+            this.resize_camera(width, height);
         }
 
         if (this.renderer) {
-            this.renderer.setSize(width, height)
-            this.renderer.render(this.scene, this.camera);
+            this.resize_renderer(width, height);
         }
 
         this.objects.forEach((obj) => {

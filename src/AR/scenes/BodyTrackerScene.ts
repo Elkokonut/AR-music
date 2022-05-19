@@ -166,8 +166,8 @@ export default class BodyTrackerScene extends Scene {
       .filter((kp) => kp.is_visible)
       .forEach((kp) => {
         const pointer = new THREE.Vector2(
-          (kp.position.x / globalThis.APPNamespace.width) * 2,
-          (kp.position.y / globalThis.APPNamespace.height) * 2
+          (kp.position.x / globalThis.APPNamespace.canvasWidth) * 2,
+          (kp.position.y / globalThis.APPNamespace.canvasHeight) * 2
         );
         const raycaster = new THREE.Raycaster();
         raycaster.setFromCamera(pointer, this.camera);

@@ -7,16 +7,20 @@ import Object3D from '../Object3D';
 
 export default class Frame extends Object3D {
     children: Object3D[];
-    private resize_func: (Frame) => void
+    resizeFunc: (Frame) => void
     onBefore: () => void
     onAfter: () => void
 
-    constructor(frame: ThreeMeshUI.Block, name: string, resize_func: (Frame) => void, onBefore = null, onAfter = null) {
+    static distance = 50;
+
+    constructor(frame: ThreeMeshUI.Block, name: string, resizeFunc = null, onBefore = null, onAfter = null) {
         super(frame, name, null);
         this.children = [];
-        this.resize_func = resize_func;
-        this.resize();
+        this.resizeFunc = resizeFunc;
         this.hide();
+
+        const distance = 50;
+        this.obj.position.setZ(globalThis.APPNamespace.canvasHeight - distance);
 
         this.onBefore = onBefore;
         this.onAfter = onAfter;
@@ -56,7 +60,9 @@ export default class Frame extends Object3D {
     }
 
     resize() {
-        this.resize_func(this);
+        this.obj.position.setZ(globalThis.APPNamespace.canvasHeight - Frame.distance);
+        if (this.resizeFunc)
+            this.resizeFunc(this);
     }
 
     interact(raycast: THREE.Raycast) {
