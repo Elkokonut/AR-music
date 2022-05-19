@@ -16,7 +16,10 @@ export default class Drum extends Object3D {
         this.obj.visible = true;
 
         const euler = this.obj.up.angleTo(new THREE.Vector3(1, 0, 0));
-        this.obj.rotateX(-euler);
+        if (name == "cymbal")
+            this.obj.rotateX(-euler + Math.PI / 2);
+        else
+            this.obj.rotateX(-euler);
 
         this.base_dimension = base_dimension;
 
@@ -56,7 +59,7 @@ export default class Drum extends Object3D {
         });
 
         if (collision) {
-            if (this.canplay && !this.sound.playing()) {
+            if (this.canplay) {
                 this.sound.play();
             }
             this.canplay = false;

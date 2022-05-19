@@ -44,16 +44,18 @@ export default class InstrumentFactory {
       if (this.instruments["drums"] && type != "drums") {
         scene.removeByName("ancien_drum_left");
         scene.removeByName("ancien_drum_right");
+        scene.removeByName("cymbal");
       }
       else if (type == "drums") {
         if (!this.instruments["drums"]) {
 
           this._load_ancien_drum(scene);
+          this._load_cymbal(scene);
         }
         else if (!scene.objects.includes(this.instruments["drums"][0])) {
           this.instruments["drums"].forEach((obj) => {
             scene.prepend3DObject(obj);
-            if (obj.obj.name == "ancien_drum_left" || obj.obj.name == "ancien_drum_right")
+            if (obj.obj.name == "ancien_drum_left" || obj.obj.name == "ancien_drum_right" || obj.obj.name == "cymbal")
               obj.obj.renderOrder = 0;
           });
         }
@@ -136,6 +138,52 @@ export default class InstrumentFactory {
       }
     );
   }
+
+  _load_cymbal(scene) {
+    const obj_path = require("../../../../static/models/cymbal/Cymbal.obj");
+    new OBJLoader(this.loadingManager)
+      .load(obj_path,
+        async (object) => {
+          console.log("success in loading cymbal");
+
+          const textureLoader = new THREE.TextureLoader();
+          const baseColorMap = await textureLoader.load(
+            require("../../../../static/models/cymbal/zildjian-i-family-18-crash-ride.jpeg")
+          );
+          const drumMaterial = new THREE.MeshStandardMaterial({
+            map: baseColorMap
+          });
+          for (const child of object.children) {
+            child.material = drumMaterial;
+          }
+
+
+          const scale = 1000;
+          const cymbal = new Drum(
+            object.clone(),
+            "cymbal",
+            new THREE.Vector3(7, 7, 0),
+            new THREE.Vector3(scale / 1440, scale / 1080, scale / 1080),
+            require("url:../../../../static/sound sample/cymbal.wav"
+            )
+          );
+
+          if (!this.instruments["drums"])
+            this.instruments["drums"] = [];
+          this.instruments["drums"].push(cymbal);
+
+          scene.append3DObject(cymbal);
+          cymbal.obj.renderOrder = 0;
+        },
+        (xhr) => {
+          console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
+
 
   _load_ancien_drum(scene) {
     const obj_path = require("../../../../static/models/NAMDrum/NAMDrum01.obj");
