@@ -83,11 +83,17 @@ export default class InstrumentFactory {
   _load_microphone(scene) {
     const model_path = require("../../../../static/models/mic/microphone.fbx");
     const name = "mic";
-    const keypoints = [
+    const keypoints_right = [
       scene.keypoints.find((keypoint) => keypoint.name == "right_index_finger_mcp"),
       scene.keypoints.find((keypoint) => keypoint.name == "right_index_finger_dip"),
       scene.keypoints.find((keypoint) => keypoint.name == "right_pinky_finger_mcp"),
       scene.keypoints.find((keypoint) => keypoint.name == "right_pinky_finger_dip")
+    ];
+    const keypoints_left = [
+      scene.keypoints.find((keypoint) => keypoint.name == "left_index_finger_mcp"),
+      scene.keypoints.find((keypoint) => keypoint.name == "left_index_finger_dip"),
+      scene.keypoints.find((keypoint) => keypoint.name == "left_pinky_finger_mcp"),
+      scene.keypoints.find((keypoint) => keypoint.name == "left_pinky_finger_dip")
     ];
     const fbxLoader = new FBXLoader(this.loadingManager);
     const textureLoader = new THREE.TextureLoader();
@@ -123,7 +129,8 @@ export default class InstrumentFactory {
         const inst = new Microphone(
           object.children[0],
           name,
-          keypoints,
+          keypoints_left,
+          keypoints_right,
           [12, 12, 12]
         );
 

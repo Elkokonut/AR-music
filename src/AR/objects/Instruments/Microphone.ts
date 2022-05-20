@@ -4,18 +4,20 @@ import Object3D from "../Object3D";
 import Pizzicato from "pizzicato";
 
 export default class Microphone extends Object3D {
-  keypoints: Keypoint[];
+  keypoints_left: Keypoint[];
+  keypoints_right: Keypoint[];
   sound: Pizzicato.Sound;
   kp_align_pos: THREE.Vector3;
   isPlaying: boolean;
   initialized: boolean;
   static base_dimension_Z = 2.8;
 
-  constructor(obj: THREE.Object3D, name, keypoints, scale) {
+  constructor(obj: THREE.Object3D, name, keypoints_left, keypoints_right, scale) {
     super(obj, name, scale);
     this.initialized = false;
     this.obj.visible = false;
-    this.keypoints = keypoints;
+    this.keypoints_left = keypoints_left;
+    this.keypoints_right = keypoints_right;
     this.sound = null;
     this.kp_align_pos = new THREE.Vector3(0, 0, 0);
 
@@ -54,19 +56,20 @@ export default class Microphone extends Object3D {
     //          [0]         [2]
     // THUMB HERE
 
+    const keypoints = this.keypoints_right[0].is_visible ? this.keypoints_right : this.keypoints_left;
 
-    this.obj.visible = this.keypoints[0].is_visible && display;
+    this.obj.visible = keypoints[0].is_visible && display;
 
     if (this.obj.visible) {
       const anchor = new THREE.Vector3();
 
-      this.kp_align_pos.subVectors(this.keypoints[1].position, this.keypoints[0].position)
+      this.kp_align_pos.subVectors(keypoints[1].position, keypoints[0].position)
         .multiplyScalar(1 / 2)
-        .add(this.keypoints[0].position);
+        .add(keypoints[0].position);
 
-      anchor.subVectors(this.keypoints[3].position, this.keypoints[2].position)
+      anchor.subVectors(keypoints[3].position, keypoints[2].position)
         .multiplyScalar(1 / 2)
-        .add(this.keypoints[2].position);
+        .add(keypoints[2].position);
 
       // Set base of the object to the anchor point
       this.obj.position.x = anchor.x;
@@ -74,7 +77,7 @@ export default class Microphone extends Object3D {
       this.obj.position.z = anchor.z;
 
       // Ratio computes the depth of the mic using Z values of pinky and index.
-      const ratio = (this.keypoints[0].z - this.keypoints[2].z) * 10;
+      const ratio = (keypoints[0].z - keypoints[2].z) * 10;
       this.kp_align_pos.add(new THREE.Vector3(0, 0, ratio * -200));
 
       // Rotate the object to the align point
