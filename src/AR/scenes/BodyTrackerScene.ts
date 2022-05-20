@@ -140,16 +140,15 @@ export default class BodyTrackerScene extends Scene {
         this.leftHand,
         this.rightHand
       );
-      if (true || this.classifier.pred_buffer.filter((n) => n == prediction).length == 7) {
-        if (prediction == "microphone")
-          this.factory.change_instrument("microphone", this);
-        else if (prediction == "drums")
-          this.factory.change_instrument("drums", this);
-        else if (prediction != "") {
-          this.factory.change_instrument("", this);
-          this.soundManager.playSound(prediction);
-        }
+      if (prediction == "microphone")
+        this.factory.change_instrument("microphone", this);
+      else if (prediction == "drums")
+        this.factory.change_instrument("drums", this);
+      else if (prediction != "") {
+        this.factory.change_instrument("", this);
+        this.soundManager.playSound(prediction);
       }
+
     }
   }
 

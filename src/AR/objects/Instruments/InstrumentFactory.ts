@@ -2,7 +2,6 @@ declare function require(name: string);
 
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
-import { TDSLoader } from "three/examples/jsm/loaders/TDSLoader";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import Microphone from "./Microphone";
 import Drum from "./Drum";

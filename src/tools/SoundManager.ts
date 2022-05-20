@@ -15,7 +15,7 @@ export default class SoundManager {
                 sound: new Howl({ src: [sound_path] }),
                 lastTimePlayed: -this.timeBeforeSound
             });
-    };
+    }
 
     playSound(label: string) {
         if (this.soundDict.get(label) == null) {

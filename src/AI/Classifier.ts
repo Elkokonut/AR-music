@@ -7,10 +7,8 @@ export default class Classifier {
   isLearning: boolean;
   current_label: string;
   enabled: boolean;
-  pred_buffer: Array<string>;
 
   constructor() {
-    this.pred_buffer = [];
     this.knn = knnClassifier.create();
     this.isLearning = false;
     this.enabled = false;
@@ -55,9 +53,6 @@ export default class Classifier {
     const prediction = await this.knn.predictClass(example, 30);
     // Because we increment the label starting from 0, label and prediction.classIndex should match.
     const returned_label = prediction.confidences[prediction.label] == 1 ? prediction.label : "";
-    this.pred_buffer.unshift(...[returned_label]);
-    if (this.pred_buffer.length == 8)
-      this.pred_buffer.pop();
     return returned_label;
   }
 
