@@ -68,7 +68,24 @@ export default class Hand {
             this.keypoints.find(keypoint => keypoint.name == `${this.type}_pinky_finger_tip`).position
         );
 
-        this.is_closed = d - 0.10 * this.worldDistance < this.worldDistance || d2 - 0.10 * this.worldDistance < this.worldDistance ;
+        this.is_closed = d - 0.10 * this.worldDistance < this.worldDistance || d2 - 0.10 * this.worldDistance < this.worldDistance;
         return this.is_closed;
+    }
+
+    getRelativeKeypoints() {
+        const width = globalThis.APPNamespace.width;
+        const height = globalThis.APPNamespace.height;
+        const wrist = this.keypoints.find(keypoint => keypoint.name == `${this.type}_wrist`).position;
+        wrist.x = wrist.x / width;
+        wrist.y = wrist.y / height;
+        return this.keypoints.reduce((array, kp) => {
+            const res = new THREE.Vector3(-1, -1, -1);
+            kp.position.x = kp.position.x / width;
+            kp.position.y = kp.position.y / height;
+            if (kp.is_visible)
+                res.subVectors(kp.position, wrist);
+            array.push(res);
+            return array;
+        }, []);
     }
 }

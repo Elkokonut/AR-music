@@ -1,6 +1,6 @@
 import BodyTrackerScene from "../../scenes/BodyTrackerScene";
 import * as THREE from 'three';
-import Frame from "./Frame";
+import Frame, { FrameType } from "./Frame";
 import FrameFactory from "./FrameFactory";
 
 export default class Interface {
@@ -9,19 +9,54 @@ export default class Interface {
 
     constructor(scene: BodyTrackerScene) {
         this.children = [];
-        this.currentFrame = FrameFactory.default_frame(scene);
-        this.children.push(this.currentFrame);
+        FrameFactory.generateAllFrames(scene, this).forEach(frm => this.addChildren(frm, scene));
 
-        scene.scene.add(this.currentFrame.obj);
+        this.currentFrame = this.findFrameByType(FrameType.StartingFrame);
         this.currentFrame.show();
         this.resize();
+    }
+
+    addChildren(frame: Frame, scene: BodyTrackerScene) {
+        this.children.push(frame);
+        scene.scene.add(frame.obj);
     }
 
     resize() {
         this.currentFrame.resize();
     }
 
-    interact(raycast: THREE.Raycast) {
-        const res = this.currentFrame.interact(raycast);
+    interact(raycasts: THREE.Raycast[]) {
+        this.currentFrame.interact(raycasts);
+    }
+
+    hide() { this.currentFrame.hide(); }
+    show() { this.currentFrame.show(); }
+
+
+    findFrameByType(type: FrameType) {
+        return this.children.find(frm => frm.type == type);
+    }
+
+    next(type: FrameType) {
+        let newFrame;
+        if (type == FrameType.SmallCounter) {
+            if (this.currentFrame.type == FrameType.SmallCounter) {
+                const content = +this.currentFrame.obj.children[1].content - 1;
+                newFrame = this.children.find(frm => frm.type == type && frm.obj.children[1].content == `${content}`);
+            }
+            else {
+                newFrame = this.children.find(frm => frm.type == type && frm.obj.children[1].content == "10");
+            }
+        }
+        else {
+            newFrame = this.findFrameByType(type);
+        }
+        if (newFrame) {
+
+            this.currentFrame.hide();
+            this.currentFrame = newFrame;
+            this.currentFrame.show();
+            this.resize();
+        }
     }
 }

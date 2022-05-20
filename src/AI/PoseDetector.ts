@@ -5,8 +5,11 @@ import * as pipe_camera from '@mediapipe/camera_utils'
 export default class PoseDetector {
   video: HTMLVideoElement;
   model: pipe_holistic.Holistic;
+  static pred_buffer: Array<number>;
+
 
   constructor(video) {
+    PoseDetector.pred_buffer = []
     this.video = video;
     this.model = new pipe_holistic.Holistic({
       locateFile: (file) => {
@@ -15,14 +18,15 @@ export default class PoseDetector {
     });
   }
 
-  async init(scene, ui) {
+
+  async init(scene) {
     console.log("INIT AI");
     let sendCounter = 0;
     const camera = new pipe_camera.Camera(
       this.video,
       {
         onFrame: async () => {
-          if (sendCounter == 1) ui.hideLoading();
+          if (sendCounter == 1) globalThis.APPNamespace.App.ui.hideLoading();
           await this.model.send({ image: this.video });
           sendCounter++;
         },
@@ -41,7 +45,7 @@ export default class PoseDetector {
       minTrackingConfidence: 0.3
     });
 
-    function onResults(results) {
+    async function onResults(results) {
       const keypoints =
       {
         "body": results.poseLandmarks,

@@ -8,7 +8,7 @@ export default class Disk extends BodyTrackerObject {
         const circle = new THREE.Mesh(geometry, material);
         super(circle, `Disk_${keypoint.type}_${keypoint.order}`, keypoint, null);
     }
-    animate(distance) {
-        super.animate(distance);
+    animate() {
+        super.animate();
     }
 }

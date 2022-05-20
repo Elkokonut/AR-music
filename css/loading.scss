@@ -18,10 +18,25 @@ $font-01: "Oxygen", sans-serif;
    justify-content: center;
    align-items: center;
 
+   .info {
+      position: absolute;
+      p {
+      top: 0;
+      padding: 0;
+      margin: 0;
+      color: $c-01;
+      font-family: $font-01;
+      animation: text 3.5s ease both infinite;
+      font-size: 12px;
+      letter-spacing: 1px;
+   } 
+}
+
+
    .loading {
       width: 80px;
       height: 50px;
-      position: relative;
+      position: absolute;
 
       p {
          top: 0;

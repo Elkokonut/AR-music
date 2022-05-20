@@ -9,20 +9,19 @@ export default class Phalanx extends Occluser {
     points: Keypoint[];
     anchor: Keypoint;
 
-    constructor(points, anchor)
-    {
-        const material = new MeshLineMaterial( {
+    constructor(points, anchor) {
+        const material = new MeshLineMaterial({
 
             color: 0x00ffff,
             lineWidth: 35, // in world units with size attenuation, pixels otherwise
-        } );
+        });
 
         const line = new MeshLine();
         line.setPoints(points);
         line.material = material;
         const mesh = new THREE.Mesh(line, material);
 
-        super(mesh, ""); 
+        super(mesh, "");
 
         this.points = points;
         this.anchor = anchor;
