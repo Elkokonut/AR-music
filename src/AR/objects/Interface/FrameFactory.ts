@@ -253,7 +253,7 @@ export default class FrameFactory {
         const frame = new Frame(new ThreeMeshUI.Block({
             padding: 0.02,
             borderRadius: 1,
-            fontSize: 1,
+            fontSize: 100 / height / 2,
             backgroundColor: new THREE.Color(0xfffff),
             backgroundOpacity: 0.4,
             justifyContent: 'center',
@@ -340,6 +340,8 @@ export default class FrameFactory {
 
         frame.addElement(new Button("Reset Training",
             function () {
+                scene.classifier.disable();
+                scene.factory.change_instrument("", scene);
                 front.next(FrameType.ClearTraining);
             },
             false,
