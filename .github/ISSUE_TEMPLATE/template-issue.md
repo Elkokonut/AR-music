@@ -13,14 +13,12 @@ assignees: ''
 
 **technical roadmap**
 
-> example:
-> - [ ] 
-> - [ ] 
-> - [ ] 
-> - [ ] 
+- [ ] 
+- [ ] 
+ - [ ] 
+- [ ] 
 
 **validation criteria**
 
-> example:
-> - [ ] 
-> - [ ]
+ - [ ] 
+ - [ ]
