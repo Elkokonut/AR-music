@@ -85,9 +85,9 @@ export default class InstrumentFactory {
     const name = "mic";
     const keypoints = [
       scene.keypoints.find((keypoint) => keypoint.name == "right_index_finger_mcp"),
-      scene.keypoints.find((keypoint) => keypoint.name == "right_index_finger_pip"),
+      scene.keypoints.find((keypoint) => keypoint.name == "right_index_finger_dip"),
       scene.keypoints.find((keypoint) => keypoint.name == "right_pinky_finger_mcp"),
-      scene.keypoints.find((keypoint) => keypoint.name == "right_pinky_finger_pip")
+      scene.keypoints.find((keypoint) => keypoint.name == "right_pinky_finger_dip")
     ];
     const fbxLoader = new FBXLoader(this.loadingManager);
     const textureLoader = new THREE.TextureLoader();
@@ -124,7 +124,7 @@ export default class InstrumentFactory {
           object.children[0],
           name,
           keypoints,
-          [10, 10, 10]
+          [12, 12, 12]
         );
 
         this.instruments["microphone"] = [inst];
