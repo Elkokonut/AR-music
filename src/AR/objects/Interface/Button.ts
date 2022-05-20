@@ -29,24 +29,18 @@ export default class Button extends Object3D {
 
         if (!hoveredStateAttributes)
             hoveredStateAttributes = {
-                state: 'hovered',
-                attributes: {
-                    offset: 0.035,
-                    backgroundColor: new THREE.Color(0x008080),
-                    backgroundOpacity: 0.7,
-                    fontColor: new THREE.Color(0xffffff)
-                },
+                offset: 0.035,
+                backgroundColor: new THREE.Color(0x008080),
+                backgroundOpacity: 0.7,
+                fontColor: new THREE.Color(0xffffff)
             };
 
         if (!idleStateAttributes)
             idleStateAttributes = {
-                state: 'idle',
-                attributes: {
-                    offset: 0.035,
-                    backgroundColor: new THREE.Color(0x229999),
-                    backgroundOpacity: 0.5,
-                    fontColor: new THREE.Color(0xffffff)
-                },
+                offset: 0.035,
+                backgroundColor: new THREE.Color(0x229999),
+                backgroundOpacity: 0.5,
+                fontColor: new THREE.Color(0xffffff)
             };
 
         if (!selectedAttributes)
@@ -67,8 +61,16 @@ export default class Button extends Object3D {
             state: 'selected',
             attributes: selectedAttributes,
         });
-        this.obj.setupState(hoveredStateAttributes);
-        this.obj.setupState(idleStateAttributes);
+        this.obj.setupState(
+            {
+                state: 'hovered',
+                attributes: hoveredStateAttributes
+            });
+        this.obj.setupState(
+            {
+                state: 'idle',
+                attributes: idleStateAttributes
+            });
         this.selected = selected;
 
         if (this.selected) {
@@ -81,7 +83,7 @@ export default class Button extends Object3D {
 
     intersect() {
         this.onHover()
-        if (this.counter >= 7)
+        if (this.counter >= 10)
             this.onSelected();
     }
 

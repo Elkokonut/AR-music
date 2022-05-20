@@ -54,7 +54,6 @@ export default class Classifier {
     const example = this.createExample(left_hand, right_hand);
     const prediction = await this.knn.predictClass(example, 30);
     // Because we increment the label starting from 0, label and prediction.classIndex should match.
-    console.log(prediction);
     const returned_label = prediction.confidences[prediction.label] == 1 ? prediction.label : "";
     this.pred_buffer.unshift(...[returned_label]);
     if (this.pred_buffer.length == 8)
@@ -66,7 +65,7 @@ export default class Classifier {
     this.knn.clearClass(label);
   }
 
-  removeAllLabels(label) {
+  removeAllLabels() {
     this.knn.clearAllClasses();
   }
 

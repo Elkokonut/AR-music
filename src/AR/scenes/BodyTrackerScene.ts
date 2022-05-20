@@ -155,7 +155,8 @@ export default class BodyTrackerScene extends Scene {
   }
 
   interact() {
-    [
+
+    this.interface.interact([
       this.keypoints.find(
         (keypoint) => keypoint.name == `right_index_finger_tip`
       ),
@@ -164,15 +165,16 @@ export default class BodyTrackerScene extends Scene {
       ),
     ]
       .filter((kp) => kp.is_visible)
-      .forEach((kp) => {
+      .map((kp) => {
         const pointer = new THREE.Vector2(
           (kp.position.x / globalThis.APPNamespace.canvasWidth) * 2,
           (kp.position.y / globalThis.APPNamespace.canvasHeight) * 2
         );
         const raycaster = new THREE.Raycaster();
         raycaster.setFromCamera(pointer, this.camera);
-        this.interface.interact(raycaster);
-      });
+        return raycaster;
+      })
+    );
   }
 
   async animate() {
