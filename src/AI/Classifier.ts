@@ -63,7 +63,8 @@ export default class Classifier {
   }
 
   removeLabel(label) {
-    this.knn.clearClass(label);
+    if (label in this.knn.getClassExampleCount())
+      this.knn.clearClass(label);
   }
 
   removeAllLabels(label) {
