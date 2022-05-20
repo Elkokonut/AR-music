@@ -27,13 +27,13 @@ export default class Classifier {
 
   createExample(left_hand: Hand, right_hand: Hand) {
 
-    let left_hand_kp = tf.tensor(left_hand.getRelativeKeypoints().reduce(function (array, kp) {
+    const left_hand_kp = tf.tensor(left_hand.getRelativeKeypoints().reduce(function (array, kp) {
       array.push(kp.x);
       array.push(kp.y);
       return array;
     }, []));
 
-    let right_hand_kp = tf.tensor(right_hand.getRelativeKeypoints().reduce(function (array, kp) {
+    const right_hand_kp = tf.tensor(right_hand.getRelativeKeypoints().reduce(function (array, kp) {
       array.push(kp.x);
       array.push(kp.y);
       return array;

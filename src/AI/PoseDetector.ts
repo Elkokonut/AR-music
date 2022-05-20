@@ -1,7 +1,6 @@
 // Register WebGL backend.
 import * as pipe_holistic from '@mediapipe/holistic'
 import * as pipe_camera from '@mediapipe/camera_utils'
-import * as tf from '@tensorflow/tfjs';
 
 
 export default class PoseDetector {
