@@ -70,10 +70,8 @@ export default class Microphone extends Object3D {
 
       // Set base of the object to the anchor point
       this.obj.position.x = anchor.x;
-      this.obj.position.y = anchor.y - 20;
+      this.obj.position.y = anchor.y;
       this.obj.position.z = anchor.z;
-
-      this.kp_align_pos.y -= 20;
 
       // Ratio computes the depth of the mic using Z values of pinky and index.
       const ratio = (this.keypoints[0].z - this.keypoints[2].z) * 10;
