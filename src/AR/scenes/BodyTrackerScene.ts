@@ -11,7 +11,6 @@ import Microphone from "../objects/Instruments/Microphone";
 import Phalanx from "../objects/Occlusers/Phalanx";
 import Palm from "../objects/Occlusers/Palm";
 import Drum from "../objects/Instruments/Drum";
-import Drumstick from "../objects/Instruments/Drumstick";
 import Hand from "../../Geometry/Hand";
 import Occluser from "../objects/Occlusers/Occluser";
 import * as ThreeMeshUI from 'three-mesh-ui';
@@ -135,9 +134,10 @@ export default class BodyTrackerScene extends Scene {
           obj.obj.position.setZ(occlusionZ);
         }
         else if (obj instanceof Drum) {
-          obj.animate(self.objects.filter(
-            (stick) => stick.obj.name.includes("drumstick")
-          ));
+          obj.animate(self.keypoints.filter((keypoint) => keypoint.type.includes('hand')));
+          // obj.animate(self.objects.filter(
+          //   (stick) => stick.obj.name.includes("drumstick")
+          // ));
         }
         else if (obj instanceof Microphone) {
           obj.animate(self.rightHand.is_closed);
