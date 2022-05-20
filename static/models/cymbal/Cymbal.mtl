@@ -1,0 +1,12 @@
+#
+# Bunkspeed OBJ Material File
+# http://www.bunkspeed.com
+#
+
+newmtl Appearance
+Kd 0.7019608 0.6039216 0.3215686
+map_Kd -clamp on C:\Users\russe\Documents\NUS Documents\NUS_SEM7\ME2162 Drumset\Cymbal\Cymbal OBJ V2\zildjian-i-family-18-crash-ride.jpeg
+Ks 0.7019608 0.6039216 0.3215686
+map_Ks C:\Users\russe\Documents\NUS Documents\NUS_SEM7\ME2162 Drumset\Cymbal\Cymbal OBJ V2\zildjian-i-family-18-crash-ride.jpeg
+illum 2
+Ns 29.28571

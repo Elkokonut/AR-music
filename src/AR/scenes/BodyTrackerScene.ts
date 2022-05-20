@@ -11,7 +11,6 @@ import Microphone from "../objects/Instruments/Microphone";
 import Phalanx from "../objects/Occlusers/Phalanx";
 import Palm from "../objects/Occlusers/Palm";
 import Drum from "../objects/Instruments/Drum";
-import Drumstick from "../objects/Instruments/Drumstick";
 import Hand from "../../Geometry/Hand";
 import Occluser from "../objects/Occlusers/Occluser";
 import * as ThreeMeshUI from "three-mesh-ui";
@@ -187,49 +186,50 @@ export default class BodyTrackerScene extends Scene {
       let occlusionZ = 0;
       self.interact();
 
+
+      [
+        self.keypoints.find(keypoint => keypoint.name == `right_index_finger_tip`),
+        self.keypoints.find(keypoint => keypoint.name == `left_index_finger_tip`)
+      ].filter(kp => kp.is_visible)
+        .forEach(kp => {
+          const pointer = new THREE.Vector2(kp.position.x / globalThis.APPNamespace.width * 2,
+            kp.position.y / globalThis.APPNamespace.height * 2)
+          const raycaster = new THREE.Raycaster();
+          raycaster.setFromCamera(pointer, self.camera);
+          self.interface.interact(raycaster);
+        });
+
       self.objects.forEach((obj) => {
         if (obj instanceof BodyTrackerObject) obj.animate();
         else if (obj instanceof Occluser) {
           if (obj.obj.name.includes("left")) {
             obj.animate(self.leftHand.is_closed);
-          } else {
+          }
+          else {
             obj.animate(self.rightHand.is_closed);
           }
           obj.obj.position.setZ(occlusionZ);
-        } else if (obj instanceof Drum) {
-          obj.animate(
-            self.objects.filter((stick) => stick.obj.name.includes("drumstick"))
-          );
-        } else if (obj instanceof Microphone) {
+        }
+        else if (obj instanceof Drum) {
+          obj.animate(self.keypoints.filter((keypoint) => keypoint.type.includes('hand')));
+        }
+        else if (obj instanceof Microphone) {
           obj.animate(self.rightHand.is_closed);
           obj.play_sound(
             self.keypoints.find((keypoint) => keypoint.name == "mouth_right")
           );
           obj.scaling(self.rightHand.distance);
           if (obj.obj.visible)
-            occlusionZ = Math.max(
-              occlusionZ,
-              Microphone.base_dimension_Z * obj.obj.scale.z
-            );
-        } else if (obj instanceof Drumstick) {
-          if (obj.obj.name.includes("left")) {
-            obj.animate(self.leftHand.is_closed);
-            obj.scaling(self.leftHand.distance);
-          } else {
-            obj.animate(self.rightHand.is_closed);
-            obj.scaling(self.rightHand.distance);
-          }
-          if (obj.obj.visible)
-            occlusionZ = Math.max(
-              occlusionZ,
-              Drumstick.base_dimension_Z * obj.obj.scale.z
-            );
+            occlusionZ = Math.max(occlusionZ, Microphone.base_dimension_Z * obj.obj.scale.z);
         }
       });
 
       await self.signHandler();
+
       ThreeMeshUI.update();
+
       self.render();
+
       requestAnimationFrame(render);
     }
     requestAnimationFrame(render);

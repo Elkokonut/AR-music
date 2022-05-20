@@ -619,11 +619,6 @@ export default class FrameFactory {
 
             frames.push(frame);
         }
-
-
         return frames;
     }
-
-
-
 }

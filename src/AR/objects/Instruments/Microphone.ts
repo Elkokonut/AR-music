@@ -11,7 +11,7 @@ export default class Microphone extends Object3D {
   initialized: boolean;
   static base_dimension_Z = 2.8;
 
-  constructor(obj, name, keypoints, scale) {
+  constructor(obj: THREE.Object3D, name, keypoints, scale) {
     super(obj, name, scale);
     this.initialized = false;
     this.obj.visible = false;
@@ -46,6 +46,7 @@ export default class Microphone extends Object3D {
   }
 
   animate(display) {
+
     // Compute anchor and kp_align_pos from given keypoints
     //keypoints from hand:
     //          [1]         [3]
@@ -67,14 +68,20 @@ export default class Microphone extends Object3D {
         .multiplyScalar(1 / 2)
         .add(this.keypoints[2].position);
 
+      // Set base of the object to the anchor point
       this.obj.position.x = anchor.x;
       this.obj.position.y = anchor.y;
       this.obj.position.z = anchor.z;
 
-      // Get align vector from anchor referential.s
-      const align_vector = new THREE.Vector3();
-      align_vector.subVectors(this.kp_align_pos, anchor).normalize();
-      this.obj.rotation.z = - Math.sign(align_vector.x) * this.obj.up.angleTo(align_vector);
+      // Ratio computes the depth of the mic using Z values of pinky and index.
+      const ratio = (this.keypoints[0].z - this.keypoints[2].z) * 10;
+      this.kp_align_pos.add(new THREE.Vector3(0, 0, ratio * -200));
+
+      // Rotate the object to the align point
+      this.obj.lookAt(this.kp_align_pos); // The lookAt method align the Z axis of the object with our vector
+      this.obj.rotateX(Math.PI / 2); // so now we rotate on the world X axis the object so it is on it's former local Z axis set by lookAt.
+      // rotate 80 and not 90 because kp_align_pos goes a bit too far.
+
     }
   }
   play_sound(mouth_keypoint) {

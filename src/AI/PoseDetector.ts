@@ -2,7 +2,6 @@
 import * as pipe_holistic from '@mediapipe/holistic'
 import * as pipe_camera from '@mediapipe/camera_utils'
 
-
 export default class PoseDetector {
   video: HTMLVideoElement;
   model: pipe_holistic.Holistic;
