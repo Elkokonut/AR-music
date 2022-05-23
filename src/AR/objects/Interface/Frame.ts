@@ -12,6 +12,7 @@ export enum FrameType {
     Big3,
     GO,
     SmallCounter,
+    AutoInfo,
     TrainingMic,
     TrainingDrum,
     TrainingInfo,
@@ -98,15 +99,20 @@ export default class Frame extends Object3D {
                     if ((intersects1 && intersects1.find(o => o.object.parent && o.object.parent.name === child.obj.name))
                         || (intersects2 && intersects2.find(o => o.object.parent && o.object.parent.name === child.obj.name))) {
                         child.intersect();
-                        if (child.selected)
+                        if (child.selected) {
                             this.children.forEach(c => { if (c instanceof Button && c != child) c.selected = false; });
+                            return true;
+                        }
                     } else
                         child.onIdle();
                 }
                 else if (child instanceof Frame) {
-                    child.interact(raycasts);
+                    const selected = child.interact(raycasts);
+                    if (selected == true)
+                        return true;
                 }
             });
         }
+        return false;
     }
 }

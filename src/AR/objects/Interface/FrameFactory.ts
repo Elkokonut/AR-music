@@ -14,6 +14,7 @@ export default class FrameFactory {
 
         frames.push(FrameFactory.startingFrame(front)); // "starting_frame"
         frames.push(FrameFactory.mainFrame(scene, front)); // "main"
+        frames.push(FrameFactory.autoInfoFrame(front));
         frames.push(...FrameFactory.generateBigCounters());
         frames.push(...FrameFactory.generateSmallCounters(10));
         frames.push(FrameFactory.trainMic(scene, front)); // "training_mic"
@@ -312,10 +313,15 @@ export default class FrameFactory {
 
         frame.addElement(new Button("Auto",
             function () {
-                scene.classifier.stopLearning();
-                scene.classifier.enable();
-                console.log("Now using the trained KNN !");
                 scene.factory.change_instrument("", scene);
+                if (scene.classifier.knn.getNumClasses() <= 1) {
+                    front.next(FrameType.AutoInfo);
+                }
+                else {
+                    scene.classifier.stopLearning();
+                    scene.classifier.enable();
+                    console.log("Now using the trained KNN !");
+                }
             },
             false,
             buttons_option
@@ -349,6 +355,14 @@ export default class FrameFactory {
         ));
 
         return frame;
+    }
+
+    static autoInfoFrame(front: Interface) {
+        const text_info = "To use Auto Mode,\n please train the AI by pressing 'AI Training'.";
+
+        return FrameFactory.content_button_frame(FrameType.AutoInfo, text_info, function () {
+            front.next(FrameType.Main);
+        }, "Got it!");
     }
 
 
