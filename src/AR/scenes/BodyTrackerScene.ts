@@ -79,8 +79,8 @@ export default class BodyTrackerScene extends Scene {
           (keypoint) => keypoint.name == `${side}_${finger}_tip`
         );
 
-        this.append3DObject(new Phalanx([bot.position, mid.position], mid));
-        this.append3DObject(new Phalanx([mid.position, top.position], mid));
+        this.append3DObject(new Phalanx([bot.position, mid.position], mid, side));
+        this.append3DObject(new Phalanx([mid.position, top.position], mid, side));
       })
     );
     this.append3DObject(
@@ -97,7 +97,8 @@ export default class BodyTrackerScene extends Scene {
         ],
         this.keypoints.find(
           (keypoint) => keypoint.name == `right_index_finger_mcp`
-        )
+        ),
+        "right"
       )
     );
 
@@ -115,7 +116,8 @@ export default class BodyTrackerScene extends Scene {
         ],
         this.keypoints.find(
           (keypoint) => keypoint.name == `left_index_finger_mcp`
-        )
+        ),
+        "left"
       )
     );
   }
@@ -202,9 +204,11 @@ export default class BodyTrackerScene extends Scene {
         if (obj instanceof BodyTrackerObject) obj.animate();
         else if (obj instanceof Occluser) {
           if (obj.obj.name.includes("left")) {
+            console.log("HELLO");
             obj.animate(self.leftHand.is_closed);
           }
           else {
+            console.log("there");
             obj.animate(self.rightHand.is_closed);
           }
           obj.obj.position.setZ(occlusionZ);
@@ -213,11 +217,16 @@ export default class BodyTrackerScene extends Scene {
           obj.animate(self.keypoints.filter((keypoint) => keypoint.type.includes('hand')));
         }
         else if (obj instanceof Microphone) {
-          obj.animate(self.rightHand.is_closed);
-          obj.play_sound(
-            self.keypoints.find((keypoint) => keypoint.name == "mouth_right")
-          );
+
+          const right_distance = obj.keypoints_right[0].position.distanceTo(obj.mouth_keypoint.position);
+          const left_distance = obj.keypoints_left[0].position.distanceTo(obj.mouth_keypoint.position);
+
+          const is_right_hand = left_distance > right_distance;
+          const is_closed = is_right_hand ? self.rightHand.is_closed : self.leftHand.is_closed;
+          const distance = is_right_hand ? self.rightHand.distance : self.leftHand.distance;
+          obj.animate(is_closed, is_right_hand);
           obj.scaling(self.rightHand.distance);
+          obj.play_sound();
           if (obj.obj.visible)
             occlusionZ = Math.max(occlusionZ, Microphone.base_dimension_Z * obj.obj.scale.z);
         }
