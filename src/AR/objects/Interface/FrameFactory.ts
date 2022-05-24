@@ -489,13 +489,13 @@ export default class FrameFactory {
         addOption(left_button_frame, "Mic", "microphone");
         addOption(left_button_frame, "Drums", "drums");
         addOption(left_button_frame, "Harp", "harp");
-        addOption(left_button_frame, "Sound1", "Sound1");
-        addOption(left_button_frame, "Sound2", "Sound2");
-        addOption(right_button_frame, "Sound3", "Sound");
-        addOption(right_button_frame, "Sound4", "Sound");
-        addOption(right_button_frame, "Sound5", "Sound");
-        addOption(right_button_frame, "Sound6", "Sound");
-        addOption(right_button_frame, "Sound7", "Sound");
+        addOption(left_button_frame, "Guitar", "guitar");
+        addOption(left_button_frame, "Kalimba", "kalimba");
+        addOption(right_button_frame, "Violon", "violon");
+        addOption(right_button_frame, "Trombone", "trombone");
+        addOption(right_button_frame, "Voice", "voice");
+        addOption(right_button_frame, "Xylo", "xylo");
+        addOption(right_button_frame, "Synth Dive", "synth_dive");
 
 
         frame.addElement(new Frame(new ThreeMeshUI.Block(
