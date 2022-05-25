@@ -467,13 +467,13 @@ export default class FrameFactory {
         FrameFactory.buttonPack(left_button_frame, "Mic", "microphone", scene, front);
         FrameFactory.buttonPack(left_button_frame, "Drums", "drums", scene, front);
         FrameFactory.buttonPack(left_button_frame, "Harp", "harp", scene, front);
-        FrameFactory.buttonPack(left_button_frame, "Sound1", "Sound1", scene, front);
-        FrameFactory.buttonPack(left_button_frame, "Sound2", "Sound2", scene, front);
-        FrameFactory.buttonPack(right_button_frame, "Sound3", "Sound", scene, front);
-        FrameFactory.buttonPack(right_button_frame, "Sound4", "Sound", scene, front);
-        FrameFactory.buttonPack(right_button_frame, "Sound5", "Sound", scene, front);
-        FrameFactory.buttonPack(right_button_frame, "Sound6", "Sound", scene, front);
-        FrameFactory.buttonPack(right_button_frame, "Sound7", "Sound", scene, front);
+        FrameFactory.buttonPack(left_button_frame, "Guitar", "guitar", scene, front);
+        FrameFactory.buttonPack(left_button_frame, "Kalimba", "kalimba", scene, front);
+        FrameFactory.buttonPack(right_button_frame, "Violon", "violon", scene, front);
+        FrameFactory.buttonPack(right_button_frame, "Trombone", "trombone", scene, front);
+        FrameFactory.buttonPack(right_button_frame, "Voice", "voice", scene, front);
+        FrameFactory.buttonPack(right_button_frame, "Xylo", "xylo", scene, front);
+        FrameFactory.buttonPack(right_button_frame, "Synth Dive", "synth_dive", scene, front);
 
 
         frame.addElement(new Frame(new ThreeMeshUI.Block(
