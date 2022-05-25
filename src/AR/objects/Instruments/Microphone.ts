@@ -86,7 +86,6 @@ export default class Microphone extends Object3D {
   play_sound(mouth_keypoint) {
     if (this.initialized && mouth_keypoint && this.kp_align_pos.distanceTo(mouth_keypoint.position) < 300 && this.obj.visible) {
       this.sound.play();
-      console.log('HELLO THERE');
     }
     else {
       this.sound.pause();
