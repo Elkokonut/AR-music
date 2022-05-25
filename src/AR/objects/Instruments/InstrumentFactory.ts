@@ -132,12 +132,14 @@ export default class InstrumentFactory {
         for (const child of object.children) {
           child.material = minigunMaterial;
         }
+        const mouth_keypoint = scene.keypoints.find((keypoint) => keypoint.name == "mouth_right");
 
         const inst = new Microphone(
           object.children[0],
           name,
           keypoints_left,
           keypoints_right,
+          mouth_keypoint,
           [12, 12, 12]
         );
 

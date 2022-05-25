@@ -7,12 +7,12 @@ export default class Palm extends Occluser {
     vertices: Keypoint[];
     anchor: Keypoint;
 
-    constructor(vertices, anchor) {
+    constructor(vertices, anchor, name) {
         const geometry = new THREE.BufferGeometry();
         const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
         const palm = new THREE.Mesh(geometry, material);
 
-        super(palm, "");
+        super(palm, name);
         this.vertices = vertices;
         this.anchor = anchor;
     }

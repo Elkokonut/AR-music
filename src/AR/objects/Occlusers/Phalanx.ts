@@ -9,7 +9,7 @@ export default class Phalanx extends Occluser {
     points: Keypoint[];
     anchor: Keypoint;
 
-    constructor(points, anchor) {
+    constructor(points, anchor, name) {
         const material = new MeshLineMaterial({
 
             color: 0x00ffff,
@@ -21,7 +21,7 @@ export default class Phalanx extends Occluser {
         line.material = material;
         const mesh = new THREE.Mesh(line, material);
 
-        super(mesh, "");
+        super(mesh, name);
 
         this.points = points;
         this.anchor = anchor;
