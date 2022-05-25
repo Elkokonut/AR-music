@@ -4,6 +4,7 @@ import * as ThreeMeshUI from 'three-mesh-ui';
 import * as THREE from 'three';
 import Frame, { FrameType } from "./Frame";
 import Interface from "./Interface";
+import MeshText from "./MeshText";
 
 declare function require(name: string);
 
@@ -69,18 +70,20 @@ export default class FrameFactory {
             {
                 height: height * 0.7,
                 width: width * 0.7,
-                fontSize: 100 / height,
                 padding: 0.5,
                 margin: 0.5,
                 borderRadius: 10,
                 backgroundColor: new THREE.Color(0x47ada1),
                 backgroundOpacity: 0.7,
                 justifyContent: 'end',
+                textAlign: 'center',
                 contentDirection: 'column',
                 fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                fontTexture: require('../../../../static/fonts/gothic.png')
+                fontTexture: require('../../../../static/fonts/gothic.png'),
+
             }),
-            type
+            type,
+            (frame) => { Frame.basicResize(frame, 0.7) }
         );
 
         const frame2 = new Frame(
@@ -93,26 +96,17 @@ export default class FrameFactory {
                     margin: 0.5,
                     backgroundColor: new THREE.Color(0xba2f8e),
                     backgroundOpacity: 0,
-                    offset: 0.05
+                    offset: 0.05,
+
                 })
-            , FrameType.ChildFrame
+            , FrameType.ChildFrame,
+            (frame) => { Frame.basicResize(frame, 0.6) }
         );
 
         frame.addElement(frame2);
-        frame2.obj.add(new ThreeMeshUI.Text({ content: content }));
+        frame2.addElement(new MeshText(content, 0.03));
 
-        frame.addElement(new Button(button_text,
-            action,
-            false,
-            {
-                width: 0.15 * height,
-                height: 0.15 * height,
-                justifyContent: 'center',
-                borderRadius: 2,
-                offset: 0.05,
-                margin: 0.5
-            }
-        ));
+        frame.addElement(new Button(0.10, 0.10, button_text, action));
         return frame;
     }
 
@@ -126,7 +120,6 @@ export default class FrameFactory {
             {
                 height: height * 0.7,
                 width: width * 0.7,
-                fontSize: 100 / height,
                 padding: 0.5,
                 margin: 0.5,
                 borderRadius: 10,
@@ -135,9 +128,11 @@ export default class FrameFactory {
                 justifyContent: 'end',
                 contentDirection: 'column',
                 fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                fontTexture: require('../../../../static/fonts/gothic.png')
+                fontTexture: require('../../../../static/fonts/gothic.png'),
+
             }),
-            type
+            type,
+            (frame) => Frame.basicResize(frame, 0.7)
         );
 
         const frame2 = new Frame(
@@ -150,13 +145,15 @@ export default class FrameFactory {
                     margin: 0.5,
                     backgroundColor: new THREE.Color(0xba2f8e),
                     backgroundOpacity: 0,
-                    offset: 0.05
+                    offset: 0.05,
+
                 })
-            , FrameType.ChildFrame
+            , FrameType.ChildFrame,
+            (frame) => Frame.basicResize(frame, 0.6)
         );
 
         frame.addElement(frame2);
-        frame2.obj.add(new ThreeMeshUI.Text({ content: content }));
+        frame2.addElement(new MeshText(content, 0.04));
 
         const frame3 = new Frame(
             new ThreeMeshUI.Block(
@@ -169,37 +166,17 @@ export default class FrameFactory {
                     margin: 0.5,
                     backgroundColor: new THREE.Color(0xba2f8e),
                     backgroundOpacity: 0,
-                    offset: 0.05
+                    offset: 0.05,
+
                 })
-            , FrameType.ChildFrame
+            , FrameType.ChildFrame,
+            (frame) => Frame.basicResize(frame, 0.6)
         );
 
         frame.addElement(frame3);
 
-        frame3.addElement(new Button(button_text2,
-            action2,
-            false,
-            {
-                width: 0.15 * height,
-                height: 0.15 * height,
-                justifyContent: 'center',
-                borderRadius: 2,
-                offset: 0.05,
-                margin: 0.5
-            }
-        ));
-        frame3.addElement(new Button(button_text1,
-            action1,
-            false,
-            {
-                width: 0.15 * height,
-                height: 0.15 * height,
-                justifyContent: 'center',
-                borderRadius: 2,
-                offset: 0.05,
-                margin: 0.5
-            }
-        ));
+        frame3.addElement(new Button(0.15, 0.15, button_text2, action2));
+        frame3.addElement(new Button(0.15, 0.15, button_text1, action1));
 
         return frame;
 
@@ -217,7 +194,6 @@ export default class FrameFactory {
             {
                 height: height * 0.7,
                 width: width * 0.7,
-                fontSize: 100 / height * 10,
                 padding: 0.5,
                 margin: 0.5,
                 borderRadius: 10,
@@ -227,12 +203,14 @@ export default class FrameFactory {
                 contentDirection: 'column',
                 fontColor: new THREE.Color(0xa7ebe7),
                 fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                fontTexture: require('../../../../static/fonts/gothic.png')
+                fontTexture: require('../../../../static/fonts/gothic.png'),
+
             }),
-            type
+            type,
+            (frame) => Frame.basicResize(frame, 0.7)
         );
 
-        frame.obj.add(new ThreeMeshUI.Text({ content: content }));
+        frame.addElement(new MeshText(content, 0.04));
         return frame;
     }
 
@@ -250,109 +228,141 @@ export default class FrameFactory {
 
     static mainFrame(scene: BodyTrackerScene, front: Interface) {
         const height = Frame.distance;
+        const ratio = globalThis.APPNamespace.canvasHeight / globalThis.APPNamespace.canvasWidth;
+        const width = height / ratio;
 
+        const contentDir = globalThis.APPNamespace.mobileCheck() ? "column" : "row";
+
+
+        const button_width = globalThis.APPNamespace.mobileCheck() ? 0.25 : 0.1;
+        const button_height = 0.1;
         const frame = new Frame(new ThreeMeshUI.Block({
-            padding: 0.02,
             borderRadius: 1,
-            fontSize: 100 / height / 2,
             backgroundColor: new THREE.Color(0xfffff),
             backgroundOpacity: 0.4,
             justifyContent: 'center',
-            contentDirection: 'row',
+            contentDirection: contentDir,
             fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-            fontTexture: require('../../../../static/fonts/gothic.png')
+            fontTexture: require('../../../../static/fonts/gothic.png'),
+
         }), FrameType.Main,
             function resize(frame: Frame) {
-                const button_size = buttons_option["width"]
-                frame.obj.position.setX(0).setY(height / 2 - button_size / 1.15 - 0.02);
+                const localHeight = Frame.distance;
+                const localRatio = globalThis.APPNamespace.canvasHeight / globalThis.APPNamespace.canvasWidth;
+                const localWidth = localHeight / localRatio;
+                const button_size = button_height * Math.min(localHeight, localWidth);
+                const margin_size = Math.min(localHeight, localWidth) * button_height / 10;
+                const panel_height = button_size + 2 * margin_size;
+
+                if (globalThis.APPNamespace.mobileCheck())
+                    frame.obj.position.setX(0).setY((localHeight - 3.5) / 2 - panel_height);
+                else
+                    frame.obj.position.setX(0).setY((localHeight - 3.5) / 2 - panel_height / 2);
             }
         );
 
-        const buttons_option = {
-            width: 0.1 * height,
-            height: 0.1 * height,
-            justifyContent: 'center',
-            borderRadius: 1,
-            offset: 0.05,
-            margin: 0.5
+        const btns_list = [
+            new Button(button_width, button_height, "No instrument",
+                function () {
+                    scene.classifier.stopLearning();
+                    scene.classifier.disable();
+                    globalThis.APPNamespace.modeAuto = false;
+                    scene.factory.change_instrument("", scene);
+                }
+            ),
+            new Button(button_width, button_height, "Mic",
+                function () {
+                    scene.classifier.stopLearning();
+                    scene.classifier.disable();
+                    globalThis.APPNamespace.modeAuto = false;
+                    scene.factory.change_instrument("microphone", scene);
+                }
+            ),
+            new Button(button_width, button_height, "Drums",
+                function () {
+                    scene.classifier.stopLearning();
+                    scene.classifier.disable();
+                    globalThis.APPNamespace.modeAuto = false;
+                    scene.factory.change_instrument("drums", scene);
+                }
+            ),
+            new Button(button_width, button_height, "Auto",
+                function () {
+                    scene.factory.change_instrument("", scene);
+                    if (scene.classifier.knn.getNumClasses() <= 1) {
+                        front.next(FrameType.AutoInfo);
+                    }
+                    else {
+                        scene.classifier.stopLearning();
+                        scene.classifier.enable();
+                        console.log("Now using the trained KNN !");
+                    }
+                }
+            ),
+            new Button(button_width, button_height, "AI Training",
+                function () {
+                    scene.classifier.stopLearning();
+                    scene.classifier.disable();
+                    scene.factory.change_instrument("", scene);
+                    if (scene.classifier.knn.getNumClasses() <= 1) {
+                        front.next(FrameType.TrainingMic);
+                    }
+                    else {
+                        front.next(FrameType.TrainingMainPanel);
+                    }
+                }
+            ),
+            new Button(button_width, button_height, "Reset Training",
+                function () {
+                    scene.classifier.disable();
+                    scene.factory.change_instrument("", scene);
+                    front.next(FrameType.ClearTraining);
+                }
+            )
+        ]
+
+        if (globalThis.APPNamespace.mobileCheck() == true) {
+            const top_sub_frame = new Frame(new ThreeMeshUI.Block({
+                borderRadius: 1,
+                backgroundColor: new THREE.Color(0xfffff),
+                backgroundOpacity: 0,
+                justifyContent: 'center',
+                contentDirection: "row",
+                fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
+                fontTexture: require('../../../../static/fonts/gothic.png'),
+                offset: 0.05
+            }), FrameType.ChildFrame
+            );
+
+            const bottom_sub_frame = new Frame(new ThreeMeshUI.Block({
+                borderRadius: 1,
+                backgroundColor: new THREE.Color(0xfffff),
+                backgroundOpacity: 0,
+                justifyContent: 'center',
+                contentDirection: "row",
+                fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
+                fontTexture: require('../../../../static/fonts/gothic.png'),
+                offset: 0.05
+            }), FrameType.ChildFrame
+            );
+
+            frame.addElement(top_sub_frame);
+            frame.addElement(bottom_sub_frame);
+
+            top_sub_frame.addElement(btns_list[0]);
+            top_sub_frame.addElement(btns_list[1]);
+            top_sub_frame.addElement(btns_list[2]);
+            bottom_sub_frame.addElement(btns_list[3]);
+            bottom_sub_frame.addElement(btns_list[4]);
+            bottom_sub_frame.addElement(btns_list[5]);
+        }
+        else {
+            btns_list.forEach(btn => frame.addElement(btn));
         }
 
-        frame.addElement(new Button("No instrument",
-            function () {
-                scene.classifier.stopLearning();
-                scene.classifier.disable();
-                globalThis.APPNamespace.modeAuto = false;
-                scene.factory.change_instrument("", scene);
-            },
-            false,
-            buttons_option
-        ));
 
 
-        frame.addElement(new Button("Mic",
-            function () {
-                scene.classifier.stopLearning();
-                scene.classifier.disable();
-                globalThis.APPNamespace.modeAuto = false;
-                scene.factory.change_instrument("microphone", scene);
-            },
-            false,
-            buttons_option
-        ));
 
-        frame.addElement(new Button("Drums",
-            function () {
-                scene.classifier.stopLearning();
-                scene.classifier.disable();
-                globalThis.APPNamespace.modeAuto = false;
-                scene.factory.change_instrument("drums", scene);
-            },
-            false,
-            buttons_option
-        ));
-
-        frame.addElement(new Button("Auto",
-            function () {
-                scene.factory.change_instrument("", scene);
-                if (scene.classifier.knn.getNumClasses() <= 1) {
-                    front.next(FrameType.AutoInfo);
-                }
-                else {
-                    scene.classifier.stopLearning();
-                    scene.classifier.enable();
-                    console.log("Now using the trained KNN !");
-                }
-            },
-            false,
-            buttons_option
-        ));
-
-        frame.addElement(new Button("AI Training",
-            function () {
-                scene.classifier.stopLearning();
-                scene.classifier.disable();
-                scene.factory.change_instrument("", scene);
-                if (scene.classifier.knn.getNumClasses() <= 1) {
-                    front.next(FrameType.TrainingMic);
-                }
-                else {
-                    front.next(FrameType.TrainingMainPanel);
-                }
-            },
-            false,
-            buttons_option
-        ));
-
-
-        frame.addElement(new Button("Reset Training",
-            function () {
-                scene.classifier.disable();
-                scene.factory.change_instrument("", scene);
-                front.next(FrameType.ClearTraining);
-            },
-            false,
-            buttons_option
-        ));
 
         return frame;
     }
@@ -367,6 +377,8 @@ export default class FrameFactory {
 
 
     static trainingMainPanel(scene: BodyTrackerScene, front: Interface) {
+        // TODO : Add "Back" Button
+
         const height = Frame.distance;
         const ratio = globalThis.APPNamespace.canvasHeight / globalThis.APPNamespace.canvasWidth;
         const width = Frame.distance / ratio;
@@ -383,9 +395,11 @@ export default class FrameFactory {
                 justifyContent: 'end',
                 contentDirection: 'column',
                 fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                fontTexture: require('../../../../static/fonts/gothic.png')
+                fontTexture: require('../../../../static/fonts/gothic.png'),
+
             }),
-            FrameType.TrainingMainPanel
+            FrameType.TrainingMainPanel,
+            (frame) => Frame.basicResize(frame, 0.85)
         );
 
         const text_frame = new Frame(new ThreeMeshUI.Block(
@@ -396,12 +410,15 @@ export default class FrameFactory {
                 borderRadius: 10,
                 backgroundColor: new THREE.Color(0xba2f8e),
                 backgroundOpacity: 0,
-                offset: 0.05
+                offset: 0.05,
+
             }),
-            FrameType.ChildFrame
+            FrameType.ChildFrame,
+            (frame) => Frame.basicResize(frame, 0.8)
         );
         frame.addElement(text_frame);
-        text_frame.obj.add(new ThreeMeshUI.Text({ content: "Training is about to start \n Pick an action to learn" }));
+        const text = "Training is about to start \n Pick an action to learn"
+        text_frame.addElement(new MeshText(text, 0.04));
 
 
         const button_frame = new Frame(new ThreeMeshUI.Block(
@@ -413,9 +430,11 @@ export default class FrameFactory {
                 borderRadius: 10,
                 backgroundColor: new THREE.Color(0xba2f8e),
                 backgroundOpacity: 0,
-                offset: 0.05
+                offset: 0.05,
+
             }),
-            FrameType.ChildFrame
+            FrameType.ChildFrame,
+            (frame) => Frame.basicResize(frame, 0.8)
         );
         frame.addElement(button_frame);
 
@@ -427,22 +446,63 @@ export default class FrameFactory {
             borderRadius: 10,
             backgroundColor: new THREE.Color(0xba2f8e),
             backgroundOpacity: 0,
-            offset: 0.05
+            offset: 0.05,
+
         };
-        const left_button_frame = new Frame(new ThreeMeshUI.Block(block_options), FrameType.ChildFrame);
+        const left_button_frame = new Frame(
+            new ThreeMeshUI.Block(block_options),
+            FrameType.ChildFrame,
+            (frame) => Frame.basicResize(frame, 0.4)
+        );
         button_frame.addElement(left_button_frame);
 
-        const right_button_frame = new Frame(new ThreeMeshUI.Block(block_options), FrameType.ChildFrame);
+        const right_button_frame = new Frame(
+            new ThreeMeshUI.Block(block_options),
+            FrameType.ChildFrame,
+            (frame) => Frame.basicResize(frame, 0.4)
+        );
         button_frame.addElement(right_button_frame);
 
-        const buttons_option = {
-            width: 0.4 * height,
-            height: 0.1 * height,
-            justifyContent: 'center',
-            borderRadius: 2,
-            offset: 0.05,
-            margin: 0.5
-        }
+
+        FrameFactory.buttonPack(left_button_frame, "Mic", "microphone", scene, front);
+        FrameFactory.buttonPack(left_button_frame, "Drums", "drums", scene, front);
+        FrameFactory.buttonPack(left_button_frame, "Harp", "harp", scene, front);
+        FrameFactory.buttonPack(left_button_frame, "Sound1", "Sound1", scene, front);
+        FrameFactory.buttonPack(left_button_frame, "Sound2", "Sound2", scene, front);
+        FrameFactory.buttonPack(right_button_frame, "Sound3", "Sound", scene, front);
+        FrameFactory.buttonPack(right_button_frame, "Sound4", "Sound", scene, front);
+        FrameFactory.buttonPack(right_button_frame, "Sound5", "Sound", scene, front);
+        FrameFactory.buttonPack(right_button_frame, "Sound6", "Sound", scene, front);
+        FrameFactory.buttonPack(right_button_frame, "Sound7", "Sound", scene, front);
+
+
+        frame.addElement(new Frame(new ThreeMeshUI.Block(
+            {
+                height: height * 0.05,
+                width: width * 0.8,
+                justifyContent: 'center',
+                contentDirection: 'row',
+                borderRadius: 10,
+                backgroundColor: new THREE.Color(0xba2f8e),
+                backgroundOpacity: 0,
+                offset: 0.05,
+
+            }),
+            FrameType.ChildFrame,
+            (frame) => Frame.basicResize(frame, 0.8)
+        ));
+
+        return frame;
+    }
+
+
+    static buttonPack(frame, btn_label, label, scene, front) {
+
+        // TODO: resize fcnt + init : when ratio > 1.5, put del btn below
+
+        const height = Frame.distance;
+        const ratio = globalThis.APPNamespace.canvasHeight / globalThis.APPNamespace.canvasWidth;
+        const width = Frame.distance / ratio;
 
         const del_buttons_option = {
             width: 0.1 * height,
@@ -461,72 +521,49 @@ export default class FrameFactory {
             backgroundColor: new THREE.Color(0xba2f8e),
             backgroundOpacity: 0,
             offset: 0.05,
-            margin: 0.5
+            margin: 0.5,
+
         };
 
+        const button_block = new Frame(new ThreeMeshUI.Block(btn_block_options), FrameType.ChildFrame,
+            (frame) => Frame.basicResize(frame, 0.4));
+        frame.addElement(button_block);
+        const btn = new Button(0.33, 0.1, btn_label,
+            () => FrameFactory.learningProcess(front,
+                scene,
+                label,
+                () => scene.factory.change_instrument("", scene),
+                () => front.next(FrameType.Main)
+            )
+        );
+        btn.label.fontSizeRatio = 0.02;
+        button_block.addElement(btn);
 
-        function addOption(frame: Frame, name: string, label: string) {
-            const button_block = new Frame(new ThreeMeshUI.Block(btn_block_options), FrameType.ChildFrame);
-            frame.addElement(button_block);
-            button_block.addElement(new Button(name,
-                () => FrameFactory.learningProcess(front,
-                    scene,
-                    label,
-                    () => scene.factory.change_instrument("", scene),
-                    () => front.next(FrameType.Main)
-                ),
-                false,
-                buttons_option
-            ));
-            button_block.addElement(new Button("X",
-                () => {
-                    scene.classifier.removeLabel(label);
-                    front.next(FrameType.Main);
-                },
-                false,
-                del_buttons_option,
-                {
-                    backgroundColor: new THREE.Color(0x940d26),
-                    backgroundOpacity: 0.9
-                },
-                {
-                    backgroundColor: new THREE.Color(0x940d26),
-                    backgroundOpacity: 0.7
-                },
-                {
-                    backgroundColor: new THREE.Color(0x940d26),
-                    backgroundOpacity: 1
-                }
-            ));
-        }
-
-        addOption(left_button_frame, "Mic", "microphone");
-        addOption(left_button_frame, "Drums", "drums");
-        addOption(left_button_frame, "Harp", "harp");
-        addOption(left_button_frame, "Sound1", "Sound1");
-        addOption(left_button_frame, "Sound2", "Sound2");
-        addOption(right_button_frame, "Sound3", "Sound");
-        addOption(right_button_frame, "Sound4", "Sound");
-        addOption(right_button_frame, "Sound5", "Sound");
-        addOption(right_button_frame, "Sound6", "Sound");
-        addOption(right_button_frame, "Sound7", "Sound");
-
-
-        frame.addElement(new Frame(new ThreeMeshUI.Block(
+        const del_btn = new Button(0.05, 0.1, "X",
+            () => {
+                scene.classifier.removeLabel(label);
+                front.next(FrameType.Main);
+            },
+            false,
+            del_buttons_option,
             {
-                height: height * 0.05,
-                width: width * 0.8,
-                justifyContent: 'center',
-                contentDirection: 'row',
-                borderRadius: 10,
-                backgroundColor: new THREE.Color(0xba2f8e),
-                backgroundOpacity: 0,
-                offset: 0.05
-            }),
-            FrameType.ChildFrame
-        ));
+                backgroundColor: new THREE.Color(0x940d26),
+                backgroundOpacity: 0.9
+            },
+            {
+                backgroundColor: new THREE.Color(0x940d26),
+                backgroundOpacity: 0.7
+            },
+            {
+                backgroundColor: new THREE.Color(0x940d26),
+                backgroundOpacity: 1
+            }
+        );
 
-        return frame;
+        del_btn.marginRatio = 0;
+
+        button_block.addElement(del_btn);
+
     }
 
 
@@ -615,7 +652,6 @@ export default class FrameFactory {
                 {
                     height: height * 0.7,
                     width: width * 0.7,
-                    fontSize: 100 / height,
                     padding: 0.5,
                     margin: 0.5,
                     borderRadius: 10,
@@ -625,12 +661,12 @@ export default class FrameFactory {
                     contentDirection: 'column-reverse',
                     fontColor: new THREE.Color(0xa7ebe7),
                     fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                    fontTexture: require('../../../../static/fonts/gothic.png')
+                    fontTexture: require('../../../../static/fonts/gothic.png'),
                 }),
-                FrameType.SmallCounter
+                FrameType.SmallCounter,
+                (frame) => Frame.basicResize(frame, 0.7)
             );
-            frame.obj.add(new ThreeMeshUI.Text({ content: `${i}` }));
-
+            frame.addElement(new MeshText(`${i}`, 0.04));
             frames.push(frame);
         }
         return frames;

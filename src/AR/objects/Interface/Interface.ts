@@ -22,7 +22,7 @@ export default class Interface {
     }
 
     resize() {
-        this.currentFrame.resize();
+        this.children.forEach(c => c.resize());
     }
 
     interact(raycasts: THREE.Raycast[]) {
@@ -56,7 +56,6 @@ export default class Interface {
             this.currentFrame.hide();
             this.currentFrame = newFrame;
             this.currentFrame.show();
-            this.resize();
         }
     }
 }

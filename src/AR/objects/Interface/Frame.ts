@@ -2,6 +2,7 @@ import Button from "./Button";
 import * as ThreeMeshUI from 'three-mesh-ui';
 import * as THREE from 'three';
 import Object3D from '../Object3D';
+import MeshText from "./MeshText";
 
 
 export enum FrameType {
@@ -61,6 +62,7 @@ export default class Frame extends Object3D {
     }
 
     hide() {
+        // if (this.type != FrameType.ChildFrame)
         this.obj.visible = false;
 
         this.children.forEach(child => {
@@ -86,6 +88,12 @@ export default class Frame extends Object3D {
         this.obj.position.setZ(globalThis.APPNamespace.canvasHeight - Frame.distance);
         if (this.resizeFunc)
             this.resizeFunc(this);
+
+        this.children.forEach(c => {
+            if (c instanceof Button || c instanceof Frame || c instanceof MeshText) {
+                c.resize();
+            }
+        })
     }
 
     interact(raycasts: THREE.Raycast[]) {
@@ -114,5 +122,16 @@ export default class Frame extends Object3D {
             });
         }
         return false;
+    }
+
+    static basicResize(frame, widthPercentage) {
+        const height = Frame.distance;
+        const ratio = globalThis.APPNamespace.canvasHeight / globalThis.APPNamespace.canvasWidth;
+        const width = height / ratio;
+
+        frame.obj.set({
+            width: width * widthPercentage,
+            borderRadius: width * widthPercentage / 5,
+        });
     }
 }
