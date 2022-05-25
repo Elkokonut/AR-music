@@ -204,11 +204,9 @@ export default class BodyTrackerScene extends Scene {
         if (obj instanceof BodyTrackerObject) obj.animate();
         else if (obj instanceof Occluser) {
           if (obj.obj.name.includes("left")) {
-            console.log("HELLO");
             obj.animate(self.leftHand.is_closed);
           }
           else {
-            console.log("there");
             obj.animate(self.rightHand.is_closed);
           }
           obj.obj.position.setZ(occlusionZ);
