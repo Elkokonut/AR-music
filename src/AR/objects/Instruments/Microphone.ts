@@ -25,24 +25,20 @@ export default class Microphone extends Object3D {
 
     this.sound = new Pizzicato.Sound({ source: "input" }, () => this.initialized = true);
     this.sound.addEffect(
-      // new Pizzicato.Effects.Reverb({
-      //   time: 1,
-      //   decay: 0.5,
-      //   reverse: true,
-      //   mix: 1
-      // })
-      // new Pizzicato.Effects.Tremolo({
-      //   speed: 7,
-      //   depth: 0.8,
-      //   mix: 0.8
-      // })
-      //   new Pizzicato.Effects.Distortion({
-      //     gain: 0.4
-      // })
-      new Pizzicato.Effects.Delay({
-        feedback: 0.6,
-        time: 0.4,
-        mix: 0.5
+      new Pizzicato.Effects.Reverb({
+        time: 1,
+        decay: 1,
+        reverse: false,
+        mix: 0.25
+      })
+    );
+    this.sound.addEffect(
+      new Pizzicato.Effects.Quadrafuzz({
+        lowGain: 0,
+        midLowGain: 0,
+        midHighGain: 0,
+        highGain: 1,
+        mix: 1.0
       })
     );
   }
@@ -88,8 +84,9 @@ export default class Microphone extends Object3D {
     }
   }
   play_sound(mouth_keypoint) {
-    if (this.initialized && mouth_keypoint && this.kp_align_pos.distanceTo(mouth_keypoint.position) < 150 && this.obj.visible) {
+    if (this.initialized && mouth_keypoint && this.kp_align_pos.distanceTo(mouth_keypoint.position) < 300 && this.obj.visible) {
       this.sound.play();
+      console.log('HELLO THERE');
     }
     else {
       this.sound.pause();
