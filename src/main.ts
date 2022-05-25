@@ -1,3 +1,5 @@
+/* eslint no-useless-escape: 0 */
+
 import App from "./app/App";
 
 async function main() {
