@@ -171,7 +171,7 @@ export default class FrameFactory {
             (frame) => { Frame.basicResize(frame, 0.3) }
         );
 
-        var video = document.createElement("video");
+        const video = document.createElement("video");
         video.setAttribute("src", videoPath);
         video.muted = true;
         video.autoplay = true;
@@ -333,12 +333,7 @@ export default class FrameFactory {
     }
 
     static mainFrame(scene: BodyTrackerScene, front: Interface) {
-        const height = Frame.distance;
-        const ratio = globalThis.APPNamespace.canvasHeight / globalThis.APPNamespace.canvasWidth;
-        const width = height / ratio;
-
         const contentDir = globalThis.APPNamespace.mobileCheck() ? "column" : "row";
-
 
         const button_width = globalThis.APPNamespace.mobileCheck() ? 0.25 : 0.1;
         const button_height = 0.1;
