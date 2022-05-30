@@ -216,14 +216,20 @@ export default class BodyTrackerScene extends Scene {
         }
         else if (obj instanceof Microphone) {
 
-          const right_distance = obj.keypoints_right[0].position.distanceTo(obj.mouth_keypoint.position);
-          const left_distance = obj.keypoints_left[0].position.distanceTo(obj.mouth_keypoint.position);
+          if (obj.keypoints_left[0].is_visible == false)
+            var is_right_hand = true;
+          else if (obj.keypoints_right[0].is_visible == false)
+            var is_right_hand = false;
+          else {
+            const right_distance = obj.keypoints_right[0].position.distanceTo(obj.mouth_keypoint.position);
+            const left_distance = obj.keypoints_left[0].position.distanceTo(obj.mouth_keypoint.position);
 
-          const is_right_hand = left_distance > right_distance;
+            var is_right_hand = left_distance > right_distance;
+          }
           const is_closed = is_right_hand ? self.rightHand.is_closed : self.leftHand.is_closed;
           const distance = is_right_hand ? self.rightHand.distance : self.leftHand.distance;
           obj.animate(is_closed, is_right_hand);
-          obj.scaling(self.rightHand.distance);
+          obj.scaling(distance);
           obj.play_sound();
           if (obj.obj.visible)
             occlusionZ = Math.max(occlusionZ, Microphone.base_dimension_Z * obj.obj.scale.z);

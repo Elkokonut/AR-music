@@ -62,7 +62,7 @@ export default class Microphone extends Object3D {
     const keypoints = is_right_hand ? this.keypoints_right : this.keypoints_left;
     this.obj.visible = keypoints[0].is_visible && display;
 
-    console.log(this.obj.visible);
+    console.log(display);
     console.log(keypoints);
 
     if (this.obj.visible) {
