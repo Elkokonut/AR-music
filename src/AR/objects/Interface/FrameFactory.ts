@@ -2,6 +2,7 @@ import BodyTrackerScene from "../../scenes/BodyTrackerScene";
 import Button from "./Button";
 import * as ThreeMeshUI from 'three-mesh-ui';
 import * as THREE from 'three';
+import enableInlineVideo from 'iphone-inline-video';
 import Frame, { FrameType } from "./Frame";
 import Interface from "./Interface";
 import MeshText from "./MeshText";
@@ -107,6 +108,107 @@ export default class FrameFactory {
         frame2.addElement(new MeshText(content, 0.03));
 
         frame.addElement(new Button(0.10, 0.10, button_text, action));
+        return frame;
+    }
+
+    private static content_video_button_frame(type: FrameType, content, videoPath, action, button_text = "Next") {
+        const height = Frame.distance;
+        const ratio = globalThis.APPNamespace.canvasHeight / globalThis.APPNamespace.canvasWidth;
+        const width = Frame.distance / ratio;
+
+        const frame = new Frame(new ThreeMeshUI.Block(
+            {
+                height: height * 0.7,
+                width: width * 0.8,
+                padding: 0.5,
+                margin: 0.5,
+                borderRadius: 10,
+                backgroundColor: new THREE.Color(0x47ada1),
+                backgroundOpacity: 0.7,
+                justifyContent: 'end',
+                textAlign: 'center',
+                contentDirection: 'column',
+                fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
+                fontTexture: require('../../../../static/fonts/gothic.png'),
+
+            }),
+            type,
+            (frame) => { Frame.basicResize(frame, 0.8) }
+        );
+
+        const frame2 = new Frame(
+            new ThreeMeshUI.Block(
+                {
+                    height: height * 0.5,
+                    width: width * 0.7,
+                    justifyContent: 'center',
+                    contentDirection: 'row',
+                    borderRadius: 10,
+                    margin: 0.5,
+                    backgroundColor: new THREE.Color(0xba2f8e),
+                    backgroundOpacity: 0,
+                    offset: 0.05,
+
+                })
+            , FrameType.ChildFrame,
+            (frame) => { Frame.basicResize(frame, 0.7) }
+        );
+
+        const text_frame = new Frame(
+            new ThreeMeshUI.Block(
+                {
+                    height: height * 0.5,
+                    width: width * 0.3,
+                    justifyContent: 'center',
+                    borderRadius: 10,
+                    margin: 0.5,
+                    backgroundColor: new THREE.Color(0xba2f8e),
+                    backgroundOpacity: 0,
+                    offset: 0.05,
+
+                })
+            , FrameType.ChildFrame,
+            (frame) => { Frame.basicResize(frame, 0.3) }
+        );
+
+        var video = document.createElement("video");
+        video.setAttribute("src", videoPath);
+        video.muted = true;
+        video.autoplay = true;
+        video.loop = true;
+        video.load();
+        enableInlineVideo(video);
+        video.play();
+
+        video.addEventListener("loadedmetadata", function () {
+            const video_frame = new Frame(
+                new ThreeMeshUI.Block(
+                    {
+                        height: height * 0.5,
+                        width: width * 0.4,
+                        justifyContent: 'center',
+                        margin: 0.5,
+                        backgroundTexture: new THREE.VideoTexture(video),
+                        backgroundOpacity: 1,
+                        backgroundSize: 'stretch',
+                        offset: 0.05,
+
+                    })
+                , FrameType.ChildFrame,
+                (frame) => { Frame.resizeWithRatio(frame, 0.4, 0.5, video.videoHeight / video.videoWidth) }
+            );
+
+            frame.addElement(frame2);
+            frame2.addElement(text_frame);
+            frame2.addElement(video_frame);
+            text_frame.addElement(new MeshText(content, 0.03));
+            frame.addElement(new Button(0.10, 0.10, button_text, action));
+            frame.resize();
+
+        }, false);
+
+
+
         return frame;
     }
 
@@ -224,6 +326,10 @@ export default class FrameFactory {
             console.log("Next");
             front.next(FrameType.Main);
         });
+        // return FrameFactory.content_video_button_frame(FrameType.StartingFrame, text_intro, "/videos_demo/video1.mp4", function () {
+        //     console.log("Next");
+        //     front.next(FrameType.Main);
+        // });
     }
 
     static mainFrame(scene: BodyTrackerScene, front: Interface) {

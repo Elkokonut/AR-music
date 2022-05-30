@@ -134,4 +134,23 @@ export default class Frame extends Object3D {
             borderRadius: width * widthPercentage / 5,
         });
     }
+
+    static resizeWithRatio(frame, widthPercentage, heightPercentage, ratio) {
+        const height = Frame.distance;
+        const windowRatio = globalThis.APPNamespace.canvasHeight / globalThis.APPNamespace.canvasWidth;
+        const width = height / windowRatio;
+        let h = heightPercentage * height;
+        let w = 1 / ratio * h;
+        if (w > width * widthPercentage) {
+            w = widthPercentage * width;
+            h = ratio * w;
+        }
+        frame.obj.set({
+            width: w,
+            height: h,
+            borderRadius: 0
+        });
+
+
+    }
 }
