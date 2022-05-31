@@ -322,14 +322,10 @@ export default class FrameFactory {
     static startingFrame(front: Interface) {
         const text_intro = "Welcome! \nPlease use headphones.\n Interact with the interface using your indexes.";
 
-        return FrameFactory.content_button_frame(FrameType.StartingFrame, text_intro, function () {
+        return FrameFactory.content_video_button_frame(FrameType.StartingFrame, text_intro, "/videos_demo/startingInfo.mp4", function () {
             console.log("Next");
             front.next(FrameType.Main);
         });
-        // return FrameFactory.content_video_button_frame(FrameType.StartingFrame, text_intro, "/videos_demo/video1.mp4", function () {
-        //     console.log("Next");
-        //     front.next(FrameType.Main);
-        // });
     }
 
     static mainFrame(scene: BodyTrackerScene, front: Interface) {
@@ -671,7 +667,10 @@ export default class FrameFactory {
     static trainMic(scene, front: Interface) {
         const text_frame = "Mimick singing in a mic to train AI";
 
-        const frame = FrameFactory.content_button_frame(FrameType.TrainingMic, text_frame,
+        const frame = FrameFactory.content_video_button_frame(
+            FrameType.TrainingMic,
+            text_frame,
+            "videos_demo/playing_mic.mp4",
             function () {
                 FrameFactory.learningProcess(
                     front,
@@ -691,8 +690,9 @@ export default class FrameFactory {
     static trainDrums(scene, front: Interface) {
         const text_frame = "Mimick playing the drum to train AI";
 
-        const frame = FrameFactory.content_button_frame(FrameType.TrainingDrum,
+        const frame = FrameFactory.content_video_button_frame(FrameType.TrainingDrum,
             text_frame,
+            "videos_demo/playing_drums.mp4",
             function () {
                 FrameFactory.learningProcess(
                     front,
