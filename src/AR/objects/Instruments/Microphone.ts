@@ -6,18 +6,20 @@ import Pizzicato from "pizzicato";
 export default class Microphone extends Object3D {
   keypoints_left: Keypoint[];
   keypoints_right: Keypoint[];
+  mouth_keypoint: Keypoint;
   sound: Pizzicato.Sound;
   kp_align_pos: THREE.Vector3;
   isPlaying: boolean;
   initialized: boolean;
   static base_dimension_Z = 2.8;
 
-  constructor(obj: THREE.Object3D, name, keypoints_left, keypoints_right, scale) {
+  constructor(obj: THREE.Object3D, name, keypoints_left, keypoints_right, mouth_keypoint, scale) {
     super(obj, name, scale);
     this.initialized = false;
     this.obj.visible = false;
     this.keypoints_left = keypoints_left;
     this.keypoints_right = keypoints_right;
+    this.mouth_keypoint = mouth_keypoint;
     this.sound = null;
     this.kp_align_pos = new THREE.Vector3(0, 0, 0);
 
@@ -43,7 +45,7 @@ export default class Microphone extends Object3D {
     );
   }
 
-  animate(display) {
+  animate(display, is_right_hand) {
 
     // Compute anchor and kp_align_pos from given keypoints
     //keypoints from hand:
@@ -52,9 +54,12 @@ export default class Microphone extends Object3D {
     //          [0]         [2]
     // THUMB HERE
 
-    const keypoints = this.keypoints_right[0].is_visible ? this.keypoints_right : this.keypoints_left;
 
+    const keypoints = is_right_hand ? this.keypoints_right : this.keypoints_left;
     this.obj.visible = keypoints[0].is_visible && display;
+
+    console.log(this.obj.visible);
+    console.log(keypoints);
 
     if (this.obj.visible) {
       const anchor = new THREE.Vector3();
@@ -83,8 +88,9 @@ export default class Microphone extends Object3D {
 
     }
   }
-  play_sound(mouth_keypoint) {
-    if (this.initialized && mouth_keypoint && this.kp_align_pos.distanceTo(mouth_keypoint.position) < 300 && this.obj.visible) {
+
+  play_sound() {
+    if (this.initialized && this.mouth_keypoint && this.kp_align_pos.distanceTo(this.mouth_keypoint.position) < 150 && this.obj.visible) {
       this.sound.play();
     }
     else {
