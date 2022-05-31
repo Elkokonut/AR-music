@@ -10,9 +10,7 @@ export default class Distance {
     }
 
     static intervalChange(number, in_interval, out_interval) {
-        let res = Math.min(in_interval[1], number);
-        res = Math.max(in_interval[0], res);
-        res = (res - in_interval[0]) * (out_interval[1] - out_interval[0]) / (in_interval[1] - in_interval[0]) + out_interval[0];
+        let res = (number - in_interval[0]) * (out_interval[1] - out_interval[0]) / (in_interval[1] - in_interval[0]) + out_interval[0];
         return res;
     }
 
