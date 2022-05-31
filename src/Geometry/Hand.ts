@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { createSemanticDiagnosticsBuilderProgram } from 'typescript';
 import Distance from './Distance';
 import Keypoint from "./Keypoint";
 
@@ -54,16 +53,8 @@ export default class Hand {
             results.push(Distance.getWorldDistance(tuple[0].position, tuple[1].position));
         });
         this.worldDistance = Math.max(...results);
-        if (this.type == "right") {
-            console.log("WORLD");
-            console.log(this.worldDistance);
-        }
         //var diag = Math.sqrt(Math.pow(globalThis.APPNamespace.width, 2) + Math.pow(globalThis.APPNamespace.height, 2));
         this.distance = Distance.intervalChange(this.worldDistance, [0, 140], [0, 1]);
-        if (this.type == "right") {
-            console.log("DIST");
-            console.log(this.distance);
-        }
     }
 
     isClosed() {
