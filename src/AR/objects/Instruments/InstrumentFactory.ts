@@ -140,7 +140,7 @@ export default class InstrumentFactory {
           keypoints_left,
           keypoints_right,
           mouth_keypoint,
-          [12, 12, 12]
+          [15, 15, 15]
         );
 
         this.instruments["microphone"] = [inst];

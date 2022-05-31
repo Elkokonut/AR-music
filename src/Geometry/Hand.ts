@@ -52,9 +52,9 @@ export default class Hand {
         lines.forEach(tuple => {
             results.push(Distance.getWorldDistance(tuple[0].position, tuple[1].position));
         });
-
         this.worldDistance = Math.max(...results);
-        this.distance = Distance.intervalChange(this.worldDistance, [0, 140], [-0.9999, 1]);
+        //var diag = Math.sqrt(Math.pow(globalThis.APPNamespace.width, 2) + Math.pow(globalThis.APPNamespace.height, 2));
+        this.distance = Distance.intervalChange(this.worldDistance, [0, 140], [0, 1]);
     }
 
     isClosed() {
