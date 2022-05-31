@@ -215,16 +215,16 @@ export default class BodyTrackerScene extends Scene {
           obj.animate(self.keypoints.filter((keypoint) => keypoint.type.includes('hand')));
         }
         else if (obj instanceof Microphone) {
-
+          let is_right_hand = false;
           if (obj.keypoints_left[0].is_visible == false)
-            var is_right_hand = true;
+            is_right_hand = true;
           else if (obj.keypoints_right[0].is_visible == false)
-            var is_right_hand = false;
+            is_right_hand = false;
           else {
             const right_distance = obj.keypoints_right[0].position.distanceTo(obj.mouth_keypoint.position);
             const left_distance = obj.keypoints_left[0].position.distanceTo(obj.mouth_keypoint.position);
 
-            var is_right_hand = left_distance > right_distance;
+            is_right_hand = left_distance > right_distance;
           }
           const is_closed = is_right_hand ? self.rightHand.is_closed : self.leftHand.is_closed;
           const distance = is_right_hand ? self.rightHand.distance : self.leftHand.distance;
