@@ -38,13 +38,17 @@ export default class Drum extends Object3D {
     }
 
     refresh_position() {
-        this.obj.position.setX(this.position.x / 10 * globalThis.APPNamespace.width / 2)
-            .setY(this.position.y / 10 * globalThis.APPNamespace.height / 2)
-            .setZ(this.position.z / 10 * globalThis.APPNamespace.height / 2);
+        const width = globalThis.APPNamespace.canvasWidth;
+        const height = globalThis.APPNamespace.canvasHeight;
 
-        this.obj.scale.setX(this.base_dimension.x * globalThis.APPNamespace.width)
-            .setY(this.base_dimension.y * globalThis.APPNamespace.height)
-            .setZ(this.base_dimension.z * globalThis.APPNamespace.height);
+
+        this.obj.position.setX(this.position.x / 10 * width / 2)
+            .setY(this.position.y / 10 * height / 2)
+            .setZ(this.position.z / 10 * height / 2);
+
+        this.obj.scale.setX(this.base_dimension.x * (width + height) / 2)
+            .setY(this.base_dimension.y * height)
+            .setZ(this.base_dimension.z * height);
 
         this.box = new THREE.Box3().setFromObject(this.obj);
         this.box.min.setZ(-1);

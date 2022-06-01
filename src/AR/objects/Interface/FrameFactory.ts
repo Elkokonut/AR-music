@@ -32,6 +32,10 @@ export default class FrameFactory {
 
 
     private static learningProcess(front, scene, label, onBefore, onAfter) {
+        if (label == "microphone" || label == "drums")
+            scene.factory.change_instrument(label, scene);
+        else
+            scene.factory.change_instrument("", scene);
         front.next(FrameType.Big3);
         setTimeout(() => {
             front.next(FrameType.Big2);
@@ -628,7 +632,7 @@ export default class FrameFactory {
             () => FrameFactory.learningProcess(front,
                 scene,
                 label,
-                () => scene.factory.change_instrument("", scene),
+                null,
                 () => front.next(FrameType.Main)
             )
         );
