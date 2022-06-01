@@ -110,7 +110,6 @@ dist
 # Vscode files
 .vscode
 .DS_Store
-*.mp4
 .yarn
 
 # built folder from typescript compiler

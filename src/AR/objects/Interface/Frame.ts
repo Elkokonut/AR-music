@@ -2,6 +2,7 @@ import Button from "./Button";
 import * as ThreeMeshUI from 'three-mesh-ui';
 import * as THREE from 'three';
 import Object3D from '../Object3D';
+import MeshText from "./MeshText";
 
 
 export enum FrameType {
@@ -12,6 +13,7 @@ export enum FrameType {
     Big3,
     GO,
     SmallCounter,
+    AutoInfo,
     TrainingMic,
     TrainingDrum,
     TrainingInfo,
@@ -40,9 +42,7 @@ export default class Frame extends Object3D {
             this.hide();
 
         this.type = type;
-
-        const distance = 50;
-        this.obj.position.setZ(globalThis.APPNamespace.canvasHeight - distance);
+        this.obj.position.setZ(globalThis.APPNamespace.canvasHeight - Frame.distance);
 
         this.onBefore = onBefore;
         this.onAfter = onAfter;
@@ -85,6 +85,11 @@ export default class Frame extends Object3D {
         this.obj.position.setZ(globalThis.APPNamespace.canvasHeight - Frame.distance);
         if (this.resizeFunc)
             this.resizeFunc(this);
+        this.children.forEach(c => {
+            if (c instanceof Button || c instanceof Frame || c instanceof MeshText) {
+                c.resize();
+            }
+        });
     }
 
     interact(raycasts: THREE.Raycast[]) {
@@ -98,15 +103,50 @@ export default class Frame extends Object3D {
                     if ((intersects1 && intersects1.find(o => o.object.parent && o.object.parent.name === child.obj.name))
                         || (intersects2 && intersects2.find(o => o.object.parent && o.object.parent.name === child.obj.name))) {
                         child.intersect();
-                        if (child.selected)
+                        if (child.selected) {
                             this.children.forEach(c => { if (c instanceof Button && c != child) c.selected = false; });
+                            return true;
+                        }
                     } else
                         child.onIdle();
                 }
                 else if (child instanceof Frame) {
-                    child.interact(raycasts);
+                    const selected = child.interact(raycasts);
+                    if (selected == true)
+                        return true;
                 }
             });
         }
+        return false;
+    }
+
+    static basicResize(frame, widthPercentage) {
+        const height = Frame.distance;
+        const ratio = globalThis.APPNamespace.canvasHeight / globalThis.APPNamespace.canvasWidth;
+        const width = height / ratio;
+
+        frame.obj.set({
+            width: width * widthPercentage,
+            borderRadius: width * widthPercentage / 5,
+        });
+    }
+
+    static resizeWithRatio(frame, widthPercentage, heightPercentage, ratio) {
+        const height = Frame.distance;
+        const windowRatio = globalThis.APPNamespace.canvasHeight / globalThis.APPNamespace.canvasWidth;
+        const width = height / windowRatio;
+        let h = heightPercentage * height;
+        let w = 1 / ratio * h;
+        if (w > width * widthPercentage) {
+            w = widthPercentage * width;
+            h = ratio * w;
+        }
+        frame.obj.set({
+            width: w,
+            height: h,
+            borderRadius: 0
+        });
+
+
     }
 }

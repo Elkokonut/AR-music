@@ -1,14 +1,23 @@
 import * as THREE from 'three';
 import * as ThreeMeshUI from 'three-mesh-ui';
 import Object3D from '../Object3D';
+import Frame from './Frame';
+import MeshText from './MeshText';
 
 export default class Button extends Object3D {
     static instancesCounter = 0;
     action: (x) => void;
     selected: boolean;
     counter: number;
+    label: MeshText;
+    widthRatio: number;
+    heightRatio: number;
+    marginRatio: number;
+    borderRadiusRatio: number;
 
     constructor(
+        widthRatio: number,
+        heightRatio: number,
         content: string = null,
         action = null,
         selected = false,
@@ -16,16 +25,21 @@ export default class Button extends Object3D {
         hoveredStateAttributes = null,
         idleStateAttributes = null,
         selectedAttributes = null
+
     ) {
-        if (!btnOptions)
+        if (!btnOptions) {
+            const height = Frame.distance;
+            const ratio = globalThis.APPNamespace.canvasHeight / globalThis.APPNamespace.canvasWidth;
+            const width = height / ratio;
             btnOptions = {
-                width: 1,
-                height: 1,
+                width: width * widthRatio,
+                height: width * heightRatio,
                 justifyContent: 'center',
-                borderRadius: 0.2,
+                borderRadius: width * heightRatio / 5,
                 offset: 0.05,
-                margin: 0.02,
+                margin: width * heightRatio / 10,
             };
+        }
 
         if (!hoveredStateAttributes)
             hoveredStateAttributes = {
@@ -52,7 +66,14 @@ export default class Button extends Object3D {
             };
 
         super(new ThreeMeshUI.Block(btnOptions), `button_${Button.instancesCounter++}`, null);
-        this.obj.add(new ThreeMeshUI.Text({ content: content }));
+
+
+        this.widthRatio = widthRatio;
+        this.heightRatio = heightRatio;
+        this.marginRatio = this.heightRatio / 10;
+        this.borderRadiusRatio = this.heightRatio / 5;
+        this.label = new MeshText(content, heightRatio / 5);
+        this.obj.add(this.label.obj);
 
         this.action = action;
         this.counter = 0;
@@ -81,9 +102,24 @@ export default class Button extends Object3D {
         }
     }
 
+    resize() {
+        const height = Frame.distance;
+        const ratio = globalThis.APPNamespace.canvasHeight / globalThis.APPNamespace.canvasWidth;
+        const width = height / ratio;
+        const min = Math.min(height, width);
+
+        this.obj.set({
+            width: min * this.widthRatio,
+            height: min * this.heightRatio,
+            borderRadius: min * this.borderRadiusRatio,
+            margin: min * this.marginRatio,
+        });
+        this.label.resize();
+    }
+
     intersect() {
-        this.onHover()
-        if (this.counter >= 10)
+        this.onHover();
+        if (this.counter >= 10 || (this.counter >= 4 && globalThis.APPNamespace.mobileCheck()))
             this.onSelected();
     }
 

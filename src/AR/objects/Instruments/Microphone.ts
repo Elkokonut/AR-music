@@ -94,4 +94,8 @@ export default class Microphone extends Object3D {
       this.sound.pause();
     }
   }
+
+  pause_sound() {
+    this.sound.pause();
+  }
 }

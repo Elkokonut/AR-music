@@ -150,7 +150,7 @@ export default class Scene {
         const obj3D = this.objects.find((obj) => obj.obj.name == name);
         if (obj3D) {
             if (obj3D instanceof Microphone)
-                obj3D.play_sound(null);
+                obj3D.pause_sound();
             obj3D.obj.removeFromParent();
             this.objects = this.objects.filter(function (obj) {
                 return obj.obj.name != name;

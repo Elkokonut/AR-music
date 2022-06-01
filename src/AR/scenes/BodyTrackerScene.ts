@@ -227,7 +227,6 @@ export default class BodyTrackerScene extends Scene {
             is_right_hand = left_distance > right_distance;
           }
           const is_closed = is_right_hand ? self.rightHand.is_closed : self.leftHand.is_closed;
-          const distance = is_right_hand ? self.rightHand.distance : self.leftHand.distance;
           obj.animate(is_closed, is_right_hand);
           obj.scaling(distance);
           obj.play_sound();
