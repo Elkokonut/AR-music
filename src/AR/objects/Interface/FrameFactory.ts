@@ -428,7 +428,8 @@ export default class FrameFactory {
                 fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
                 fontTexture: require('../../../../static/fonts/gothic.png'),
                 offset: 0.05
-            }), FrameType.ChildFrame
+            }), FrameType.ChildFrame,
+                (frame) => { Frame.basicResize(frame, 1) }
             );
 
             const bottom_sub_frame = new Frame(new ThreeMeshUI.Block({
@@ -440,7 +441,8 @@ export default class FrameFactory {
                 fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
                 fontTexture: require('../../../../static/fonts/gothic.png'),
                 offset: 0.05
-            }), FrameType.ChildFrame
+            }), FrameType.ChildFrame,
+                (frame) => { Frame.basicResize(frame, 1) }
             );
 
             frame.addElement(top_sub_frame);
@@ -456,9 +458,6 @@ export default class FrameFactory {
         else {
             btns_list.forEach(btn => frame.addElement(btn));
         }
-
-
-
 
 
         return frame;

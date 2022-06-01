@@ -42,9 +42,7 @@ export default class Frame extends Object3D {
             this.hide();
 
         this.type = type;
-
-        const distance = 50;
-        this.obj.position.setZ(globalThis.APPNamespace.canvasHeight - distance);
+        this.obj.position.setZ(globalThis.APPNamespace.canvasHeight - Frame.distance);
 
         this.onBefore = onBefore;
         this.onAfter = onAfter;
@@ -62,7 +60,6 @@ export default class Frame extends Object3D {
     }
 
     hide() {
-        // if (this.type != FrameType.ChildFrame)
         this.obj.visible = false;
 
         this.children.forEach(child => {
@@ -88,12 +85,11 @@ export default class Frame extends Object3D {
         this.obj.position.setZ(globalThis.APPNamespace.canvasHeight - Frame.distance);
         if (this.resizeFunc)
             this.resizeFunc(this);
-
         this.children.forEach(c => {
             if (c instanceof Button || c instanceof Frame || c instanceof MeshText) {
                 c.resize();
             }
-        })
+        });
     }
 
     interact(raycasts: THREE.Raycast[]) {
