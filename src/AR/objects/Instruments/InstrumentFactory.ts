@@ -173,7 +173,7 @@ export default class InstrumentFactory {
             child.material = drumMaterial;
           }
 
-          let position = new THREE.Vector3(7, 7, 0);
+          const position = new THREE.Vector3(7, 7, 0);
           if (globalThis.APPNamespace.mobileCheck())
             position.setY(5);
 
