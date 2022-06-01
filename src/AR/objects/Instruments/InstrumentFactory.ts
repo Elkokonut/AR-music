@@ -173,12 +173,15 @@ export default class InstrumentFactory {
             child.material = drumMaterial;
           }
 
+          let position = new THREE.Vector3(7, 7, 0);
+          if (globalThis.APPNamespace.mobileCheck())
+            position.setY(5);
 
           const scale = 1000;
           const cymbal = new Drum(
             object.clone(),
             "cymbal",
-            new THREE.Vector3(7, 7, 0),
+            position,
             new THREE.Vector3(scale / 1440, scale / 1080, scale / 1080),
             require("url:../../../../static/sound sample/cymbal.wav"
             )
