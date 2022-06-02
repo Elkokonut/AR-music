@@ -72,19 +72,12 @@ export default class Hand {
         return this.is_closed;
     }
 
-    getRelativeKeypoints() {
-        const width = globalThis.APPNamespace.width;
-        const height = globalThis.APPNamespace.height;
-        const wrist = this.keypoints.find(keypoint => keypoint.name == `${this.type}_wrist`).position.clone();
-        wrist.x = wrist.x / width;
-        wrist.y = wrist.y / height;
+    getKeypoints() {
         return this.keypoints.reduce((array, kp) => {
             const position = kp.position.clone();
-            const res = new THREE.Vector3(-1, -1, -1);
-            position.x = kp.position.x / width;
-            position.y = kp.position.y / height;
+            let res = new THREE.Vector3(-1, -1, -1);
             if (kp.is_visible)
-                res.subVectors(position, wrist);
+                res = position;
             array.push(res);
             return array;
         }, []);
