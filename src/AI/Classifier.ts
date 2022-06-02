@@ -25,13 +25,13 @@ export default class Classifier {
 
   createExample(left_hand: Hand, right_hand: Hand) {
 
-    const left_hand_kp = tf.tensor(left_hand.getRelativeKeypoints().reduce(function (array, kp) {
+    const left_hand_kp = tf.tensor(left_hand.getKeypoints().reduce(function (array, kp) {
       array.push(kp.x);
       array.push(kp.y);
       return array;
     }, []));
 
-    const right_hand_kp = tf.tensor(right_hand.getRelativeKeypoints().reduce(function (array, kp) {
+    const right_hand_kp = tf.tensor(right_hand.getKeypoints().reduce(function (array, kp) {
       array.push(kp.x);
       array.push(kp.y);
       return array;
@@ -50,7 +50,7 @@ export default class Classifier {
     if (this.knn.getNumClasses() <= 0)
       return "";
     const example = this.createExample(left_hand, right_hand);
-    const prediction = await this.knn.predictClass(example, 30);
+    const prediction = await this.knn.predictClass(example, 60);
     // Because we increment the label starting from 0, label and prediction.classIndex should match.
     const returned_label = prediction.confidences[prediction.label] == 1 ? prediction.label : "";
     return returned_label;
