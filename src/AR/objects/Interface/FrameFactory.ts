@@ -54,6 +54,8 @@ export default class FrameFactory {
             front.next(FrameType.SmallCounter);
             for (let i = 1; i < 10; i++) {
                 setTimeout(() => {
+                    if (label != "microphone" && label != "drums")
+                        scene.soundManager.playSound(label);
                     front.next(FrameType.SmallCounter);
                 }, 1000 * i);
             }
