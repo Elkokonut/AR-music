@@ -9,16 +9,24 @@ export default class Interface {
 
     constructor(scene: BodyTrackerScene) {
         this.children = [];
-        FrameFactory.generateAllFrames(scene, this).forEach(frm => this.addChildren(frm, scene));
+        FrameFactory.generateAllFrames(scene, this).forEach(frm => this.addChild(frm, scene));
 
         this.currentFrame = this.findFrameByType(FrameType.StartingFrame);
         this.currentFrame.show();
         this.resize();
     }
 
-    addChildren(frame: Frame, scene: BodyTrackerScene) {
+    addChild(frame: Frame, scene: BodyTrackerScene) {
         this.children.push(frame);
         scene.scene.add(frame.obj);
+    }
+
+
+    removeChild(frame: Frame, scene: BodyTrackerScene) {
+        this.children = this.children.filter(function (obj) {
+            return obj != frame;
+        });
+        scene.removeByName(frame.obj.name);
     }
 
     resize() {
