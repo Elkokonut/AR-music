@@ -6,6 +6,7 @@ import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import Microphone from "./Microphone";
 import Drum from "./Drum";
 import Object3D from "../Object3D";
+import Keypoint from "../../../Geometry/Keypoint";
 
 export default class InstrumentFactory {
   instruments: { [key: string]: Object3D[] };
@@ -132,7 +133,8 @@ export default class InstrumentFactory {
         for (const child of object.children) {
           child.material = minigunMaterial;
         }
-        const mouth_keypoint = scene.keypoints.find((keypoint) => keypoint.name == "mouth_right");
+        const mouth_keypoint = new Keypoint("a", "a", "a");
+        //const mouth_keypoint = scene.keypoints.find((keypoint) => keypoint.name == "mouth_right");
 
         const inst = new Microphone(
           object.children[0],

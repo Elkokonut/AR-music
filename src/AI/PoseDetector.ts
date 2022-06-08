@@ -1,21 +1,22 @@
 // Register WebGL backend.
-import * as pipe_holistic from '@mediapipe/holistic'
+import * as pipe_hands from '@mediapipe/hands'
 import * as pipe_camera from '@mediapipe/camera_utils'
 
 export default class PoseDetector {
   video: HTMLVideoElement;
-  model: pipe_holistic.Holistic;
+  model: pipe_hands.Hands;
   static pred_buffer: Array<number>;
 
 
   constructor(video) {
     PoseDetector.pred_buffer = []
     this.video = video;
-    this.model = new pipe_holistic.Holistic({
+    this.model = new pipe_hands.Hands({
       locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`;
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
       }
     });
+
   }
 
 
@@ -34,27 +35,24 @@ export default class PoseDetector {
         height: this.video.videoHeight
       }
     );
-
     this.model.setOptions({
+      maxNumHands: 2,
       modelComplexity: 0,
-      smoothLandmarks: true,
-      enableSegmentation: false,
-      smoothSegmentation: false,
-      refineFaceLandmarks: false,
-      minDetectionConfidence: 0.3,
-      minTrackingConfidence: 0.3
+      minDetectionConfidence: 0.5,
+      minTrackingConfidence: 0.5
     });
 
     async function onResults(results) {
-      const keypoints =
-      {
-        "body": results.poseLandmarks,
-        "left_hand": results.leftHandLandmarks,
-        "right_hand": results.rightHandLandmarks
-      };
-      if ((results.poseLandmarks && results.poseLandmarks.length > 0)
-        || (results.leftHandLandmarks && results.leftHandLandmarks.length > 0)
-        || (results.rightHandLandmarks && results.rightHandLandmarks.length > 0)) {
+      const left = results.multiHandLandmarks[0];
+      const right = results.multiHandLandmarks[1];
+
+      if ((left && left.length > 0)
+        || (right && right.length > 0)) {
+        const keypoints =
+        {
+          "left_hand": left,
+          "right_hand": right
+        };
         scene.update_keypoints(keypoints);
       }
     }

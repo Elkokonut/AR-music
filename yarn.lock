@@ -64,6 +64,11 @@
   resolved "https://registry.npmjs.org/@mediapipe/camera_utils/-/camera_utils-0.3.1640029074.tgz"
   integrity sha512-jRV/Mp2lgqNYT68TeVRu/Xq+ptZO9F9vCjxzQsA3VM2r7oXg0TrnfO9De2KKOUTpt0p28dKHs625J8GdWjha8A==
 
+"@mediapipe/hands@^0.4.1646424915":
+  version "0.4.1646424915"
+  resolved "https://registry.yarnpkg.com/@mediapipe/hands/-/hands-0.4.1646424915.tgz#faaa1798dea931044b09dabd1fa845cadb009554"
+  integrity sha512-R1VM3DRCKTA49nVvkprInYUXx8cKisi86y6/9clvYA0vApmLqTjIHQFibJDHwSdy4Rykn2CjWywQAWw5+mGw8w==
+
 "@mediapipe/holistic@^0.5.1635989137":
   version "0.5.1635989137"
   resolved "https://registry.npmjs.org/@mediapipe/holistic/-/holistic-0.5.1635989137.tgz"
