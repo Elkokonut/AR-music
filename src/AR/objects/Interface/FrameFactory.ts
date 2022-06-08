@@ -29,6 +29,46 @@ export default class FrameFactory {
 
     // #region generic;
 
+    static basicChildFrame(localHeight, localWidth, column = false) {
+        const height = Frame.distance;
+        const ratio = globalThis.APPNamespace.canvasHeight / globalThis.APPNamespace.canvasWidth;
+        const width = Frame.distance / ratio;
+        return new Frame(
+            new ThreeMeshUI.Block(
+                {
+                    height: height * localHeight,
+                    width: width * localWidth,
+                    justifyContent: 'center',
+                    contentDirection: column ? 'column' : 'row',
+                    backgroundColor: new THREE.Color(0xba2f8e),
+                    backgroundOpacity: 0,
+                    offset: 0.05,
+
+                })
+            , FrameType.ChildFrame,
+            (frame) => { Frame.basicResize(frame, localWidth) }
+        );
+    }
+
+    static backButton(front: Interface, localHeight, localWidth) {
+        return new Button(localHeight, localWidth, "Back to menu",
+            () => { front.next(FrameType.Main); },
+            false,
+            null,
+            {
+                backgroundColor: new THREE.Color(0x940d26),
+                backgroundOpacity: 0.9
+            },
+            {
+                backgroundColor: new THREE.Color(0x940d26),
+                backgroundOpacity: 0.7
+            },
+            {
+                backgroundColor: new THREE.Color(0x940d26),
+                backgroundOpacity: 1
+            }
+        );
+    }
 
 
     private static learningProcess(front, scene, label, onBefore, onAfter) {
@@ -91,22 +131,7 @@ export default class FrameFactory {
             (frame) => { Frame.basicResize(frame, 0.7) }
         );
 
-        const frame2 = new Frame(
-            new ThreeMeshUI.Block(
-                {
-                    height: height * 0.5,
-                    width: width * 0.6,
-                    justifyContent: 'center',
-                    borderRadius: 10,
-                    margin: 0.5,
-                    backgroundColor: new THREE.Color(0xba2f8e),
-                    backgroundOpacity: 0,
-                    offset: 0.05,
-
-                })
-            , FrameType.ChildFrame,
-            (frame) => { Frame.basicResize(frame, 0.6) }
-        );
+        const frame2 = FrameFactory.basicChildFrame(0.5, 0.6);
 
         frame.addElement(frame2);
         frame2.addElement(new MeshText(content, 0.03));
@@ -140,40 +165,9 @@ export default class FrameFactory {
             (frame) => { Frame.basicResize(frame, 0.8) }
         );
 
-        const frame2 = new Frame(
-            new ThreeMeshUI.Block(
-                {
-                    height: height * 0.5,
-                    width: width * 0.7,
-                    justifyContent: 'center',
-                    contentDirection: 'row',
-                    borderRadius: 10,
-                    margin: 0.5,
-                    backgroundColor: new THREE.Color(0xba2f8e),
-                    backgroundOpacity: 0,
-                    offset: 0.05,
+        const frame2 = FrameFactory.basicChildFrame(0.5, 0.7);
 
-                })
-            , FrameType.ChildFrame,
-            (frame) => { Frame.basicResize(frame, 0.7) }
-        );
-
-        const text_frame = new Frame(
-            new ThreeMeshUI.Block(
-                {
-                    height: height * 0.5,
-                    width: width * 0.3,
-                    justifyContent: 'center',
-                    borderRadius: 10,
-                    margin: 0.5,
-                    backgroundColor: new THREE.Color(0xba2f8e),
-                    backgroundOpacity: 0,
-                    offset: 0.05,
-
-                })
-            , FrameType.ChildFrame,
-            (frame) => { Frame.basicResize(frame, 0.3) }
-        );
+        const text_frame = FrameFactory.basicChildFrame(0.5, 0.3);
 
         const video = document.createElement("video");
         video.setAttribute("src", videoPath);
@@ -241,44 +235,12 @@ export default class FrameFactory {
             (frame) => Frame.basicResize(frame, 0.7)
         );
 
-        const frame2 = new Frame(
-            new ThreeMeshUI.Block(
-                {
-                    height: height * 0.5,
-                    width: width * 0.6,
-                    justifyContent: 'center',
-                    borderRadius: 10,
-                    margin: 0.5,
-                    backgroundColor: new THREE.Color(0xba2f8e),
-                    backgroundOpacity: 0,
-                    offset: 0.05,
-
-                })
-            , FrameType.ChildFrame,
-            (frame) => Frame.basicResize(frame, 0.6)
-        );
+        const frame2 = FrameFactory.basicChildFrame(0.5, 0.6);
 
         frame.addElement(frame2);
         frame2.addElement(new MeshText(content, 0.04));
 
-        const frame3 = new Frame(
-            new ThreeMeshUI.Block(
-                {
-                    height: height * 0.2,
-                    width: width * 0.6,
-                    justifyContent: 'center',
-                    contentDirection: 'row',
-                    borderRadius: 10,
-                    margin: 0.5,
-                    backgroundColor: new THREE.Color(0xba2f8e),
-                    backgroundOpacity: 0,
-                    offset: 0.05,
-
-                })
-            , FrameType.ChildFrame,
-            (frame) => Frame.basicResize(frame, 0.6)
-        );
-
+        const frame3 = FrameFactory.basicChildFrame(0.2, 0.6);
         frame.addElement(frame3);
 
         frame3.addElement(new Button(0.15, 0.15, button_text2, action2));
@@ -502,65 +464,25 @@ export default class FrameFactory {
             (frame) => Frame.basicResize(frame, 0.85)
         );
 
-        const text_frame = new Frame(new ThreeMeshUI.Block(
-            {
-                height: height * 0.2,
-                width: width * 0.8,
-                justifyContent: 'center',
-                borderRadius: 10,
-                backgroundColor: new THREE.Color(0xba2f8e),
-                backgroundOpacity: 0,
-                offset: 0.05,
+        const top_frame = FrameFactory.basicChildFrame(0.2, 0.7);
+        const back_button = FrameFactory.backButton(front, 0.1, 0.1);
+        const text_frame = FrameFactory.basicChildFrame(0.2, 0.5);
+        const filler_frame = FrameFactory.basicChildFrame(0.2, 0.05);
 
-            }),
-            FrameType.ChildFrame,
-            (frame) => Frame.basicResize(frame, 0.8)
-        );
-        frame.addElement(text_frame);
         const text = "Training is about to start \n Pick an action to learn"
+
+        frame.addElement(top_frame);
         text_frame.addElement(new MeshText(text, 0.04));
+        top_frame.addElement(back_button);
+        top_frame.addElement(text_frame);
+        top_frame.addElement(filler_frame);
 
 
-        const button_frame = new Frame(new ThreeMeshUI.Block(
-            {
-                height: height * 0.6,
-                width: width * 0.8,
-                justifyContent: 'center',
-                contentDirection: 'row',
-                borderRadius: 10,
-                backgroundColor: new THREE.Color(0xba2f8e),
-                backgroundOpacity: 0,
-                offset: 0.05,
-
-            }),
-            FrameType.ChildFrame,
-            (frame) => Frame.basicResize(frame, 0.8)
-        );
+        const button_frame = FrameFactory.basicChildFrame(0.6, 0.8);
+        const left_button_frame = FrameFactory.basicChildFrame(0.6, 0.4, true);
+        const right_button_frame = FrameFactory.basicChildFrame(0.6, 0.4, true);
         frame.addElement(button_frame);
-
-        const block_options = {
-            height: height * 0.6,
-            width: width * 0.4,
-            justifyContent: 'center',
-            contentDirection: 'column',
-            borderRadius: 10,
-            backgroundColor: new THREE.Color(0xba2f8e),
-            backgroundOpacity: 0,
-            offset: 0.05,
-
-        };
-        const left_button_frame = new Frame(
-            new ThreeMeshUI.Block(block_options),
-            FrameType.ChildFrame,
-            (frame) => Frame.basicResize(frame, 0.4)
-        );
         button_frame.addElement(left_button_frame);
-
-        const right_button_frame = new Frame(
-            new ThreeMeshUI.Block(block_options),
-            FrameType.ChildFrame,
-            (frame) => Frame.basicResize(frame, 0.4)
-        );
         button_frame.addElement(right_button_frame);
 
 
@@ -576,41 +498,17 @@ export default class FrameFactory {
         FrameFactory.buttonPack(right_button_frame, "Synth Dive", "synth_dive", scene, front);
 
 
-        frame.addElement(new Frame(new ThreeMeshUI.Block(
-            {
-                height: height * 0.05,
-                width: width * 0.8,
-                justifyContent: 'center',
-                contentDirection: 'row',
-                borderRadius: 10,
-                backgroundColor: new THREE.Color(0xba2f8e),
-                backgroundOpacity: 0,
-                offset: 0.05,
-
-            }),
-            FrameType.ChildFrame,
-            (frame) => Frame.basicResize(frame, 0.8)
-        ));
+        frame.addElement(FrameFactory.basicChildFrame(0.05, 0.8));
 
         return frame;
     }
 
 
     static buttonPack(frame, btn_label, label, scene, front) {
-
-        // TODO: resize fcnt + init : when ratio > 1.5, put del btn below
-
         const height = Frame.distance;
         const ratio = globalThis.APPNamespace.canvasHeight / globalThis.APPNamespace.canvasWidth;
         const width = Frame.distance / ratio;
 
-        const del_buttons_option = {
-            width: 0.1 * height,
-            height: 0.1 * height,
-            justifyContent: 'center',
-            borderRadius: 2,
-            offset: 0.05,
-        }
 
         const btn_block_options = {
             height: height * 0.1,
@@ -645,7 +543,7 @@ export default class FrameFactory {
                 front.next(FrameType.Main);
             },
             false,
-            del_buttons_option,
+            null,
             {
                 backgroundColor: new THREE.Color(0x940d26),
                 backgroundOpacity: 0.9
