@@ -539,8 +539,7 @@ export default class FrameFactory {
 
         const del_btn = new Button(0.05, 0.1, "X",
             () => {
-                scene.classifier.removeLabel(label);
-                front.next(FrameType.Main);
+                FrameFactory.pendingSoundDeletion(label, scene, front);
             },
             false,
             null,
@@ -562,6 +561,42 @@ export default class FrameFactory {
 
         button_block.addElement(del_btn);
 
+    }
+
+    static pendingSoundDeletion(label, scene, front: Interface) {
+
+        const content = `Are you sure you want to delete all\
+         \ninformation registered as "${label}" ? \
+        \n You will still be able to register it again later.`
+
+        const frame = FrameFactory.yes_no_frame(
+            FrameType.DeleteLabel, content, null, null, "No", "Yes"
+        );
+        frame.resize();
+
+        const fcnt0 = () => {
+            scene.classifier.removeLabel(label);
+            front.removeChild(frame, scene);
+            front.next(FrameType.Main);
+        }
+
+        const fcnt1 = () => {
+            front.removeChild(frame, scene);
+            front.next(FrameType.TrainingMainPanel);
+        }
+
+        const sub_btn_frame = frame.children[1];
+
+        if (sub_btn_frame instanceof Frame) {
+            if (sub_btn_frame.children[0] instanceof Button) {
+                sub_btn_frame.children[0].action = fcnt0;
+            }
+            if (sub_btn_frame.children[1] instanceof Button) {
+                sub_btn_frame.children[1].action = fcnt1;
+            }
+        }
+        front.addChild(frame, scene);
+        front.next(FrameType.DeleteLabel);
     }
 
 
