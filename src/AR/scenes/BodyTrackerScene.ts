@@ -232,7 +232,8 @@ export default class BodyTrackerScene extends Scene {
           const distance = is_right_hand ? self.rightHand.distance : self.leftHand.distance;
           obj.animate(is_closed, is_right_hand);
           obj.scaling(distance);
-          obj.play_sound();
+          if (is_closed)
+            obj.play_sound();
           if (obj.obj.visible)
             occlusionZ = Math.max(occlusionZ, Microphone.base_dimension_Z * obj.obj.scale.z);
         }
