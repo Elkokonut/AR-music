@@ -45,18 +45,13 @@ export default class PoseDetector {
     async function onResults(results) {
       const left = results.multiHandLandmarks[0];
       const right = results.multiHandLandmarks[1];
-
-      if ((left && left.length > 0)
-        || (right && right.length > 0)) {
-        const keypoints =
-        {
-          "left_hand": left,
-          "right_hand": right
-        };
-        scene.update_keypoints(keypoints);
-      }
+      const keypoints =
+      {
+        "left_hand": left,
+        "right_hand": right
+      };
+      scene.update_keypoints(keypoints);
     }
-
     this.model.onResults(onResults);
     camera.start();
   }

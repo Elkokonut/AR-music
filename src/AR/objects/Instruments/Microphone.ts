@@ -13,13 +13,12 @@ export default class Microphone extends Object3D {
   initialized: boolean;
   static base_dimension_Z = 2.8;
 
-  constructor(obj: THREE.Object3D, name, keypoints_left, keypoints_right, mouth_keypoint, scale) {
+  constructor(obj: THREE.Object3D, name, keypoints_left, keypoints_right, scale) {
     super(obj, name, scale);
     this.initialized = false;
     this.obj.visible = false;
     this.keypoints_left = keypoints_left;
     this.keypoints_right = keypoints_right;
-    this.mouth_keypoint = mouth_keypoint;
     this.sound = null;
     this.kp_align_pos = new THREE.Vector3(0, 0, 0);
 
@@ -87,7 +86,8 @@ export default class Microphone extends Object3D {
   }
 
   play_sound() {
-    this.sound.play();
+    if (this.initialized)
+      this.sound.play();
   }
 
   pause_sound() {
