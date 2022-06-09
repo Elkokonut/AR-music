@@ -19,6 +19,7 @@ export enum FrameType {
     TrainingInfo,
     TrainingMainPanel,
     ClearTraining,
+    DeleteLabel,
     ChildFrame
 }
 
