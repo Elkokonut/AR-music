@@ -232,7 +232,7 @@ export default class BodyTrackerScene extends Scene {
           const distance = is_right_hand ? self.rightHand.distance : self.leftHand.distance;
           obj.animate(is_closed, is_right_hand);
           obj.scaling(distance);
-          if (is_closed)
+          if (is_closed && obj.obj.visible)
             obj.play_sound();
           else
             obj.pause_sound();
