@@ -234,6 +234,8 @@ export default class BodyTrackerScene extends Scene {
           obj.scaling(distance);
           if (is_closed)
             obj.play_sound();
+          else
+            obj.pause_sound();
           if (obj.obj.visible)
             occlusionZ = Math.max(occlusionZ, Microphone.base_dimension_Z * obj.obj.scale.z);
         }
