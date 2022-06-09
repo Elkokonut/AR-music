@@ -18,6 +18,7 @@ import Interface from "../objects/Interface/Interface";
 import Classifier from "../../AI/Classifier";
 
 import soundManager from "../../tools/SoundManager";
+import { or } from "mathjs";
 
 
 export default class BodyTrackerScene extends Scene {
@@ -221,8 +222,9 @@ export default class BodyTrackerScene extends Scene {
           else if (obj.keypoints_right[0].is_visible == false)
             is_right_hand = false;
           else {
-            const right_distance = obj.keypoints_right[0].position.distanceTo(obj.mouth_keypoint.position);
-            const left_distance = obj.keypoints_left[0].position.distanceTo(obj.mouth_keypoint.position);
+            const origin = new THREE.Vector3(0, 0, 0);
+            const right_distance = obj.keypoints_right[0].position.distanceTo(origin);
+            const left_distance = obj.keypoints_left[0].position.distanceTo(origin);
 
             is_right_hand = left_distance > right_distance;
           }
@@ -230,7 +232,10 @@ export default class BodyTrackerScene extends Scene {
           const distance = is_right_hand ? self.rightHand.distance : self.leftHand.distance;
           obj.animate(is_closed, is_right_hand);
           obj.scaling(distance);
-          obj.play_sound();
+          if (is_closed && obj.obj.visible)
+            obj.play_sound();
+          else
+            obj.pause_sound();
           if (obj.obj.visible)
             occlusionZ = Math.max(occlusionZ, Microphone.base_dimension_Z * obj.obj.scale.z);
         }

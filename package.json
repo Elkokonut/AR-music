@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@mediapipe/camera_utils": "^0.3.1640029074",
+    "@mediapipe/hands": "^0.4.1646424915",
     "@mediapipe/holistic": "^0.5.1635989137",
     "@parcel/config-default": "^2.4.1",
     "@tensorflow-models/knn-classifier": "^1.2.4",
