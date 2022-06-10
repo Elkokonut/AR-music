@@ -15,6 +15,7 @@ export enum FrameType {
     SmallCounter,
     AutoInfo,
     AppInstructions,
+    Tutorial,
     TrainingMic,
     TrainingDrum,
     TrainingInfo,

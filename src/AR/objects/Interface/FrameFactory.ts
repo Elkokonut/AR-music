@@ -15,6 +15,8 @@ export default class FrameFactory {
         const frames: Frame[] = [];
 
         frames.push(FrameFactory.startingFrame(front)); // "starting_frame"
+        frames.push(FrameFactory.appInstructionsFrame(front));
+        frames.push(FrameFactory.tutorial(front));
         frames.push(FrameFactory.mainFrame(scene, front)); // "main"
         frames.push(FrameFactory.autoInfoFrame(front));
         frames.push(...FrameFactory.generateBigCounters());
@@ -209,8 +211,6 @@ export default class FrameFactory {
                     text_frame.addElement(new MeshText(content, 0.03));
                     frame.addElement(new Button(0.10, 0.10, button_text, action));
                     frame.resize();
-
-
                 }, false);
             }
         });
@@ -229,7 +229,7 @@ export default class FrameFactory {
         const frame = new Frame(new ThreeMeshUI.Block(
             {
                 height: height * 0.7,
-                width: width * 0.7,
+                width: width * 0.8,
                 padding: 0.5,
                 margin: 0.5,
                 borderRadius: 10,
@@ -248,13 +248,13 @@ export default class FrameFactory {
         const frame2 = FrameFactory.basicChildFrame(0.5, 0.6);
 
         frame.addElement(frame2);
-        frame2.addElement(new MeshText(content, 0.04));
+        frame2.addElement(new MeshText(content, 0.03));
 
         const frame3 = FrameFactory.basicChildFrame(0.2, 0.6);
         frame.addElement(frame3);
 
-        frame3.addElement(new Button(0.15, 0.15, button_text2, action2));
-        frame3.addElement(new Button(0.15, 0.15, button_text1, action1));
+        frame3.addElement(new Button(0.1, 0.1, button_text2, action2));
+        frame3.addElement(new Button(0.1, 0.1, button_text1, action1));
 
         return frame;
 
@@ -299,8 +299,7 @@ export default class FrameFactory {
         const text_intro = "Welcome! \nPlease use headphones.\n Interact with the interface using your indexes.";
 
         return FrameFactory.content_video_button_frame(FrameType.StartingFrame, text_intro, "/videos_demo/startingInfo.mp4", function () {
-            console.log("Next");
-            front.next(FrameType.Main);
+            front.next(FrameType.AppInstructions);
         });
     }
 
@@ -372,7 +371,7 @@ export default class FrameFactory {
                     }
                 }
             ),
-            new Button(button_width, button_height, "AI Training",
+            new Button(button_width, button_height, "Learn Gestures",
                 function () {
                     scene.classifier.stopLearning();
                     scene.classifier.disable();
@@ -385,7 +384,7 @@ export default class FrameFactory {
                     }
                 }
             ),
-            new Button(button_width, button_height, "Reset Training",
+            new Button(button_width, button_height, "Reset Gestures Learning",
                 function () {
                     scene.classifier.disable();
                     scene.factory.change_instrument("", scene);
@@ -440,7 +439,8 @@ export default class FrameFactory {
     }
 
     static autoInfoFrame(front: Interface) {
-        const text_info = "To use Auto Mode,\n please train the AI by pressing 'AI Training'.";
+        const text_info = "Auto Mode allows you to detect automatically gestures to play sounds. \n \
+        To use Auto Mode,\n please train the AI by pressing 'Learn Gestures'.";
 
         return FrameFactory.content_button_frame(FrameType.AutoInfo, text_info, function () {
             front.next(FrameType.Main);
@@ -666,15 +666,40 @@ export default class FrameFactory {
         return frames;
     }
 
+    static appInstructionsFrame(front: Interface) {
+        const text_frame = "This website allows you to play drums and mic in AR.\n \
+        You can save gestures to automatically detect up to 10 sounds! \n \
+        You can start your journey by clicking on 'Got it!'!\n \
+        If you need futher help, you can check up the tutorial!";
+
+        return FrameFactory.yes_no_frame(FrameType.AppInstructions, text_frame, function () {
+            front.next(FrameType.Tutorial);
+        }, function () {
+            front.next(FrameType.Main);
+        },
+            "I need that tutorial!",
+
+            "Got it!");
+    }
+
+    static tutorial(front: Interface) {
+        const text_frame = "Cool Tuto";
+
+        return FrameFactory.content_video_button_frame(FrameType.Tutorial, text_frame, "/videos_demo/startingInfo.mp4", function () {
+            front.next(FrameType.Main);
+        }, "Got it!");
+
+    }
+
     static infoTrainingFrame(front: Interface) {
-        const text_frame = "You can add new instruments or improve the detection by clicking \non 'AI training' again.\n Click on 'Auto' to try the AI."
+        const text_frame = "You can add new instruments or improve the detection by clicking \non 'Learn Gestures' again.\n Click on 'Auto' to try the AI."
         return FrameFactory.content_button_frame(FrameType.TrainingInfo, text_frame, function () {
             front.next(FrameType.Main);
         }, "Got it!");
     }
 
     static clearTraining(scene, front: Interface) {
-        const content = "Are you sure you want to delete all data from the AI ?"
+        const content = "Are you sure you want to delete all data about the gestures ?"
 
         return FrameFactory.yes_no_frame(FrameType.ClearTraining,
             content, () => {
