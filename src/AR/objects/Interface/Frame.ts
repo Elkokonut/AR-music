@@ -14,6 +14,7 @@ export enum FrameType {
     GO,
     SmallCounter,
     AutoInfo,
+    AppInstructions,
     TrainingMic,
     TrainingDrum,
     TrainingInfo,
@@ -29,29 +30,26 @@ export default class Frame extends Object3D {
     children: Object3D[];
     type: FrameType;
     resizeFunc: (Frame) => void
-    onBefore: () => void
-    onAfter: () => void
+    private onBefore: (() => void)[]
+    private onAfter: (() => void)[]
 
     static distance = 50;
 
-    constructor(frame: ThreeMeshUI.Block, type: FrameType, resizeFunc = null, onBefore = null, onAfter = null) {
+    constructor(frame: ThreeMeshUI.Block, type: FrameType, resizeFunc = null) {
         super(frame, `frame_${Frame.frame_count++}`, null);
         this.children = [];
+        this.onBefore = [];
+        this.onAfter = [];
+        this.type = type;
+        this.obj.position.setZ(globalThis.APPNamespace.canvasHeight - Frame.distance);
         this.resizeFunc = resizeFunc;
 
         if (type != FrameType.ChildFrame)
             this.hide();
-
-        this.type = type;
-        this.obj.position.setZ(globalThis.APPNamespace.canvasHeight - Frame.distance);
-
-        this.onBefore = onBefore;
-        this.onAfter = onAfter;
     }
 
     show() {
-        if (this.onBefore)
-            this.onBefore();
+        this.onBefore.forEach(fct => fct());
         this.obj.visible = true;
         this.children.forEach(child => {
             if (child instanceof Frame) {
@@ -71,9 +69,15 @@ export default class Frame extends Object3D {
                 child.hide();
             }
         });
+        this.onAfter.forEach(fct => fct());
+    }
 
-        if (this.onAfter)
-            this.onAfter();
+    addOnBefore(onBefore: () => void) {
+        this.onBefore.push(onBefore);
+    }
+
+    addOnAfter(onAfter: () => void) {
+        this.onAfter.push(onAfter);
     }
 
 

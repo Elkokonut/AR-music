@@ -168,44 +168,52 @@ export default class FrameFactory {
         );
 
         const frame2 = FrameFactory.basicChildFrame(0.5, 0.7);
-
         const text_frame = FrameFactory.basicChildFrame(0.5, 0.3);
+        let call = false;
+        frame.addOnBefore(() => {
 
-        const video = document.createElement("video");
-        video.setAttribute("src", videoPath);
-        video.muted = true;
-        video.autoplay = true;
-        video.loop = true;
-        video.load();
-        enableInlineVideo(video);
-        video.play();
+            if (call == false) {
+                call = true;
 
-        video.addEventListener("loadedmetadata", function () {
-            const video_frame = new Frame(
-                new ThreeMeshUI.Block(
-                    {
-                        height: height * 0.5,
-                        width: width * 0.4,
-                        justifyContent: 'center',
-                        margin: 0.5,
-                        backgroundTexture: new THREE.VideoTexture(video),
-                        backgroundOpacity: 1,
-                        backgroundSize: 'stretch',
-                        offset: 0.05,
+                const video = document.createElement("video");
+                video.setAttribute("src", videoPath);
+                video.muted = true;
+                video.autoplay = true;
+                video.loop = true;
+                video.load();
+                enableInlineVideo(video);
+                video.play();
 
-                    })
-                , FrameType.ChildFrame,
-                (frame) => { Frame.resizeWithRatio(frame, 0.4, 0.5, video.videoHeight / video.videoWidth) }
-            );
 
-            frame.addElement(frame2);
-            frame2.addElement(text_frame);
-            frame2.addElement(video_frame);
-            text_frame.addElement(new MeshText(content, 0.03));
-            frame.addElement(new Button(0.10, 0.10, button_text, action));
-            frame.resize();
+                video.addEventListener("loadedmetadata", function () {
+                    const video_frame = new Frame(
+                        new ThreeMeshUI.Block(
+                            {
+                                height: height * 0.5,
+                                width: width * 0.4,
+                                justifyContent: 'center',
+                                margin: 0.5,
+                                backgroundTexture: new THREE.VideoTexture(video),
+                                backgroundOpacity: 1,
+                                backgroundSize: 'stretch',
+                                offset: 0.05,
 
-        }, false);
+                            })
+                        , FrameType.ChildFrame,
+                        (frame) => { Frame.resizeWithRatio(frame, 0.4, 0.5, video.videoHeight / video.videoWidth) }
+                    );
+
+                    frame.addElement(frame2);
+                    frame2.addElement(text_frame);
+                    frame2.addElement(video_frame);
+                    text_frame.addElement(new MeshText(content, 0.03));
+                    frame.addElement(new Button(0.10, 0.10, button_text, action));
+                    frame.resize();
+
+
+                }, false);
+            }
+        });
 
 
 
@@ -619,7 +627,9 @@ export default class FrameFactory {
             },
             "Start");
 
-        frame.onBefore = () => { scene.factory.change_instrument("microphone", scene) };
+        frame.addOnBefore(() => {
+            scene.factory.change_instrument("microphone", scene)
+        });
 
         return frame;
     }
@@ -641,7 +651,7 @@ export default class FrameFactory {
             },
             "Start");
 
-        frame.onBefore = () => { scene.factory.change_instrument("drums", scene); }
+        frame.addOnBefore(() => { scene.factory.change_instrument("drums", scene); });
 
         return frame;
     }
