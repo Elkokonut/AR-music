@@ -1,12 +1,9 @@
-declare function require(name: string);
-
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import Microphone from "./Microphone";
 import Drum from "./Drum";
 import Object3D from "../Object3D";
-import Keypoint from "../../../Geometry/Keypoint";
 
 export default class InstrumentFactory {
   instruments: { [key: string]: Object3D[] };
@@ -89,7 +86,7 @@ export default class InstrumentFactory {
   }
 
   _load_microphone(scene) {
-    const model_path = require("../../../../static/models/mic/microphone.fbx");
+    const model_path = "models/mic/microphone.fbx";
     const name = "mic";
     const keypoints_right = [
       scene.keypoints.find((keypoint) => keypoint.name == "right_index_finger_mcp"),
@@ -111,16 +108,16 @@ export default class InstrumentFactory {
         // success
         console.log("success");
         const baseColorMap = await textureLoader.load(
-          require("../../../../static/models/mic/textures/Microphone_FBX_Microphone_BaseColor.png")
+          "models/mic/textures/Microphone_FBX_Microphone_BaseColor.png"
         );
         const metallicMap = await textureLoader.load(
-          require("../../../../static/models/mic/textures/Microphone_FBX_Microphone_Metalness.png")
+          "models/mic/textures/Microphone_FBX_Microphone_Metalness.png"
         );
         const normalMap = await textureLoader.load(
-          require("../../../../static/models/mic/textures/Microphone_FBX_Microphone_Normal.png")
+          "models/mic/textures/Microphone_FBX_Microphone_Normal.png"
         );
         const roughnessMap = await textureLoader.load(
-          require("../../../../static/models/mic/textures/Microphone_FBX_Microphone_Roughness.png")
+          "models/mic/textures/Microphone_FBX_Microphone_Roughness.png"
         );
 
         const minigunMaterial = new THREE.MeshStandardMaterial({
@@ -155,7 +152,7 @@ export default class InstrumentFactory {
   }
 
   _load_cymbal(scene) {
-    const obj_path = require("../../../../static/models/cymbal/Cymbal.obj");
+    const obj_path = "models/cymbal/Cymbal.obj";
     new OBJLoader(this.loadingManager)
       .load(obj_path,
         async (object) => {
@@ -163,7 +160,7 @@ export default class InstrumentFactory {
 
           const textureLoader = new THREE.TextureLoader();
           const baseColorMap = await textureLoader.load(
-            require("../../../../static/models/cymbal/zildjian-i-family-18-crash-ride.jpeg")
+            "models/cymbal/zildjian-i-family-18-crash-ride.jpeg"
           );
           const drumMaterial = new THREE.MeshStandardMaterial({
             map: baseColorMap
@@ -182,8 +179,7 @@ export default class InstrumentFactory {
             "cymbal",
             position,
             new THREE.Vector3(scale / 1440, scale / 1080, scale / 1080),
-            require("url:../../../../static/sound sample/cymbal.wav"
-            )
+            "sound sample/cymbal.wav"
           );
 
           if (!this.instruments["drums"])
@@ -204,7 +200,7 @@ export default class InstrumentFactory {
 
 
   _load_ancien_drum(scene) {
-    const obj_path = require("../../../../static/models/NAMDrum/NAMDrum01.obj");
+    const obj_path = "models/NAMDrum/NAMDrum01.obj";
     new OBJLoader(this.loadingManager)
       .load(obj_path,
         async (object) => {
@@ -212,7 +208,7 @@ export default class InstrumentFactory {
 
           const textureLoader = new THREE.TextureLoader();
           const baseColorMap = await textureLoader.load(
-            require("../../../../static/models/NAMDrum/NAMDrum01.jpg")
+            "models/NAMDrum/NAMDrum01.jpg"
           );
           const drumMaterial = new THREE.MeshStandardMaterial({
             map: baseColorMap
@@ -227,8 +223,7 @@ export default class InstrumentFactory {
             "ancien_drum_left",
             new THREE.Vector3(-5, -13, 0),
             new THREE.Vector3(scale / 1440, scale / 1080, scale / 1080),
-            require("url:../../../../static/sound sample/drum_left.wav"
-            )
+            "sound sample/drum_left.wav"
           );
 
           const drum_right = new Drum(
@@ -236,8 +231,7 @@ export default class InstrumentFactory {
             "ancien_drum_right",
             new THREE.Vector3(5, -13, 0),
             new THREE.Vector3(scale / 1440, scale / 1080, scale / 1080),
-            require("url:../../../../static/sound sample/drum_right.wav"
-            )
+            "sound sample/drum_right.wav"
           );
 
           if (!this.instruments["drums"])
