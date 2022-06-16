@@ -151,7 +151,6 @@ export default class BodyTrackerScene extends Scene {
         this.factory.change_instrument("", this);
         this.soundManager.playSound(prediction);
       }
-
     }
   }
 

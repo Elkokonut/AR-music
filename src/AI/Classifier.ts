@@ -12,16 +12,7 @@ export default class Classifier {
     this.knn = knnClassifier.create();
     this.isLearning = false;
     this.enabled = false;
-    this.init();
   }
-
-  init() {
-    const example = tf.tensor(new Array(84).fill(-1));
-    for (let index = 0; index < 600; index++) {
-      this.knn.addExample(example, "");
-    }
-  }
-
 
   createExample(left_hand: Hand, right_hand: Hand) {
 
@@ -63,7 +54,6 @@ export default class Classifier {
 
   removeAllLabels() {
     this.knn.clearAllClasses();
-    this.init();
   }
 
   startLearning(label: string) {
