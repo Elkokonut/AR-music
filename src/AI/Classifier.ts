@@ -17,11 +17,14 @@ export default class Classifier {
   }
 
   add_base_example() {
-    if (this.nb_base_example < 600) {
-      const example = tf.tensor(new Array(84).fill(-1));
-      this.knn.addExample(example, "");
-      this.nb_base_example += 1;
+    if (this.nb_base_example < 200) {
+      for (let i = 0; i < 5; i++) {
+        const example = tf.tensor(new Array(84).fill(-1));
+        this.knn.addExample(example, "");
+        this.nb_base_example += 1;
+      }
     }
+    else { console.log("init ended") }
   }
 
 

@@ -148,9 +148,10 @@ export default class BodyTrackerScene extends Scene {
         this.factory.change_instrument("microphone", this);
       else if (prediction == "drums")
         this.factory.change_instrument("drums", this);
-      else if (prediction != "") {
+      else {
         this.factory.change_instrument("", this);
-        this.soundManager.playSound(prediction);
+        if (prediction != "")
+          this.soundManager.playSound(prediction);
       }
 
     }
