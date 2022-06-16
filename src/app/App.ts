@@ -10,6 +10,7 @@ export default class App {
   video: HTMLVideoElement;
   initialisation: boolean;
   ui: UI;
+  scene: BodyTrackerScene;
 
   constructor(debugMode) {
     this.video = document.querySelector('#webcam');
@@ -20,20 +21,16 @@ export default class App {
 
     enableInlineVideo(this.video);
     this.video.style.display = "none";
-    if (navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-        .then((localMediaStream) => this.getStream(localMediaStream))
-        .catch(function (error) {
-          console.log("Something went wrong!", error);
-        });
-    }
-    else {
-      console.log('Ce navigateur ne supporte pas la méthode getUserMedia');
-    }
+    this.scene = null;
 
-    this.video.addEventListener('canplay', () => this.callInitPage());
-    this.video.addEventListener('playing', () => this.callInitPage());
-    this.video.addEventListener('pause', () => this.callInitPage());
+    this.initAI().then((pose_detector) => {
+      this.video.addEventListener('playing', () => {
+        this.scene = this.initScene();
+        pose_detector.start(this.scene);
+      }
+      );
+    });
+
   }
 
   async getStream(localMediaStream) {
@@ -41,25 +38,21 @@ export default class App {
     this.video.srcObject = localMediaStream;
   }
 
-  async callInitPage() {
-    if (!this.initialisation) {
-      this.initialisation = true;
-      await this.initPage();
-    }
+
+  async initAI() {
+    const pose_detector = new PoseDetector(this.video);
+    await pose_detector.init();
+    return pose_detector;
   }
 
-  async initPage() {
+  initScene() {
     const scene = new BodyTrackerScene(this.video, this.debugMode);
     window.addEventListener("resize", () => scene.resize());
     const promise = this.video.play();
     if (promise !== undefined) {
       promise.catch(() => this.createButton()).then(() => console.log("Autoplay!"));
     }
-
-    globalThis.APPNamespace.Classifier = new Classifier();
-
-    const pose_detector = new PoseDetector(this.video);
-    await pose_detector.init(scene);
+    return scene;
   }
 
   createButton() {
