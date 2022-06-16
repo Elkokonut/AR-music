@@ -136,9 +136,9 @@ export default class BodyTrackerScene extends Scene {
   }
 
   async signHandler() {
-    if (this.classifier.isLearning)
+    if (this.classifier.isLearning) {
       this.classifier.addExample(this.leftHand, this.rightHand);
-    else if (this.classifier.enabled) {
+    } else if (this.classifier.enabled) {
       const prediction = await this.classifier.predict(
         this.leftHand,
         this.rightHand
@@ -147,12 +147,10 @@ export default class BodyTrackerScene extends Scene {
         this.factory.change_instrument("microphone", this);
       else if (prediction == "drums")
         this.factory.change_instrument("drums", this);
-      else {
+      else if (prediction != "") {
         this.factory.change_instrument("", this);
-        if (prediction != "")
-          this.soundManager.playSound(prediction);
+        this.soundManager.playSound(prediction);
       }
-
     }
   }
 
