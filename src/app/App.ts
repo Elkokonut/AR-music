@@ -20,16 +20,16 @@ export default class App {
 
     enableInlineVideo(this.video);
     this.video.style.display = "none";
-    if (navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-        .then((localMediaStream) => this.getStream(localMediaStream))
-        .catch(function (error) {
-          console.log("Something went wrong!", error);
-        });
-    }
-    else {
-      console.log('Ce navigateur ne supporte pas la méthode getUserMedia');
-    }
+    // if (navigator.mediaDevices.getUserMedia) {
+    //   navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    //     .then((localMediaStream) => this.getStream(localMediaStream))
+    //     .catch(function (error) {
+    //       console.log("Something went wrong!", error);
+    //     });
+    // }
+    // else {
+    //   console.log('Ce navigateur ne supporte pas la méthode getUserMedia');
+    // }
 
     this.video.addEventListener('canplay', () => this.callInitPage());
     this.video.addEventListener('playing', () => this.callInitPage());
@@ -51,15 +51,13 @@ export default class App {
   async initPage() {
     const scene = new BodyTrackerScene(this.video, this.debugMode);
     window.addEventListener("resize", () => scene.resize());
+    this.ui.hideLoading();
     const promise = this.video.play();
     if (promise !== undefined) {
       promise.catch(() => this.createButton()).then(() => console.log("Autoplay!"));
     }
-
-    globalThis.APPNamespace.Classifier = new Classifier();
-
-    const pose_detector = new PoseDetector(this.video);
-    await pose_detector.init(scene);
+    // const pose_detector = new PoseDetector(this.video);
+    // await pose_detector.init(scene);
   }
 
   createButton() {

@@ -9,10 +9,10 @@ export default class Interface {
 
     constructor(scene: BodyTrackerScene) {
         this.children = [];
-        FrameFactory.generateAllFrames(scene, this).forEach(frm => this.addChild(frm, scene));
+        // FrameFactory.generateAllFrames(scene, this).forEach(frm => this.addChild(frm, scene));
 
-        this.currentFrame = this.findFrameByType(FrameType.StartingFrame);
-        this.currentFrame.show();
+        // this.currentFrame = this.findFrameByType(FrameType.StartingFrame);
+        // this.currentFrame.show();
         this.resize();
     }
 
@@ -34,7 +34,8 @@ export default class Interface {
     }
 
     interact(raycasts: THREE.Raycast[]) {
-        this.currentFrame.interact(raycasts);
+        if (this.currentFrame)
+            this.currentFrame.interact(raycasts);
     }
 
     hide() { this.currentFrame.hide(); }

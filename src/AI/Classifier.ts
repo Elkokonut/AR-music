@@ -17,7 +17,7 @@ export default class Classifier {
 
   init() {
     const example = tf.tensor(new Array(84).fill(-1));
-    for (let index = 0; index < 600; index++) {
+    for (let index = 0; index < 1; index++) {
       this.knn.addExample(example, "");
     }
   }
