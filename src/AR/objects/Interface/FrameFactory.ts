@@ -369,7 +369,13 @@ export default class FrameFactory {
                     scene.classifier.disable();
                     scene.factory.change_instrument("", scene);
                     if (scene.classifier.knn.getNumClasses() <= 1) {
-                        front.next(FrameType.TrainingMic);
+                        if (scene.classifier.knn.getClassExampleCount())
+                            if (!scene.classifier.knn.getClassExampleCount()["microphone"])
+                                front.next(FrameType.TrainingMic);
+                            else
+                                front.next(FrameType.TrainingDrum);
+                        else
+                            front.next(FrameType.TrainingMic);
                     }
                     else {
                         front.next(FrameType.TrainingMainPanel);
