@@ -13,6 +13,7 @@ export default class Classifier {
     this.knn = knnClassifier.create();
     this.isLearning = false;
     this.enabled = false;
+    this.nb_base_example = 0;
   }
 
   add_base_example() {
