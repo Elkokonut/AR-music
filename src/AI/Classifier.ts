@@ -64,7 +64,7 @@ export default class Classifier {
 
   removeAllLabels() {
     this.knn.clearAllClasses();
-    this.init();
+    this.nb_base_example = 0;
   }
 
   startLearning(label: string) {
