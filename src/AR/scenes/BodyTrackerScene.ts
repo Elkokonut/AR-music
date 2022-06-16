@@ -137,6 +137,7 @@ export default class BodyTrackerScene extends Scene {
 
   async signHandler() {
     if (this.classifier.isLearning) {
+      this.classifier.add_base_example();
       this.classifier.addExample(this.leftHand, this.rightHand);
     } else if (this.classifier.enabled) {
       const prediction = await this.classifier.predict(

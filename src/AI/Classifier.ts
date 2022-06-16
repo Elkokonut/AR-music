@@ -4,6 +4,7 @@ import Hand from "../Geometry/Hand";
 
 export default class Classifier {
   knn: knnClassifier.KNNClassifier;
+  nb_base_example: number;
   isLearning: boolean;
   current_label: string;
   enabled: boolean;
@@ -12,13 +13,13 @@ export default class Classifier {
     this.knn = knnClassifier.create();
     this.isLearning = false;
     this.enabled = false;
-    this.init();
   }
 
-  init() {
-    const example = tf.tensor(new Array(84).fill(-1));
-    for (let index = 0; index < 600; index++) {
+  add_base_example() {
+    if (this.nb_base_example < 600) {
+      const example = tf.tensor(new Array(84).fill(-1));
       this.knn.addExample(example, "");
+      this.nb_base_example += 1;
     }
   }
 
