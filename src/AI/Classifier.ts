@@ -24,7 +24,6 @@ export default class Classifier {
         this.nb_base_example += 1;
       }
     }
-    else { console.log("init ended") }
   }
 
 
