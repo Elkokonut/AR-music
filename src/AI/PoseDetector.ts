@@ -20,7 +20,7 @@ export default class PoseDetector {
   }
 
 
-  async init(scene) {
+  async init() {
     console.log("INIT AI");
     let sendCounter = 0;
     const camera = new pipe_camera.Camera(
@@ -41,6 +41,10 @@ export default class PoseDetector {
       minDetectionConfidence: 0.5,
       minTrackingConfidence: 0.5
     });
+    camera.start();
+  }
+
+  start(scene) {
 
     async function onResults(results) {
       const left = results.multiHandLandmarks[0];
@@ -53,6 +57,5 @@ export default class PoseDetector {
       scene.update_keypoints(keypoints);
     }
     this.model.onResults(onResults);
-    camera.start();
   }
 }
