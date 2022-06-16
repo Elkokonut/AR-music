@@ -7,8 +7,6 @@ import Frame, { FrameType } from "./Frame";
 import Interface from "./Interface";
 import MeshText from "./MeshText";
 
-declare function require(name: string);
-
 export default class FrameFactory {
 
     static generateAllFrames(scene: BodyTrackerScene, front: Interface) {
@@ -125,8 +123,8 @@ export default class FrameFactory {
                 justifyContent: 'end',
                 textAlign: 'center',
                 contentDirection: 'column',
-                fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                fontTexture: require('../../../../static/fonts/gothic.png'),
+                fontFamily: 'fonts/gothic-msdf.json',
+                fontTexture: 'fonts/gothic.png',
 
             }),
             type,
@@ -159,8 +157,8 @@ export default class FrameFactory {
                 justifyContent: 'end',
                 textAlign: 'center',
                 contentDirection: 'column',
-                fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                fontTexture: require('../../../../static/fonts/gothic.png'),
+                fontFamily: 'fonts/gothic-msdf.json',
+                fontTexture: 'fonts/gothic.png',
 
             }),
             type,
@@ -229,8 +227,8 @@ export default class FrameFactory {
                 backgroundOpacity: 0.7,
                 justifyContent: 'end',
                 contentDirection: 'column',
-                fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                fontTexture: require('../../../../static/fonts/gothic.png'),
+                fontFamily: 'fonts/gothic-msdf.json',
+                fontTexture: 'fonts/gothic.png',
 
             }),
             type,
@@ -272,8 +270,8 @@ export default class FrameFactory {
                 justifyContent: 'center',
                 contentDirection: 'column',
                 fontColor: new THREE.Color(0xa7ebe7),
-                fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                fontTexture: require('../../../../static/fonts/gothic.png'),
+                fontFamily: 'fonts/gothic-msdf.json',
+                fontTexture: 'fonts/gothic.png',
 
             }),
             type,
@@ -307,8 +305,8 @@ export default class FrameFactory {
             backgroundOpacity: 0.4,
             justifyContent: 'center',
             contentDirection: contentDir,
-            fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-            fontTexture: require('../../../../static/fonts/gothic.png'),
+            fontFamily: 'fonts/gothic-msdf.json',
+            fontTexture: 'fonts/gothic.png',
         }), FrameType.Main,
             function resize(frame: Frame) {
                 const localHeight = Frame.distance;
@@ -392,8 +390,8 @@ export default class FrameFactory {
                 backgroundOpacity: 0,
                 justifyContent: 'center',
                 contentDirection: "row",
-                fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                fontTexture: require('../../../../static/fonts/gothic.png'),
+                fontFamily: 'fonts/gothic-msdf.json',
+                fontTexture: 'fonts/gothic.png',
                 offset: 0.05
             }), FrameType.ChildFrame,
                 (frame) => { Frame.basicResize(frame, 1) }
@@ -405,8 +403,8 @@ export default class FrameFactory {
                 backgroundOpacity: 0,
                 justifyContent: 'center',
                 contentDirection: "row",
-                fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                fontTexture: require('../../../../static/fonts/gothic.png'),
+                fontFamily: 'fonts/gothic-msdf.json',
+                fontTexture: 'fonts/gothic.png',
                 offset: 0.05
             }), FrameType.ChildFrame,
                 (frame) => { Frame.basicResize(frame, 1) }
@@ -457,8 +455,8 @@ export default class FrameFactory {
                 backgroundOpacity: 0.7,
                 justifyContent: 'end',
                 contentDirection: 'column',
-                fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                fontTexture: require('../../../../static/fonts/gothic.png'),
+                fontFamily: 'fonts/gothic-msdf.json',
+                fontTexture: 'fonts/gothic.png',
 
             }),
             FrameType.TrainingMainPanel,
@@ -739,8 +737,8 @@ export default class FrameFactory {
                     justifyContent: 'start',
                     contentDirection: 'column-reverse',
                     fontColor: new THREE.Color(0xa7ebe7),
-                    fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                    fontTexture: require('../../../../static/fonts/gothic.png'),
+                    fontFamily: 'fonts/gothic-msdf.json',
+                    fontTexture: 'fonts/gothic.png',
                 }),
                 FrameType.SmallCounter,
                 (frame) => Frame.basicResize(frame, 0.7)
