@@ -20,18 +20,20 @@ export default class App {
     this.ui.showLoading();
 
     enableInlineVideo(this.video);
-    this.video.style.display = "none";
     this.scene = null;
 
     this.initAI().then(async (pose_detector) => {
-      this.video.addEventListener('playing', () => {
-        this.scene = this.initScene();
-        pose_detector.start(this.scene);
+      this.video.addEventListener('loadedmetadata', () => {
+        if (!this.initialisation) {
+          console.log(this.video.videoHeight);
+          this.initialisation = true;
+          this.scene = this.initScene();
+          pose_detector.start(this.scene);
+        }
       });
     }).catch((err) => {
       this.ui.showErrorPage();
     });
-
 
   }
 
