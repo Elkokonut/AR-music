@@ -30,9 +30,7 @@ export default class PoseDetector {
           if (sendCounter == 1) globalThis.APPNamespace.App.ui.hideLoading();
           await this.model.send({ image: this.video });
           sendCounter++;
-        },
-        width: this.video.videoWidth,
-        height: this.video.videoHeight
+        }
       }
     );
     this.model.setOptions({
