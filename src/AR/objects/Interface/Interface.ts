@@ -47,7 +47,15 @@ export default class Interface {
 
     next(type: FrameType) {
         let newFrame;
-        if (type == FrameType.SmallCounter) {
+        if (type == FrameType.Tutorial) {
+            if (this.currentFrame.type == FrameType.Tutorial) {
+                newFrame = this.children.find(frm => frm.type == type && frm.order == this.currentFrame.order + 1);
+            }
+            else {
+                newFrame = this.children.find(frm => frm.type == type && frm.order == 0);
+            }
+        }
+        else if (type == FrameType.SmallCounter) {
             if (this.currentFrame.type == FrameType.SmallCounter) {
                 const content = +this.currentFrame.obj.children[1].content - 1;
                 newFrame = this.children.find(frm => frm.type == type && frm.obj.children[1].content == `${content}`);

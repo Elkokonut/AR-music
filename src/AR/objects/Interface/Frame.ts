@@ -30,18 +30,20 @@ export default class Frame extends Object3D {
 
     children: Object3D[];
     type: FrameType;
+    order: number;
     resizeFunc: (Frame) => void
     private onBefore: (() => void)[]
     private onAfter: (() => void)[]
 
     static distance = 50;
 
-    constructor(frame: ThreeMeshUI.Block, type: FrameType, resizeFunc = null) {
+    constructor(frame: ThreeMeshUI.Block, type: FrameType, resizeFunc = null, order = 0) {
         super(frame, `frame_${Frame.frame_count++}`, null);
         this.children = [];
         this.onBefore = [];
         this.onAfter = [];
         this.type = type;
+        this.order = order;
         this.obj.position.setZ(globalThis.APPNamespace.canvasHeight - Frame.distance);
         this.resizeFunc = resizeFunc;
 
