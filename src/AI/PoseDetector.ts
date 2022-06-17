@@ -41,7 +41,7 @@ export default class PoseDetector {
       minDetectionConfidence: 0.5,
       minTrackingConfidence: 0.5
     });
-    camera.start();
+    await camera.start();
   }
 
   start(scene) {
