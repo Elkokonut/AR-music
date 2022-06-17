@@ -6,11 +6,13 @@ import FrameFactory from "./FrameFactory";
 export default class Interface {
     children: Frame[];
     currentFrame: Frame;
+    scene: BodyTrackerScene;
 
     constructor(scene: BodyTrackerScene) {
         this.children = [];
         FrameFactory.generateAllFrames(scene, this).forEach(frm => this.addChild(frm, scene));
 
+        this.scene = scene;
         this.currentFrame = this.findFrameByType(FrameType.StartingFrame);
         this.currentFrame.show();
         this.resize();
@@ -22,11 +24,12 @@ export default class Interface {
     }
 
 
-    removeChild(frame: Frame, scene: BodyTrackerScene) {
+    removeChild(frame: Frame) {
+        frame.delete();
         this.children = this.children.filter(function (obj) {
             return obj != frame;
         });
-        scene.removeByName(frame.obj.name);
+        this.scene.removeByName(frame.obj.name);
     }
 
     resize() {
@@ -68,8 +71,11 @@ export default class Interface {
             newFrame = this.findFrameByType(type);
         }
         if (newFrame) {
-
             this.currentFrame.hide();
+            if (this.currentFrame.type == FrameType.Tutorial)
+                this.removeChild(this.currentFrame);
+            else
+                this.currentFrame.hide();
             this.currentFrame = newFrame;
             this.currentFrame.show();
         }

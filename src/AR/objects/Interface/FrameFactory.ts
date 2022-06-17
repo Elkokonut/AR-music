@@ -14,7 +14,7 @@ export default class FrameFactory {
 
         frames.push(FrameFactory.startingFrame(front)); // "starting_frame"
         frames.push(FrameFactory.appInstructionsFrame(front));
-        frames.push(FrameFactory.tutorial(front));
+        frames.push(...FrameFactory.tutorial(front));
         frames.push(FrameFactory.mainFrame(scene, front)); // "main"
         frames.push(FrameFactory.autoInfoFrame(front));
         frames.push(...FrameFactory.generateBigCounters());
@@ -208,6 +208,11 @@ export default class FrameFactory {
                     frame2.addElement(video_frame);
                     text_frame.addElement(new MeshText(content, 0.03));
                     frame.addElement(new Button(0.10, 0.10, button_text, action));
+                    frame.addOnDelete(() => {
+                        video.pause();
+                        video.removeAttribute('src'); // empty source
+                        video.load();
+                    });
                     frame.resize();
                 }, false);
             }
@@ -490,7 +495,7 @@ export default class FrameFactory {
 
 
 
-        frame.onBefore = () => {
+        frame.addOnBefore(() => {
             const btns_panel = frame.children[1];
             if (btns_panel instanceof Frame) {
                 btns_panel.children.forEach(panel => {
@@ -515,7 +520,7 @@ export default class FrameFactory {
                     }
                 });
             }
-        }
+        });
 
 
         const top_frame = FrameFactory.basicChildFrame(0.2, 0.7);
@@ -630,12 +635,12 @@ export default class FrameFactory {
 
         const fcnt0 = () => {
             scene.classifier.removeLabel(label);
-            front.removeChild(frame, scene);
+            front.removeChild(frame);
             front.next(FrameType.Main);
         }
 
         const fcnt1 = () => {
-            front.removeChild(frame, scene);
+            front.removeChild(frame);
             front.next(FrameType.TrainingMainPanel);
         }
 
@@ -727,11 +732,53 @@ export default class FrameFactory {
     }
 
     static tutorial(front: Interface) {
-        const text_frame = "Cool Tuto";
 
-        return FrameFactory.content_video_button_frame(FrameType.Tutorial, text_frame, "/videos_demo/startingInfo.mp4", function () {
-            front.next(FrameType.Main);
-        }, "Got it!");
+        const res = [];
+
+        let order = 0;
+        function createTuto(type, text, path, fct, label) {
+            const tuto = FrameFactory.content_video_button_frame(type, text, path, fct, label);
+            tuto.order = order++;
+            return tuto;
+        }
+        const video_path = [
+            "/videos_demo/no_instrument.mp4",
+            "/videos_demo/microphone.mp4",
+            "/videos_demo/drums.mp4",
+            "/videos_demo/ai_training.mp4",
+            "/videos_demo/ai_training_p2.mp4",
+            "/videos_demo/auto.mp4",
+            "/videos_demo/ai_delete.mp4",
+            "/videos_demo/reset_training.mp4"
+        ];
+        const text_tuto = [
+            "You can change instrument with button on top",
+            "In order to use mic, close your fist and sing",
+            "You can play drums with your hands",
+            "You can learn gestures by clicking on 'Learn gestures'. \n During 10 seconds, repeat the same gesture. \n Apart from mic and drums, fixed gestures are easier to learn.",
+            "After first learning you can go back and access 8 more options\nFeel free to learn all ten!",
+            "You will be able to use auto mode after learning gestures. Mimick the same gestures as before to play instrument.",
+            "You can delete gestures by clicking on the red cross and learn gestures again by going back to 'Learn gestures'",
+            "You can reset all gestures by clicking on 'Reset Gesture Learning'"
+        ];
+
+        for (let i = 0; i < video_path.length; i++) {
+            let fct = () => front.next(FrameType.Tutorial);
+            res.push(createTuto(FrameType.Tutorial, text_tuto[i], video_path[i], fct, "Next"));
+        }
+
+        const end = FrameFactory.content_button_frame(
+            FrameType.Tutorial,
+            "That's it! \n You are now ready to play some AR music!\nEnjoy!",
+            function () {
+                front.next(FrameType.Main);
+            },
+            "Cool!");
+        end.order = order++;
+
+        res.push(end);
+
+        return res;
 
     }
 

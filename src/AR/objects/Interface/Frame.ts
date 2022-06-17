@@ -34,6 +34,7 @@ export default class Frame extends Object3D {
     resizeFunc: (Frame) => void
     private onBefore: (() => void)[]
     private onAfter: (() => void)[]
+    private onDelete: (() => void)[]
 
     static distance = 50;
 
@@ -42,6 +43,7 @@ export default class Frame extends Object3D {
         this.children = [];
         this.onBefore = [];
         this.onAfter = [];
+        this.onDelete = [];
         this.type = type;
         this.order = order;
         this.obj.position.setZ(globalThis.APPNamespace.canvasHeight - Frame.distance);
@@ -75,6 +77,15 @@ export default class Frame extends Object3D {
         this.onAfter.forEach(fct => fct());
     }
 
+    delete() {
+        this.children.forEach(child => {
+            if (child instanceof Frame) {
+                child.delete();
+            }
+        });
+        this.onDelete.forEach(fct => fct());
+    }
+
     addOnBefore(onBefore: () => void) {
         this.onBefore.push(onBefore);
     }
@@ -83,6 +94,9 @@ export default class Frame extends Object3D {
         this.onAfter.push(onAfter);
     }
 
+    addOnDelete(onAfter: () => void) {
+        this.onDelete.push(onAfter);
+    }
 
     addElement(elmt: Object3D) {
         this.children.push(elmt);
