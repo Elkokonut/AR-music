@@ -23,13 +23,15 @@ export default class App {
     this.video.style.display = "none";
     this.scene = null;
 
-    this.initAI().then((pose_detector) => {
+    this.initAI().then(async (pose_detector) => {
       this.video.addEventListener('playing', () => {
         this.scene = this.initScene();
         pose_detector.start(this.scene);
-      }
-      );
+      });
+    }).catch((err) => {
+      this.ui.showErrorPage();
     });
+
 
   }
 
