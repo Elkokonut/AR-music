@@ -6,7 +6,9 @@ import MeshText from './MeshText';
 
 export default class Button extends Object3D {
     static instancesCounter = 0;
+    content: string;
     action: (x) => void;
+    enable: boolean;
     selected: boolean;
     counter: number;
     label: MeshText;
@@ -67,7 +69,7 @@ export default class Button extends Object3D {
 
         super(new ThreeMeshUI.Block(btnOptions), `button_${Button.instancesCounter++}`, null);
 
-
+        this.content = content;
         this.widthRatio = widthRatio;
         this.heightRatio = heightRatio;
         this.marginRatio = this.heightRatio / 10;
@@ -87,12 +89,22 @@ export default class Button extends Object3D {
                 state: 'hovered',
                 attributes: hoveredStateAttributes
             });
+
+        this.obj.setupState({
+            state: 'disable',
+            attributes: {
+                backgroundColor: new THREE.Color(0x808080),
+                backgroundOpacity: 0.3
+            }
+        });
         this.obj.setupState(
             {
                 state: 'idle',
                 attributes: idleStateAttributes
             });
+
         this.selected = selected;
+        this.enable = true;
 
         if (this.selected) {
             this.onSelected();
@@ -100,6 +112,17 @@ export default class Button extends Object3D {
         else {
             this.onIdle();
         }
+
+    }
+
+    disableButton() {
+        this.enable = false;
+        this.obj.setState('disable');
+    }
+
+    enableButton() {
+        this.enable = true;
+        this.obj.setState('idle');
     }
 
     resize() {
@@ -124,28 +147,37 @@ export default class Button extends Object3D {
     }
 
     onHover() {
-        this.counter++;
-        this.selected = false;
-        this.obj.setState('hovered')
+        if (this.enable) {
+            this.counter++;
+            this.selected = false;
+            this.obj.setState('hovered')
+        }
     }
 
     onSelected() {
-        this.selected = true;
-        this.obj.setState('selected');
-        if (this.action)
-            this.action.call(this);
+        if (this.enable) {
+            this.selected = true;
+            this.obj.setState('selected');
+            if (this.action)
+                this.action.call(this);
+        }
+
     }
 
     forceIdle() {
-        this.counter = 0;
-        this.selected = false;
-        this.obj.setState("idle");
+        if (this.enable) {
+            this.counter = 0;
+            this.selected = false;
+            this.obj.setState("idle");
+        }
     }
 
     onIdle() {
-        if (!this.selected) {
-            this.counter = 0;
-            this.obj.setState("idle");
+        if (this.enable) {
+            if (!this.selected) {
+                this.counter = 0;
+                this.obj.setState("idle");
+            }
         }
     }
 }

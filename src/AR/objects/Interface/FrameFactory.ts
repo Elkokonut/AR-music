@@ -7,8 +7,6 @@ import Frame, { FrameType } from "./Frame";
 import Interface from "./Interface";
 import MeshText from "./MeshText";
 
-declare function require(name: string);
-
 export default class FrameFactory {
 
     static generateAllFrames(scene: BodyTrackerScene, front: Interface) {
@@ -127,8 +125,8 @@ export default class FrameFactory {
                 justifyContent: 'end',
                 textAlign: 'center',
                 contentDirection: 'column',
-                fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                fontTexture: require('../../../../static/fonts/gothic.png'),
+                fontFamily: 'fonts/gothic-msdf.json',
+                fontTexture: 'fonts/gothic.png',
 
             }),
             type,
@@ -161,8 +159,8 @@ export default class FrameFactory {
                 justifyContent: 'end',
                 textAlign: 'center',
                 contentDirection: 'column',
-                fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                fontTexture: require('../../../../static/fonts/gothic.png'),
+                fontFamily: 'fonts/gothic-msdf.json',
+                fontTexture: 'fonts/gothic.png',
 
             }),
             type,
@@ -237,8 +235,8 @@ export default class FrameFactory {
                 backgroundOpacity: 0.7,
                 justifyContent: 'end',
                 contentDirection: 'column',
-                fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                fontTexture: require('../../../../static/fonts/gothic.png'),
+                fontFamily: 'fonts/gothic-msdf.json',
+                fontTexture: 'fonts/gothic.png',
 
             }),
             type,
@@ -280,8 +278,8 @@ export default class FrameFactory {
                 justifyContent: 'center',
                 contentDirection: 'column',
                 fontColor: new THREE.Color(0xa7ebe7),
-                fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                fontTexture: require('../../../../static/fonts/gothic.png'),
+                fontFamily: 'fonts/gothic-msdf.json',
+                fontTexture: 'fonts/gothic.png',
 
             }),
             type,
@@ -314,9 +312,8 @@ export default class FrameFactory {
             backgroundOpacity: 0.4,
             justifyContent: 'center',
             contentDirection: contentDir,
-            fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-            fontTexture: require('../../../../static/fonts/gothic.png'),
-
+            fontFamily: 'fonts/gothic-msdf.json',
+            fontTexture: 'fonts/gothic.png',
         }), FrameType.Main,
             function resize(frame: Frame) {
                 const localHeight = Frame.distance;
@@ -377,7 +374,13 @@ export default class FrameFactory {
                     scene.classifier.disable();
                     scene.factory.change_instrument("", scene);
                     if (scene.classifier.knn.getNumClasses() <= 1) {
-                        front.next(FrameType.TrainingMic);
+                        if (scene.classifier.knn.getClassExampleCount())
+                            if (!scene.classifier.knn.getClassExampleCount()["microphone"])
+                                front.next(FrameType.TrainingMic);
+                            else
+                                front.next(FrameType.TrainingDrum);
+                        else
+                            front.next(FrameType.TrainingMic);
                     }
                     else {
                         front.next(FrameType.TrainingMainPanel);
@@ -400,8 +403,8 @@ export default class FrameFactory {
                 backgroundOpacity: 0,
                 justifyContent: 'center',
                 contentDirection: "row",
-                fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                fontTexture: require('../../../../static/fonts/gothic.png'),
+                fontFamily: 'fonts/gothic-msdf.json',
+                fontTexture: 'fonts/gothic.png',
                 offset: 0.05
             }), FrameType.ChildFrame,
                 (frame) => { Frame.basicResize(frame, 1) }
@@ -413,8 +416,8 @@ export default class FrameFactory {
                 backgroundOpacity: 0,
                 justifyContent: 'center',
                 contentDirection: "row",
-                fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                fontTexture: require('../../../../static/fonts/gothic.png'),
+                fontFamily: 'fonts/gothic-msdf.json',
+                fontTexture: 'fonts/gothic.png',
                 offset: 0.05
             }), FrameType.ChildFrame,
                 (frame) => { Frame.basicResize(frame, 1) }
@@ -466,13 +469,54 @@ export default class FrameFactory {
                 backgroundOpacity: 0.7,
                 justifyContent: 'end',
                 contentDirection: 'column',
-                fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                fontTexture: require('../../../../static/fonts/gothic.png'),
+                fontFamily: 'fonts/gothic-msdf.json',
+                fontTexture: 'fonts/gothic.png',
 
             }),
             FrameType.TrainingMainPanel,
             (frame) => Frame.basicResize(frame, 0.85)
         );
+        const map_content_label: Map<string, string> = new Map();
+        map_content_label.set('Mic', "microphone");
+        map_content_label.set("Drums", "drums");
+        map_content_label.set("Harp", "harp");
+        map_content_label.set("Guitar", "guitar");
+        map_content_label.set("Kalimba", "kalimba");
+        map_content_label.set("Violon", "violon");
+        map_content_label.set("Trombone", "trombone");
+        map_content_label.set("Voice", "voice");
+        map_content_label.set("Xylo", "xylo");
+        map_content_label.set("Synth Dive", "synth_dive");
+
+
+
+        frame.onBefore = () => {
+            const btns_panel = frame.children[1];
+            if (btns_panel instanceof Frame) {
+                btns_panel.children.forEach(panel => {
+                    if (panel instanceof Frame) {
+                        panel.children.forEach(btn_duo => {
+                            if (btn_duo instanceof Frame) {
+                                const trainBtn = btn_duo.children[0];
+                                const delBtn = btn_duo.children[1];
+                                if (trainBtn instanceof Button && delBtn instanceof Button) {
+                                    const label = map_content_label.get(trainBtn.content);
+                                    if (label in scene.classifier.knn.getClassExampleCount()) {
+                                        trainBtn.disableButton();
+                                        delBtn.enableButton();
+                                    }
+                                    else {
+                                        trainBtn.enableButton();
+                                        delBtn.disableButton();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
 
         const top_frame = FrameFactory.basicChildFrame(0.2, 0.7);
         const back_button = FrameFactory.backButton(front, 0.1, 0.1);
@@ -495,17 +539,16 @@ export default class FrameFactory {
         button_frame.addElement(left_button_frame);
         button_frame.addElement(right_button_frame);
 
-
-        FrameFactory.buttonPack(left_button_frame, "Mic", "microphone", scene, front);
-        FrameFactory.buttonPack(left_button_frame, "Drums", "drums", scene, front);
-        FrameFactory.buttonPack(left_button_frame, "Harp", "harp", scene, front);
-        FrameFactory.buttonPack(left_button_frame, "Guitar", "guitar", scene, front);
-        FrameFactory.buttonPack(left_button_frame, "Kalimba", "kalimba", scene, front);
-        FrameFactory.buttonPack(right_button_frame, "Violon", "violon", scene, front);
-        FrameFactory.buttonPack(right_button_frame, "Trombone", "trombone", scene, front);
-        FrameFactory.buttonPack(right_button_frame, "Voice", "voice", scene, front);
-        FrameFactory.buttonPack(right_button_frame, "Xylo", "xylo", scene, front);
-        FrameFactory.buttonPack(right_button_frame, "Synth Dive", "synth_dive", scene, front);
+        let count = 0;
+        map_content_label.forEach((label, content) => {
+            FrameFactory.buttonPack(
+                count++ < 5 ? left_button_frame : right_button_frame,
+                content,
+                label,
+                scene,
+                front
+            );
+        })
 
 
         frame.addElement(FrameFactory.basicChildFrame(0.05, 0.8));
@@ -568,6 +611,7 @@ export default class FrameFactory {
         );
 
         del_btn.marginRatio = 0;
+        del_btn.disableButton();
 
         button_block.addElement(del_btn);
 
@@ -734,8 +778,8 @@ export default class FrameFactory {
                     justifyContent: 'start',
                     contentDirection: 'column-reverse',
                     fontColor: new THREE.Color(0xa7ebe7),
-                    fontFamily: require('../../../../static/fonts/gothic-msdf.json'),
-                    fontTexture: require('../../../../static/fonts/gothic.png'),
+                    fontFamily: 'fonts/gothic-msdf.json',
+                    fontTexture: 'fonts/gothic.png',
                 }),
                 FrameType.SmallCounter,
                 (frame) => Frame.basicResize(frame, 0.7)

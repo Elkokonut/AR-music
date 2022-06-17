@@ -8,6 +8,9 @@
 		body {
 			margin: 0;
 		}
+		#webcam {
+			display: none;
+		}
 	</style>
 </head>
 
@@ -42,7 +45,7 @@
 		</div>
 	</div>
 
-	<div id="loading_cube" class="loading_cube_body">
+	<div id="loading_cube" class="loading_cube_body" style="display: none;">
 		<div class="loading_cube">
 			<div class="plane">
 				<div class="cube cube--0">
@@ -121,9 +124,20 @@
 		</div>
 	</div>
 
+	<div id="errorPage" class="content_error" style="display: none;">
+		<div class="info_error">
+			<p>Could not start the app :(</p>
+			<p>Please make sure you allowed all permissions on camera</p>
+			<p>Also check that you are not using your webcam in another app</p>
+			<p>Reload the page to try again!</p>
+		</div>
+	</div>
+</div>
+
 	<script type="module" src="./src/main.ts"></script>
 	<link rel="stylesheet" href="css/loading.scss" />
 	<link rel="stylesheet" href="css/model_loading.scss" />
+	<link rel="stylesheet" href="css/error.scss" />
 </body>
 
 </html>
