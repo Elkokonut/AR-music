@@ -763,7 +763,7 @@ export default class FrameFactory {
         ];
 
         for (let i = 0; i < video_path.length; i++) {
-            let fct = () => front.next(FrameType.Tutorial);
+            const fct = () => front.next(FrameType.Tutorial);
             res.push(createTuto(FrameType.Tutorial, text_tuto[i], video_path[i], fct, "Next"));
         }
 
