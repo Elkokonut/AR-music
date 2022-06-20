@@ -2,7 +2,28 @@
 
 import App from "./app/App";
 
+function iOS() {
+    return [
+        'iPad Simulator',
+        'iPhone Simulator',
+        'iPod Simulator',
+        'iPad',
+        'iPhone',
+        'iPod'
+    ].includes(navigator.platform)
+        // iPad on iOS 13 detection
+        || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+}
+
 async function main() {
+    if (navigator.userAgent.match(/firefox|fxios/i))
+        alert("We detected you were using firefox.\
+        \n The website isn't stable on firefox yet.\
+        \nWe advise you not to learn too much gestures using the app for a better experience.");
+
+    if (iOS())
+        alert("We detected you were using iOS.\
+        \n The website doesn't work on iOS yet.");
     globalThis.APPNamespace = {};
     globalThis.APPNamespace.mobileCheck = function () {
         let check = false;
