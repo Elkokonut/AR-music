@@ -2,7 +2,6 @@ import BodyTrackerScene from '../AR/scenes/BodyTrackerScene';
 import PoseDetector from '../AI/PoseDetector';
 import enableInlineVideo from 'iphone-inline-video';
 import { UI } from './Ui';
-import Classifier from '../AI/Classifier';
 
 
 export default class App {

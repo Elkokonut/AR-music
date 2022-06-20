@@ -18,7 +18,6 @@ import Interface from "../objects/Interface/Interface";
 import Classifier from "../../AI/Classifier";
 
 import soundManager from "../../tools/SoundManager";
-import { or } from "mathjs";
 
 
 export default class BodyTrackerScene extends Scene {

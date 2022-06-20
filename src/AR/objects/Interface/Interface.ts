@@ -6,11 +6,13 @@ import FrameFactory from "./FrameFactory";
 export default class Interface {
     children: Frame[];
     currentFrame: Frame;
+    scene: BodyTrackerScene;
 
     constructor(scene: BodyTrackerScene) {
         this.children = [];
         FrameFactory.generateAllFrames(scene, this).forEach(frm => this.addChild(frm, scene));
 
+        this.scene = scene;
         this.currentFrame = this.findFrameByType(FrameType.StartingFrame);
         this.currentFrame.show();
         this.resize();
@@ -22,11 +24,12 @@ export default class Interface {
     }
 
 
-    removeChild(frame: Frame, scene: BodyTrackerScene) {
+    removeChild(frame: Frame) {
+        frame.delete();
         this.children = this.children.filter(function (obj) {
             return obj != frame;
         });
-        scene.removeByName(frame.obj.name);
+        this.scene.removeByName(frame.obj.name);
     }
 
     resize() {
@@ -47,7 +50,15 @@ export default class Interface {
 
     next(type: FrameType) {
         let newFrame;
-        if (type == FrameType.SmallCounter) {
+        if (type == FrameType.Tutorial) {
+            if (this.currentFrame.type == FrameType.Tutorial) {
+                newFrame = this.children.find(frm => frm.type == type && frm.order == this.currentFrame.order + 1);
+            }
+            else {
+                newFrame = this.children.find(frm => frm.type == type && frm.order == 0);
+            }
+        }
+        else if (type == FrameType.SmallCounter) {
             if (this.currentFrame.type == FrameType.SmallCounter) {
                 const content = +this.currentFrame.obj.children[1].content - 1;
                 newFrame = this.children.find(frm => frm.type == type && frm.obj.children[1].content == `${content}`);
@@ -60,8 +71,11 @@ export default class Interface {
             newFrame = this.findFrameByType(type);
         }
         if (newFrame) {
-
             this.currentFrame.hide();
+            if (this.currentFrame.type == FrameType.Tutorial)
+                this.removeChild(this.currentFrame);
+            else
+                this.currentFrame.hide();
             this.currentFrame = newFrame;
             this.currentFrame.show();
         }

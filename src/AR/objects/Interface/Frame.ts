@@ -14,6 +14,8 @@ export enum FrameType {
     GO,
     SmallCounter,
     AutoInfo,
+    AppInstructions,
+    Tutorial,
     TrainingMic,
     TrainingDrum,
     TrainingInfo,
@@ -28,30 +30,31 @@ export default class Frame extends Object3D {
 
     children: Object3D[];
     type: FrameType;
+    order: number;
     resizeFunc: (Frame) => void
-    onBefore: () => void
-    onAfter: () => void
+    private onBefore: (() => void)[]
+    private onAfter: (() => void)[]
+    private onDelete: (() => void)[]
 
     static distance = 50;
 
-    constructor(frame: ThreeMeshUI.Block, type: FrameType, resizeFunc = null, onBefore = null, onAfter = null) {
+    constructor(frame: ThreeMeshUI.Block, type: FrameType, resizeFunc = null, order = 0) {
         super(frame, `frame_${Frame.frame_count++}`, null);
         this.children = [];
+        this.onBefore = [];
+        this.onAfter = [];
+        this.onDelete = [];
+        this.type = type;
+        this.order = order;
+        this.obj.position.setZ(globalThis.APPNamespace.canvasHeight - Frame.distance);
         this.resizeFunc = resizeFunc;
 
         if (type != FrameType.ChildFrame)
             this.hide();
-
-        this.type = type;
-        this.obj.position.setZ(globalThis.APPNamespace.canvasHeight - Frame.distance);
-
-        this.onBefore = onBefore;
-        this.onAfter = onAfter;
     }
 
     show() {
-        if (this.onBefore)
-            this.onBefore();
+        this.onBefore.forEach(fct => fct());
         this.obj.visible = true;
         this.children.forEach(child => {
             if (child instanceof Frame) {
@@ -71,11 +74,29 @@ export default class Frame extends Object3D {
                 child.hide();
             }
         });
-
-        if (this.onAfter)
-            this.onAfter();
+        this.onAfter.forEach(fct => fct());
     }
 
+    delete() {
+        this.children.forEach(child => {
+            if (child instanceof Frame) {
+                child.delete();
+            }
+        });
+        this.onDelete.forEach(fct => fct());
+    }
+
+    addOnBefore(onBefore: () => void) {
+        this.onBefore.push(onBefore);
+    }
+
+    addOnAfter(onAfter: () => void) {
+        this.onAfter.push(onAfter);
+    }
+
+    addOnDelete(onAfter: () => void) {
+        this.onDelete.push(onAfter);
+    }
 
     addElement(elmt: Object3D) {
         this.children.push(elmt);
