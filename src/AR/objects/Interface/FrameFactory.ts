@@ -656,7 +656,7 @@ export default class FrameFactory {
 
 
     static trainMic(scene, front: Interface) {
-        const text_frame = interface_json["content"]["train_mic"];;
+        const text_frame = interface_json["content"]["train_mic"];
 
         const frame = FrameFactory.content_video_button_frame(
             FrameType.TrainingMic,
