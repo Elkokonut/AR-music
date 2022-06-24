@@ -8,9 +8,8 @@ import MeshText from "./MeshText";
 export enum FrameType {
     StartingFrame,
     Main,
-    Big1,
-    Big2,
-    Big3,
+    Ready,
+    Set,
     GO,
     SmallCounter,
     AutoInfo,

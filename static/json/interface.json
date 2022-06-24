@@ -1,0 +1,32 @@
+{
+    "labels": {
+        "main_panel_buttons": {
+            "no_inst": "No instrument",
+            "mic": "Mic",
+            "drums": "Drums",
+            "auto_mode": "Customized mode",
+            "teach_gestures": "Add customized gesture",
+            "reset_gestures": "Reset customization"
+        }
+    },
+    "content": {
+        "starting_frame": "Welcome! \nPlease use headphones.\n Interact with the interface using your indexes on the video.",
+        "app_instructions_frame": "This website allows you to play drums and mic in AR.\n You can save customized gestures to automatically detect up to 10 sounds! \n You can start your journey by clicking on 'Got it!'!\n If you need futher help, you can check up the tutorial!",
+        "auto_info_frame": "Customized Mode allows you to detect automatically gestures to play sounds. \n  To use Customized Mode,\n please create customized gestures first.",
+        "training_main_panel": "Pick a sound to associate to your customized gesture. \nKeep the same gesture until your back on the main menu! \n Apart from mic and drums, fixed gestures are easier to detect.",
+        "info_training_frame": "You can add new instruments or improve the detection by clicking \non 'Add customized gesture' again.\n Click on 'Customized mode' to try the instruments.",
+        "train_mic": "Mimick singing in a mic to add gesture to your customized experience. Repeat the same gesture until next frame!",
+        "train_drums": "Mimick playing the drums to add gesture to your customized experience. Repeat the same gesture until next frame!",
+        "reset_gestures": "Are you sure you want to delete all data about the gestures ?",
+        "tutorial": [
+            "You can change instrument with button on top",
+            "In order to use mic, close your fist and sing",
+            "You can play drums with your hands",
+            "You can Add customized gesture by clicking on 'Add customized gesture'. \n During 10 seconds, repeat the same gesture. \n Apart from mic and drums, fixed gestures are easier to detect. \nYou are free to choose the gesture of your liking.",
+            "You can go back  on 'Add customized gesture' and access 8 more options\nFeel free to add all ten!",
+            "You will be able to use customized mode after adding gestures. Mimick the same gestures as before to play instrument.",
+            "You can delete gestures by clicking on the red cross and add gestures again by going back to 'Add customized gesture'",
+            "You can reset all gestures by clicking on 'Reset customization'"
+        ]
+    }
+}
