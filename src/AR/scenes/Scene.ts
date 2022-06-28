@@ -9,7 +9,7 @@ export default class Scene {
     scene: THREE.Scene;
     camera: THREE.PerspectiveCamera | THREE.OrthographicCamera;
     renderer: THREE.WebGLRenderer;
-    #renderOrder: number;
+    renderOrder: number;
     controls: OrbitControls;
     initialisation: boolean;
     objects: Object3D[];
@@ -18,7 +18,7 @@ export default class Scene {
         this.video = video;
         this.controls = null;
         this.initialisation = false;
-        this.#renderOrder = 10;
+        this.renderOrder = 10;
         this.objects = []
         console.log("Init Scene");
 
@@ -132,7 +132,7 @@ export default class Scene {
         if (renderOrder != null)
             obj3D.obj.renderOrder = renderOrder;
         else
-            obj3D.obj.renderOrder = this.#renderOrder++;
+            obj3D.obj.renderOrder = this.renderOrder++;
         this.scene.add(obj3D.obj);
         this.objects.push(obj3D);
     }
@@ -141,7 +141,7 @@ export default class Scene {
         if (renderOrder != null)
             obj3D.obj.renderOrder = renderOrder;
         else
-            obj3D.obj.renderOrder = this.#renderOrder++;
+            obj3D.obj.renderOrder = this.renderOrder++;
         this.scene.add(obj3D.obj);
         this.objects.unshift(...[obj3D]);
     }
