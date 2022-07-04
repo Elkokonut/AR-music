@@ -6,6 +6,8 @@ import enableInlineVideo from 'iphone-inline-video';
 import Frame, { FrameType } from "./Frame";
 import Interface from "./Interface";
 import MeshText from "./MeshText";
+declare function require(name: string);
+const interface_json = require("../../../../static/json/interface.json");
 
 export default class FrameFactory {
 
@@ -76,20 +78,17 @@ export default class FrameFactory {
             scene.factory.change_instrument(label, scene);
         else
             scene.factory.change_instrument("", scene);
-        front.next(FrameType.Big3);
+        front.next(FrameType.Ready);
         setTimeout(() => {
-            front.next(FrameType.Big2);
+            front.next(FrameType.Set);
         }, 1000);
-        setTimeout(() => {
-            front.next(FrameType.Big1);
-        }, 2000);
         setTimeout(() => {
             scene.classifier.startLearning(label);
             scene.classifier.disable();
             front.next(FrameType.GO);
             if (onBefore)
                 onBefore();
-        }, 3000);
+        }, 2000);
         setTimeout(() => {
             front.next(FrameType.SmallCounter);
             for (let i = 1; i < 10; i++) {
@@ -99,13 +98,13 @@ export default class FrameFactory {
                     front.next(FrameType.SmallCounter);
                 }, 1000 * i);
             }
-        }, 4000);
+        }, 3000);
         setTimeout(() => {
             scene.classifier.stopLearning();
             scene.factory.change_instrument("", scene);
             if (onAfter)
                 onAfter();
-        }, 14000);
+        }, 13000);
     }
 
     private static content_button_frame(type: FrameType, content, action, button_text = "Next") {
@@ -299,7 +298,7 @@ export default class FrameFactory {
     //#endregion
 
     static startingFrame(front: Interface) {
-        const text_intro = "Welcome! \nPlease use headphones.\n Interact with the interface using your indexes.";
+        const text_intro = interface_json["content"]["starting_frame"];
 
         return FrameFactory.content_video_button_frame(FrameType.StartingFrame, text_intro, "/videos_demo/startingInfo.mp4", function () {
             front.next(FrameType.AppInstructions);
@@ -309,7 +308,7 @@ export default class FrameFactory {
     static mainFrame(scene: BodyTrackerScene, front: Interface) {
         const contentDir = globalThis.APPNamespace.mobileCheck() ? "column" : "row";
 
-        const button_width = globalThis.APPNamespace.mobileCheck() ? 0.25 : 0.1;
+        const button_width = globalThis.APPNamespace.mobileCheck() ? 0.25 : 0.15;
         const button_height = 0.1;
         const frame = new Frame(new ThreeMeshUI.Block({
             borderRadius: 1,
@@ -336,7 +335,7 @@ export default class FrameFactory {
         );
 
         const btns_list = [
-            new Button(button_width, button_height, "No instrument",
+            new Button(button_width, button_height, interface_json["labels"]["main_panel_buttons"]["no_inst"],
                 function () {
                     scene.classifier.stopLearning();
                     scene.classifier.disable();
@@ -344,7 +343,7 @@ export default class FrameFactory {
                     scene.factory.change_instrument("", scene);
                 }
             ),
-            new Button(button_width, button_height, "Mic",
+            new Button(button_width, button_height, interface_json["labels"]["main_panel_buttons"]["mic"],
                 function () {
                     scene.classifier.stopLearning();
                     scene.classifier.disable();
@@ -352,7 +351,7 @@ export default class FrameFactory {
                     scene.factory.change_instrument("microphone", scene);
                 }
             ),
-            new Button(button_width, button_height, "Drums",
+            new Button(button_width, button_height, interface_json["labels"]["main_panel_buttons"]["drums"],
                 function () {
                     scene.classifier.stopLearning();
                     scene.classifier.disable();
@@ -360,7 +359,7 @@ export default class FrameFactory {
                     scene.factory.change_instrument("drums", scene);
                 }
             ),
-            new Button(button_width, button_height, "Auto",
+            new Button(button_width, button_height, interface_json["labels"]["main_panel_buttons"]["auto_mode"],
                 function () {
                     scene.factory.change_instrument("", scene);
                     if (scene.classifier.knn.getNumClasses() <= 1) {
@@ -373,26 +372,26 @@ export default class FrameFactory {
                     }
                 }
             ),
-            new Button(button_width, button_height, "Learn Gestures",
+            new Button(button_width, button_height, interface_json["labels"]["main_panel_buttons"]["teach_gestures"],
                 function () {
                     scene.classifier.stopLearning();
                     scene.classifier.disable();
                     scene.factory.change_instrument("", scene);
                     if (scene.classifier.knn.getNumClasses() <= 1) {
                         if (scene.classifier.knn.getClassExampleCount())
-                            if (!scene.classifier.knn.getClassExampleCount()["microphone"])
-                                front.next(FrameType.TrainingMic);
-                            else
+                            if (!scene.classifier.knn.getClassExampleCount()["drums"])
                                 front.next(FrameType.TrainingDrum);
+                            else
+                                front.next(FrameType.TrainingMic);
                         else
-                            front.next(FrameType.TrainingMic);
+                            front.next(FrameType.TrainingDrum);
                     }
                     else {
                         front.next(FrameType.TrainingMainPanel);
                     }
                 }
             ),
-            new Button(button_width, button_height, "Reset Gestures Learning",
+            new Button(button_width, button_height, interface_json["labels"]["main_panel_buttons"]["reset_gestures"],
                 function () {
                     scene.classifier.disable();
                     scene.factory.change_instrument("", scene);
@@ -447,8 +446,7 @@ export default class FrameFactory {
     }
 
     static autoInfoFrame(front: Interface) {
-        const text_info = "Auto Mode allows you to detect automatically gestures to play sounds. \n \
-        To use Auto Mode,\n please train the AI by pressing 'Learn Gestures'.";
+        const text_info = interface_json["content"]["auto_info_frame"];
 
         return FrameFactory.content_button_frame(FrameType.AutoInfo, text_info, function () {
             front.next(FrameType.Main);
@@ -457,8 +455,6 @@ export default class FrameFactory {
 
 
     static trainingMainPanel(scene: BodyTrackerScene, front: Interface) {
-        // TODO : Add "Back" Button
-
         const height = Frame.distance;
         const ratio = globalThis.APPNamespace.canvasHeight / globalThis.APPNamespace.canvasWidth;
         const width = Frame.distance / ratio;
@@ -528,10 +524,10 @@ export default class FrameFactory {
         const text_frame = FrameFactory.basicChildFrame(0.2, 0.5);
         const filler_frame = FrameFactory.basicChildFrame(0.2, 0.05);
 
-        const text = "Training is about to start \n Pick an action to learn"
+        const text = interface_json["content"]["training_main_panel"];
 
         frame.addElement(top_frame);
-        text_frame.addElement(new MeshText(text, 0.04));
+        text_frame.addElement(new MeshText(text, 0.02));
         top_frame.addElement(back_button);
         top_frame.addElement(text_frame);
         top_frame.addElement(filler_frame);
@@ -660,7 +656,7 @@ export default class FrameFactory {
 
 
     static trainMic(scene, front: Interface) {
-        const text_frame = "Mimick singing in a mic to train AI";
+        const text_frame = interface_json["content"]["train_mic"];
 
         const frame = FrameFactory.content_video_button_frame(
             FrameType.TrainingMic,
@@ -672,7 +668,7 @@ export default class FrameFactory {
                     scene,
                     "microphone",
                     null,
-                    () => front.next(FrameType.TrainingDrum))
+                    () => front.next(FrameType.TrainingInfo))
             },
             "Start");
 
@@ -685,7 +681,7 @@ export default class FrameFactory {
 
 
     static trainDrums(scene, front: Interface) {
-        const text_frame = "Mimick playing the drum to train AI";
+        const text_frame = interface_json["content"]["train_drums"];
 
         const frame = FrameFactory.content_video_button_frame(FrameType.TrainingDrum,
             text_frame,
@@ -696,7 +692,7 @@ export default class FrameFactory {
                     scene,
                     "drums",
                     null,
-                    () => front.next(FrameType.TrainingInfo))
+                    () => front.next(FrameType.TrainingMic))
             },
             "Start");
 
@@ -707,19 +703,15 @@ export default class FrameFactory {
 
     static generateBigCounters() {
         const frames = []
-        frames.push(FrameFactory.text_frame(FrameType.Big1, "1"));
-        frames.push(FrameFactory.text_frame(FrameType.Big2, "2"));
-        frames.push(FrameFactory.text_frame(FrameType.Big3, "3"));
+        frames.push(FrameFactory.text_frame(FrameType.Ready, "Ready..."));
+        frames.push(FrameFactory.text_frame(FrameType.Set, "Set"));
         frames.push(FrameFactory.text_frame(FrameType.GO, "GO!"));
 
         return frames;
     }
 
     static appInstructionsFrame(front: Interface) {
-        const text_frame = "This website allows you to play drums and mic in AR.\n \
-        You can save gestures to automatically detect up to 10 sounds! \n \
-        You can start your journey by clicking on 'Got it!'!\n \
-        If you need futher help, you can check up the tutorial!";
+        const text_frame = interface_json["content"]["app_instructions_frame"];
 
         return FrameFactory.yes_no_frame(FrameType.AppInstructions, text_frame, function () {
             front.next(FrameType.Tutorial);
@@ -751,16 +743,7 @@ export default class FrameFactory {
             "/videos_demo/ai_delete.mp4",
             "/videos_demo/reset_training.mp4"
         ];
-        const text_tuto = [
-            "You can change instrument with button on top",
-            "In order to use mic, close your fist and sing",
-            "You can play drums with your hands",
-            "You can learn gestures by clicking on 'Learn gestures'. \n During 10 seconds, repeat the same gesture. \n Apart from mic and drums, fixed gestures are easier to learn.",
-            "After first learning you can go back and access 8 more options\nFeel free to learn all ten!",
-            "You will be able to use auto mode after learning gestures. Mimick the same gestures as before to play instrument.",
-            "You can delete gestures by clicking on the red cross and learn gestures again by going back to 'Learn gestures'",
-            "You can reset all gestures by clicking on 'Reset Gesture Learning'"
-        ];
+        const text_tuto = interface_json["content"]["tutorial"];
 
         for (let i = 0; i < video_path.length; i++) {
             const fct = () => front.next(FrameType.Tutorial);
@@ -783,14 +766,14 @@ export default class FrameFactory {
     }
 
     static infoTrainingFrame(front: Interface) {
-        const text_frame = "You can add new instruments or improve the detection by clicking \non 'Learn Gestures' again.\n Click on 'Auto' to try the AI."
+        const text_frame = interface_json["content"]["info_training_frame"];
         return FrameFactory.content_button_frame(FrameType.TrainingInfo, text_frame, function () {
             front.next(FrameType.Main);
         }, "Got it!");
     }
 
     static clearTraining(scene, front: Interface) {
-        const content = "Are you sure you want to delete all data about the gestures ?"
+        const content = interface_json["content"]["reset_gestures"];
 
         return FrameFactory.yes_no_frame(FrameType.ClearTraining,
             content, () => {
@@ -831,7 +814,7 @@ export default class FrameFactory {
                 FrameType.SmallCounter,
                 (frame) => Frame.basicResize(frame, 0.7)
             );
-            frame.addElement(new MeshText(`${i}`, 0.04));
+            frame.addElement(new MeshText(`${i}`, 0.06));
             frames.push(frame);
         }
         return frames;

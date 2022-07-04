@@ -24,7 +24,6 @@ export default class App {
     this.initAI().then(async (pose_detector) => {
       this.video.addEventListener('loadedmetadata', () => {
         if (!this.initialisation) {
-          console.log(this.video.videoHeight);
           this.initialisation = true;
           this.scene = this.initScene();
           pose_detector.start(this.scene);
