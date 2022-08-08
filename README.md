@@ -2,7 +2,7 @@
 Web AR application that let user interact with instruments to produce sounds and link gestures to sounds.
 
 
-This project has been carried out during our interships at [OCTO Technology](https://www.octo.com/).
+This project has been carried out during our internships at [OCTO Technology](https://www.octo.com/).
 
 ## 👁️&nbsp; Demo
 
